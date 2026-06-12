@@ -77,7 +77,7 @@ function createMatchCard(match) {
             <div class="match-body">
                 <div class="team home-team">
                     <span class="team-flag">${homeTeam.flag}</span>
-                    <span class="team-name">${homeTeam.name}</span>
+                    <span class="team-name clickable-team" data-team="${match.homeTeam}" onclick="showLineupModal('${match.homeTeam}')" title="Ver escalação">${homeTeam.name}</span>
                 </div>
                 <div class="match-score">
                     ${match.status === 'finished' || match.status === 'live' ? `
@@ -88,7 +88,7 @@ function createMatchCard(match) {
                 </div>
                 <div class="team away-team">
                     <span class="team-flag">${awayTeam.flag}</span>
-                    <span class="team-name">${awayTeam.name}</span>
+                    <span class="team-name clickable-team" data-team="${match.awayTeam}" onclick="showLineupModal('${match.awayTeam}')" title="Ver escalação">${awayTeam.name}</span>
                 </div>
             </div>
             <div class="match-footer">
@@ -101,6 +101,13 @@ function createMatchCard(match) {
                     <span>${stadium.city}, ${stadium.country}</span>
                 </div>
             </div>
+            ${match.status === 'finished' ? `
+                <div class="match-details-link">
+                    <button class="btn-match-details" onclick="showMatchDetails(${match.id})" title="Ver detalhes da partida">
+                        <i class="fas fa-chart-line"></i> Ver Estatísticas
+                    </button>
+                </div>
+            ` : ''}
         </div>
     `;
 }
@@ -819,8 +826,311 @@ matchStyles.textContent = `
             grid-template-columns: 1fr;
         }
     }
+    .clickable-team {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+    
+    .clickable-team:hover {
+        background: rgba(26, 35, 126, 0.1);
+        color: #1a237e;
+        transform: scale(1.05);
+    }
+    
+    .match-details-link {
+        padding: 12px 16px;
+        background: #f5f5f5;
+        border-top: 1px solid #e0e0e0;
+        text-align: center;
+    }
+    
+    .btn-match-details {
+        background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-match-details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+    }
+    
+    .btn-match-details i {
+        font-size: 16px;
+    }
 `;
 document.head.appendChild(matchStyles);
+
+// Function to show detailed match statistics
+function showMatchDetails(matchId) {
+    const match = getAllMatches().find(m => m.id === matchId);
+    if (!match || match.status !== 'finished') {
+        alert('Estatísticas disponíveis apenas para jogos finalizados.');
+        return;
+    }
+    
+    const homeTeam = getTeamInfo(match.homeTeam);
+    const awayTeam = getTeamInfo(match.awayTeam);
+    const homeLineup = getTeamLineup(match.homeTeam);
+    const awayLineup = getTeamLineup(match.awayTeam);
+    
+    // Generate realistic match statistics
+    const stats = generateMatchStatistics(match);
+    
+    const modal = document.createElement('div');
+    modal.className = 'match-details-modal';
+    modal.innerHTML = `
+        <div class="match-details-overlay" onclick="closeMatchDetailsModal()"></div>
+        <div class="match-details-content">
+            <div class="match-details-header">
+                <h2><i class="fas fa-chart-line"></i> Estatísticas da Partida</h2>
+                <button class="match-details-close" onclick="closeMatchDetailsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="match-details-score">
+                <div class="match-details-team">
+                    <span class="team-flag-large">${homeTeam.flag}</span>
+                    <h3>${homeTeam.name}</h3>
+                </div>
+                <div class="match-details-result">
+                    <span class="final-score">${match.homeScore} - ${match.awayScore}</span>
+                    <span class="match-date">${new Date(match.date).toLocaleDateString('pt-BR')}</span>
+                </div>
+                <div class="match-details-team">
+                    <span class="team-flag-large">${awayTeam.flag}</span>
+                    <h3>${awayTeam.name}</h3>
+                </div>
+            </div>
+            
+            <div class="match-details-body">
+                <div class="stats-comparison">
+                    <h3><i class="fas fa-chart-bar"></i> Estatísticas do Jogo</h3>
+                    ${createStatComparison('Posse de Bola', stats.possession.home, stats.possession.away, '%')}
+                    ${createStatComparison('Finalizações', stats.shots.home, stats.shots.away)}
+                    ${createStatComparison('Chutes no Gol', stats.shotsOnTarget.home, stats.shotsOnTarget.away)}
+                    ${createStatComparison('Escanteios', stats.corners.home, stats.corners.away)}
+                    ${createStatComparison('Faltas', stats.fouls.home, stats.fouls.away)}
+                    ${createStatComparison('Cartões Amarelos', stats.yellowCards.home, stats.yellowCards.away)}
+                    ${createStatComparison('Cartões Vermelhos', stats.redCards.home, stats.redCards.away)}
+                    ${createStatComparison('Passes Certos', stats.passes.home, stats.passes.away)}
+                </div>
+                
+                <div class="lineups-section">
+                    <h3><i class="fas fa-users"></i> Escalações</h3>
+                    <div class="lineups-grid">
+                        <div class="lineup-column">
+                            <h4>${homeTeam.flag} ${homeTeam.name}</h4>
+                            <p class="formation-text"><i class="fas fa-chess-board"></i> ${homeLineup ? homeLineup.formation : '4-3-3'}</p>
+                            <div class="lineup-list">
+                                ${homeLineup ? homeLineup.startingXI.map(p => `
+                                    <div class="lineup-item">
+                                        <span class="player-number">${p.number}</span>
+                                        <span class="player-name">${p.name}</span>
+                                        <span class="player-pos">${p.position}</span>
+                                    </div>
+                                `).join('') : '<p>Escalação não disponível</p>'}
+                            </div>
+                        </div>
+                        <div class="lineup-column">
+                            <h4>${awayTeam.flag} ${awayTeam.name}</h4>
+                            <p class="formation-text"><i class="fas fa-chess-board"></i> ${awayLineup ? awayLineup.formation : '4-3-3'}</p>
+                            <div class="lineup-list">
+                                ${awayLineup ? awayLineup.startingXI.map(p => `
+                                    <div class="lineup-item">
+                                        <span class="player-number">${p.number}</span>
+                                        <span class="player-name">${p.name}</span>
+                                        <span class="player-pos">${p.position}</span>
+                                    </div>
+                                `).join('') : '<p>Escalação não disponível</p>'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="match-events">
+                    <h3><i class="fas fa-clock"></i> Eventos da Partida</h3>
+                    <div class="events-timeline">
+                        ${generateMatchEvents(match, stats).map(event => `
+                            <div class="event-item ${event.type}">
+                                <span class="event-time">${event.minute}'</span>
+                                <span class="event-icon">${event.icon}</span>
+                                <span class="event-description">${event.description}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    setTimeout(() => modal.classList.add('active'), 10);
+}
+
+function closeMatchDetailsModal() {
+    const modal = document.querySelector('.match-details-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.remove(), 300);
+    }
+}
+
+function createStatComparison(label, homeValue, awayValue, suffix = '') {
+    const total = homeValue + awayValue;
+    const homePercent = total > 0 ? (homeValue / total) * 100 : 50;
+    const awayPercent = total > 0 ? (awayValue / total) * 100 : 50;
+    
+    return `
+        <div class="stat-row">
+            <span class="stat-value home">${homeValue}${suffix}</span>
+            <div class="stat-bar-container">
+                <div class="stat-label">${label}</div>
+                <div class="stat-bar">
+                    <div class="stat-bar-fill home" style="width: ${homePercent}%"></div>
+                    <div class="stat-bar-fill away" style="width: ${awayPercent}%"></div>
+                </div>
+            </div>
+            <span class="stat-value away">${awayValue}${suffix}</span>
+        </div>
+    `;
+}
+
+function generateMatchStatistics(match) {
+    // Generate realistic statistics based on match result
+    const homeWon = match.homeScore > match.awayScore;
+    const awayWon = match.awayScore > match.homeScore;
+    const draw = match.homeScore === match.awayScore;
+    
+    // Base possession on result
+    let homePossession, awayPossession;
+    if (homeWon) {
+        homePossession = 52 + Math.floor(Math.random() * 13);
+    } else if (awayWon) {
+        homePossession = 35 + Math.floor(Math.random() * 13);
+    } else {
+        homePossession = 48 + Math.floor(Math.random() * 5);
+    }
+    awayPossession = 100 - homePossession;
+    
+    return {
+        possession: { home: homePossession, away: awayPossession },
+        shots: {
+            home: match.homeScore * 3 + Math.floor(Math.random() * 8) + 2,
+            away: match.awayScore * 3 + Math.floor(Math.random() * 8) + 2
+        },
+        shotsOnTarget: {
+            home: match.homeScore + Math.floor(Math.random() * 4) + 1,
+            away: match.awayScore + Math.floor(Math.random() * 4) + 1
+        },
+        corners: {
+            home: Math.floor(Math.random() * 8) + 2,
+            away: Math.floor(Math.random() * 8) + 2
+        },
+        fouls: {
+            home: Math.floor(Math.random() * 10) + 8,
+            away: Math.floor(Math.random() * 10) + 8
+        },
+        yellowCards: {
+            home: Math.floor(Math.random() * 3),
+            away: Math.floor(Math.random() * 3)
+        },
+        redCards: {
+            home: Math.random() > 0.9 ? 1 : 0,
+            away: Math.random() > 0.9 ? 1 : 0
+        },
+        passes: {
+            home: Math.floor(homePossession * 5) + Math.floor(Math.random() * 50),
+            away: Math.floor(awayPossession * 5) + Math.floor(Math.random() * 50)
+        }
+    };
+}
+
+function generateMatchEvents(match, stats) {
+    const events = [];
+    const homeTeam = getTeamInfo(match.homeTeam);
+    const awayTeam = getTeamInfo(match.awayTeam);
+    
+    // Add goals
+    for (let i = 0; i < match.homeScore; i++) {
+        const minute = Math.floor(Math.random() * 85) + 5;
+        events.push({
+            minute,
+            type: 'goal',
+            icon: '⚽',
+            description: `GOL! ${homeTeam.name} marca`
+        });
+    }
+    
+    for (let i = 0; i < match.awayScore; i++) {
+        const minute = Math.floor(Math.random() * 85) + 5;
+        events.push({
+            minute,
+            type: 'goal',
+            icon: '⚽',
+            description: `GOL! ${awayTeam.name} marca`
+        });
+    }
+    
+    // Add yellow cards
+    for (let i = 0; i < stats.yellowCards.home; i++) {
+        const minute = Math.floor(Math.random() * 85) + 5;
+        events.push({
+            minute,
+            type: 'yellow-card',
+            icon: '🟨',
+            description: `Cartão amarelo para ${homeTeam.name}`
+        });
+    }
+    
+    for (let i = 0; i < stats.yellowCards.away; i++) {
+        const minute = Math.floor(Math.random() * 85) + 5;
+        events.push({
+            minute,
+            type: 'yellow-card',
+            icon: '🟨',
+            description: `Cartão amarelo para ${awayTeam.name}`
+        });
+    }
+    
+    // Add red cards
+    if (stats.redCards.home > 0) {
+        const minute = Math.floor(Math.random() * 70) + 20;
+        events.push({
+            minute,
+            type: 'red-card',
+            icon: '🟥',
+            description: `Cartão vermelho para ${homeTeam.name}`
+        });
+    }
+    
+    if (stats.redCards.away > 0) {
+        const minute = Math.floor(Math.random() * 70) + 20;
+        events.push({
+            minute,
+            type: 'red-card',
+            icon: '🟥',
+            description: `Cartão vermelho para ${awayTeam.name}`
+        });
+    }
+    
+    // Sort by minute
+    events.sort((a, b) => a.minute - b.minute);
+    
+    return events;
+}
 
 console.log('✅ Matches module loaded');
 

@@ -188,56 +188,56 @@ const WORLD_CUP_2026 = {
     // Only matches that have been completed have scores
     matches: [
         // Group A - Round 1 (COMPLETED)
-        { id: 1, date: "2026-06-11T19:00:00", group: "A", homeTeam: "MEX", awayTeam: "URU", homeScore: 2, awayScore: 1, stadium: "Estadio Azteca", status: "finished", phase: "group", round: 1 },
-        { id: 2, date: "2026-06-11T16:00:00", group: "A", homeTeam: "JAM", awayTeam: "VEN", homeScore: 1, awayScore: 0, stadium: "Estadio BBVA", status: "finished", phase: "group", round: 1 },
+        { id: 1, date: "2026-06-11T19:00:00", group: "A", homeTeam: "MEX", awayTeam: "RSA", homeScore: 2, awayScore: 0, stadium: "Estadio Azteca", status: "finished", phase: "group", round: 1 },
+        { id: 2, date: "2026-06-11T16:00:00", group: "A", homeTeam: "KOR", awayTeam: "CZE", homeScore: 2, awayScore: 1, stadium: "Estadio BBVA", status: "finished", phase: "group", round: 1 },
         
         // Group B - Round 1 (1 match completed, 1 scheduled)
-        { id: 3, date: "2026-06-11T22:00:00", group: "B", homeTeam: "USA", awayTeam: "CHI", homeScore: 3, awayScore: 2, stadium: "SoFi Stadium", status: "finished", phase: "group", round: 1 },
-        { id: 4, date: "2026-06-12T19:00:00", group: "B", homeTeam: "PAN", awayTeam: "BOL", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 3, date: "2026-06-11T22:00:00", group: "B", homeTeam: "CAN", awayTeam: "SUI", homeScore: 2, awayScore: 1, stadium: "SoFi Stadium", status: "finished", phase: "group", round: 1 },
+        { id: 4, date: "2026-06-12T19:00:00", group: "B", homeTeam: "BIH", awayTeam: "QAT", homeScore: 1, awayScore: 1, stadium: "Hard Rock Stadium", status: "finished", phase: "group", round: 1 },
         
         // Group C - Round 1 (SCHEDULED)
-        { id: 5, date: "2026-06-12T16:00:00", group: "C", homeTeam: "CAN", awayTeam: "COL", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 1 },
-        { id: 6, date: "2026-06-12T19:00:00", group: "C", homeTeam: "CRC", awayTeam: "PAR", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
+        { id: 5, date: "2026-06-12T16:00:00", group: "C", homeTeam: "BRA", awayTeam: "MAR", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 6, date: "2026-06-12T19:00:00", group: "C", homeTeam: "HAI", awayTeam: "SCO", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
         
         // Group D - Round 1 (SCHEDULED)
-        { id: 7, date: "2026-06-12T22:00:00", group: "D", homeTeam: "BRA", awayTeam: "GER", homeScore: null, awayScore: null, stadium: "MetLife Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 8, date: "2026-06-13T16:00:00", group: "D", homeTeam: "JPN", awayTeam: "BOL", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 7, date: "2026-06-12T22:00:00", group: "D", homeTeam: "USA", awayTeam: "PAR", homeScore: null, awayScore: null, stadium: "MetLife Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 8, date: "2026-06-13T16:00:00", group: "D", homeTeam: "AUS", awayTeam: "TUR", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group E - Round 1 (SCHEDULED)
-        { id: 9, date: "2026-06-12T19:00:00", group: "E", homeTeam: "ARG", awayTeam: "FRA", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 10, date: "2026-06-13T16:00:00", group: "E", homeTeam: "KOR", awayTeam: "VEN", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 9, date: "2026-06-12T19:00:00", group: "E", homeTeam: "GER", awayTeam: "CUW", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 10, date: "2026-06-13T16:00:00", group: "E", homeTeam: "CIV", awayTeam: "ECU", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
         
         // Group F - Round 1 (SCHEDULED)
-        { id: 11, date: "2026-06-13T19:00:00", group: "F", homeTeam: "ESP", awayTeam: "NED", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 12, date: "2026-06-13T16:00:00", group: "F", homeTeam: "SEN", awayTeam: "ECU", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 11, date: "2026-06-13T19:00:00", group: "F", homeTeam: "NED", awayTeam: "JPN", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 12, date: "2026-06-13T16:00:00", group: "F", homeTeam: "SWE", awayTeam: "TUN", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group G - Round 1 (SCHEDULED)
-        { id: 13, date: "2026-06-13T19:00:00", group: "G", homeTeam: "POR", awayTeam: "ITA", homeScore: null, awayScore: null, stadium: "Gillette Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 14, date: "2026-06-13T16:00:00", group: "G", homeTeam: "AUS", awayTeam: "CHI", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 13, date: "2026-06-13T19:00:00", group: "G", homeTeam: "BEL", awayTeam: "EGY", homeScore: null, awayScore: null, stadium: "Gillette Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 14, date: "2026-06-13T16:00:00", group: "G", homeTeam: "IRN", awayTeam: "NZL", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
         
         // Group H - Round 1 (SCHEDULED)
-        { id: 15, date: "2026-06-13T19:00:00", group: "H", homeTeam: "CRO", awayTeam: "UKR", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 16, date: "2026-06-13T16:00:00", group: "H", homeTeam: "NGA", awayTeam: "PER", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 15, date: "2026-06-13T19:00:00", group: "H", homeTeam: "ESP", awayTeam: "CPV", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 16, date: "2026-06-13T16:00:00", group: "H", homeTeam: "KSA", awayTeam: "URU", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group I - Round 1 (SCHEDULED)
-        { id: 17, date: "2026-06-13T19:00:00", group: "I", homeTeam: "DEN", awayTeam: "SUI", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 18, date: "2026-06-13T16:00:00", group: "I", homeTeam: "CMR", awayTeam: "COL", homeScore: null, awayScore: null, stadium: "Lumen Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 17, date: "2026-06-13T19:00:00", group: "I", homeTeam: "FRA", awayTeam: "SEN", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 18, date: "2026-06-13T16:00:00", group: "I", homeTeam: "IRQ", awayTeam: "NOR", homeScore: null, awayScore: null, stadium: "Lumen Field", status: "scheduled", phase: "group", round: 1 },
         
         // Group J - Round 1 (SCHEDULED)
-        { id: 19, date: "2026-06-13T19:00:00", group: "J", homeTeam: "POL", awayTeam: "SWE", homeScore: null, awayScore: null, stadium: "Mercedes-Benz Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 20, date: "2026-06-13T16:00:00", group: "J", homeTeam: "GHA", awayTeam: "PAR", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 19, date: "2026-06-13T19:00:00", group: "J", homeTeam: "ARG", awayTeam: "ALG", homeScore: null, awayScore: null, stadium: "Mercedes-Benz Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 20, date: "2026-06-13T16:00:00", group: "J", homeTeam: "AUT", awayTeam: "JOR", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group K - Round 1 (SCHEDULED)
-        { id: 21, date: "2026-06-13T19:00:00", group: "K", homeTeam: "SRB", awayTeam: "AUT", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 22, date: "2026-06-13T16:00:00", group: "K", homeTeam: "TUN", awayTeam: "KSA", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 21, date: "2026-06-13T19:00:00", group: "K", homeTeam: "POR", awayTeam: "COD", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 22, date: "2026-06-13T16:00:00", group: "K", homeTeam: "UZB", awayTeam: "COL", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group L - Round 1 (SCHEDULED)
-        { id: 23, date: "2026-06-13T19:00:00", group: "L", homeTeam: "QAT", awayTeam: "IRQ", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
-        { id: 24, date: "2026-06-13T16:00:00", group: "L", homeTeam: "ALG", awayTeam: "UAE", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 23, date: "2026-06-13T19:00:00", group: "L", homeTeam: "ENG", awayTeam: "CRO", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
+        { id: 24, date: "2026-06-13T16:00:00", group: "L", homeTeam: "GHA", awayTeam: "PAN", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 1 },
         
         // Round 2 matches (15-18 June) - All groups
-        { id: 25, date: "2026-06-15T19:00:00", group: "A", homeTeam: "MEX", awayTeam: "JAM", homeScore: null, awayScore: null, stadium: "Estadio Azteca", status: "scheduled", phase: "group", round: 2 },
-        { id: 26, date: "2026-06-15T16:00:00", group: "A", homeTeam: "URU", awayTeam: "VEN", homeScore: null, awayScore: null, stadium: "Estadio Akron", status: "scheduled", phase: "group", round: 2 },
+        { id: 25, date: "2026-06-15T19:00:00", group: "A", homeTeam: "MEX", awayTeam: "KOR", homeScore: null, awayScore: null, stadium: "Estadio Azteca", status: "scheduled", phase: "group", round: 2 },
+        { id: 26, date: "2026-06-15T16:00:00", group: "A", homeTeam: "RSA", awayTeam: "CZE", homeScore: null, awayScore: null, stadium: "Estadio Akron", status: "scheduled", phase: "group", round: 2 },
         { id: 27, date: "2026-06-16T19:00:00", group: "B", homeTeam: "USA", awayTeam: "PAN", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 2 },
         { id: 28, date: "2026-06-16T16:00:00", group: "B", homeTeam: "CHI", awayTeam: "BOL", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 2 },
         { id: 29, date: "2026-06-16T19:00:00", group: "C", homeTeam: "CAN", awayTeam: "CRC", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 2 },

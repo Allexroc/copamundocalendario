@@ -118,6 +118,16 @@ function populateTeamFilterByGroup(groupId) {
 }
 
 function showTeamSummary(teamCode) {
+    // Use the new detailed team modal
+    if (typeof showTeamDetails === 'function') {
+        showTeamDetails(teamCode);
+    } else {
+        console.error('showTeamDetails function not found. Make sure team-details.js is loaded.');
+    }
+}
+
+// Keep old function as fallback (renamed)
+function showTeamSummaryOld(teamCode) {
     const team = getTeamInfo(teamCode);
     if (!team) return;
     
