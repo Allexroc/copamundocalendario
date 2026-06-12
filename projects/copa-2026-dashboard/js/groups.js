@@ -177,19 +177,136 @@ function setupExpandAllButton() {
 }
 
 function viewGroupMatches(groupId) {
-    // Switch to calendar tab and filter by group
-    const calendarTab = document.querySelector('[data-tab="calendar"]');
-    if (calendarTab) {
-        calendarTab.click();
-        
-        // Set group filter
-        setTimeout(() => {
-            const groupFilter = document.getElementById('groupFilter');
-            if (groupFilter) {
-                groupFilter.value = groupId;
-                groupFilter.dispatchEvent(new Event('change'));
-            }
-        }, 100);
+    // Get all matches for this group
+    const groupMatches = WORLD_CUP_2026.matches.filter(m => m.group === groupId);
+    const finishedMatches = groupMatches.filter(m => m.status === 'finished');
+    const scheduledMatches = groupMatches.filter(m => m.status === 'scheduled');
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'group-matches-modal';
+    modal.innerHTML = `
+        <div class="group-matches-content">
+            <div class="group-matches-header">
+                <h2><i class="fas fa-futbol"></i> Jogos do Grupo ${groupId}</h2>
+                <button class="close-modal" onclick="closeGroupMatchesModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="group-matches-body">
+                ${finishedMatches.length > 0 ? `
+                    <div class="matches-section">
+                        <h3><i class="fas fa-check-circle"></i> Partidas Realizadas (${finishedMatches.length})</h3>
+                        <div class="matches-summary">
+                            ${finishedMatches.map(match => createMatchSummaryCard(match)).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${scheduledMatches.length > 0 ? `
+                    <div class="matches-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Próximas Partidas (${scheduledMatches.length})</h3>
+                        <div class="matches-list">
+                            ${scheduledMatches.map(match => createScheduledMatchCard(match)).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${finishedMatches.length === 0 && scheduledMatches.length === 0 ? `
+                    <div class="no-matches">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Nenhuma partida encontrada para este grupo.</p>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    setTimeout(() => modal.classList.add('active'), 10);
+}
+
+function createMatchSummaryCard(match) {
+    const homeTeam = getTeamInfo(match.homeTeam);
+    const awayTeam = getTeamInfo(match.awayTeam);
+    
+    // Handle case where team info is not found
+    if (!homeTeam || !awayTeam) {
+        return '';
+    }
+    
+    const matchDate = new Date(match.date);
+    const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+    const homeWon = match.homeScore > match.awayScore;
+    const awayWon = match.awayScore > match.homeScore;
+    const draw = match.homeScore === match.awayScore;
+    
+    return `
+        <div class="match-summary-card">
+            <div class="match-date">${dateStr}</div>
+            <div class="match-result">
+                <div class="team-result ${homeWon ? 'winner' : draw ? 'draw' : ''}">
+                    <span class="team-flag">${homeTeam.flag}</span>
+                    <span class="team-name">${homeTeam.name}</span>
+                    <span class="team-score">${match.homeScore}</span>
+                </div>
+                <div class="vs-separator">×</div>
+                <div class="team-result ${awayWon ? 'winner' : draw ? 'draw' : ''}">
+                    <span class="team-score">${match.awayScore}</span>
+                    <span class="team-name">${awayTeam.name}</span>
+                    <span class="team-flag">${awayTeam.flag}</span>
+                </div>
+            </div>
+            <div class="match-stadium">
+                <i class="fas fa-map-marker-alt"></i> ${match.stadium}
+            </div>
+        </div>
+    `;
+}
+
+function createScheduledMatchCard(match) {
+    const homeTeam = getTeamInfo(match.homeTeam);
+    const awayTeam = getTeamInfo(match.awayTeam);
+    
+    // Handle case where team info is not found
+    if (!homeTeam || !awayTeam) {
+        return '';
+    }
+    
+    const matchDate = new Date(match.date);
+    const dateStr = matchDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    return `
+        <div class="scheduled-match-card">
+            <div class="match-datetime">
+                <i class="fas fa-clock"></i> ${dateStr}
+            </div>
+            <div class="match-teams">
+                <div class="team-info">
+                    <span class="team-flag">${homeTeam.flag}</span>
+                    <span class="team-name">${homeTeam.name}</span>
+                </div>
+                <span class="vs">vs</span>
+                <div class="team-info">
+                    <span class="team-flag">${awayTeam.flag}</span>
+                    <span class="team-name">${awayTeam.name}</span>
+                </div>
+            </div>
+            <div class="match-venue">
+                <i class="fas fa-map-marker-alt"></i> ${match.stadium}
+            </div>
+        </div>
+    `;
+}
+
+function closeGroupMatchesModal() {
+    const modal = document.querySelector('.group-matches-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.remove(), 300);
     }
 }
 
@@ -431,6 +548,315 @@ groupStyles.textContent = `
         
         .team-name {
             font-size: 13px;
+        }
+    }
+    
+    /* Group Matches Modal Styles */
+    .group-matches-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        padding: 20px;
+    }
+    
+    .group-matches-modal.active {
+        opacity: 1;
+    }
+    
+    .group-matches-content {
+        background: white;
+        border-radius: 16px;
+        max-width: 800px;
+        width: 100%;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+    }
+    
+    .group-matches-modal.active .group-matches-content {
+        transform: scale(1);
+    }
+    
+    .group-matches-header {
+        padding: 24px;
+        background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #ffd700;
+    }
+    
+    .group-matches-header h2 {
+        margin: 0;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .close-modal {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        transition: background 0.3s ease;
+    }
+    
+    .close-modal:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .group-matches-body {
+        padding: 24px;
+        overflow-y: auto;
+        flex: 1;
+    }
+    
+    .matches-section {
+        margin-bottom: 32px;
+    }
+    
+    .matches-section:last-child {
+        margin-bottom: 0;
+    }
+    
+    .matches-section h3 {
+        margin: 0 0 16px 0;
+        font-size: 18px;
+        color: #1a237e;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .matches-summary {
+        display: grid;
+        gap: 16px;
+    }
+    
+    .match-summary-card {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 16px;
+        border-left: 4px solid #1a237e;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .match-summary-card:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .match-date {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+    
+    .match-result {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .team-result {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        padding: 8px;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+    }
+    
+    .team-result.winner {
+        background: #e8f5e9;
+        font-weight: 600;
+    }
+    
+    .team-result.draw {
+        background: #fff3e0;
+    }
+    
+    .team-result .team-flag {
+        font-size: 28px;
+    }
+    
+    .team-result .team-name {
+        flex: 1;
+        font-size: 15px;
+        color: #212121;
+    }
+    
+    .team-result .team-score {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a237e;
+        min-width: 32px;
+        text-align: center;
+    }
+    
+    .vs-separator {
+        font-size: 14px;
+        color: #999;
+        font-weight: 600;
+    }
+    
+    .match-stadium {
+        font-size: 13px;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .matches-list {
+        display: grid;
+        gap: 12px;
+    }
+    
+    .scheduled-match-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 16px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .scheduled-match-card:hover {
+        border-color: #1a237e;
+        box-shadow: 0 2px 8px rgba(26, 35, 126, 0.1);
+    }
+    
+    .match-datetime {
+        font-size: 13px;
+        color: #1a237e;
+        font-weight: 600;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .match-teams {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .match-teams .team-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+    
+    .match-teams .team-flag {
+        font-size: 24px;
+    }
+    
+    .match-teams .team-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #212121;
+    }
+    
+    .match-teams .vs {
+        font-size: 12px;
+        color: #999;
+        font-weight: 600;
+    }
+    
+    .match-venue {
+        font-size: 12px;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .no-matches {
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+    }
+    
+    .no-matches i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .no-matches p {
+        margin: 0;
+        font-size: 16px;
+    }
+    
+    @media (max-width: 768px) {
+        .group-matches-modal {
+            padding: 0;
+        }
+        
+        .group-matches-content {
+            max-width: 100%;
+            max-height: 100vh;
+            border-radius: 0;
+        }
+        
+        .group-matches-header h2 {
+            font-size: 20px;
+        }
+        
+        .match-result {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .team-result {
+            width: 100%;
+        }
+        
+        .vs-separator {
+            transform: rotate(90deg);
+        }
+        
+        .match-teams {
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .match-teams .team-info {
+            width: 100%;
+            justify-content: center;
         }
     }
 `;
