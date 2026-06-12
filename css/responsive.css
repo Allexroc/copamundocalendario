@@ -1,0 +1,334 @@
+/* ============================================
+   FIFA World Cup 2026 Dashboard - Responsive Styles
+   Mobile-First Responsive Design
+   ============================================ */
+
+/* ============================================
+   Tablet (768px - 1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 240px;
+        --spacing-xl: 24px;
+        --spacing-xxl: 32px;
+    }
+
+    .header-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    .logo h1 {
+        font-size: 1.25rem;
+    }
+
+    .header-center {
+        max-width: 400px;
+        margin: 0 var(--spacing-lg);
+    }
+
+    .main-content {
+        padding: var(--spacing-lg);
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .groups-container {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--spacing-md);
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   Mobile (< 768px)
+   ============================================ */
+@media (max-width: 768px) {
+    :root {
+        --header-height: 60px;
+        --spacing-lg: 16px;
+        --spacing-xl: 20px;
+        --spacing-xxl: 24px;
+    }
+
+    /* Header Mobile */
+    .header-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .logo i {
+        font-size: 1.5rem;
+    }
+
+    .logo h1 {
+        font-size: 1rem;
+    }
+
+    .header-center {
+        display: none;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        background: white;
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow-md);
+        z-index: 999;
+    }
+
+    .header-center.active {
+        display: block;
+    }
+
+    .search-bar input {
+        font-size: 0.875rem;
+    }
+
+    .language-selector {
+        display: none;
+    }
+
+    /* Sidebar Mobile */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: var(--header-height);
+        width: 280px;
+        height: calc(100vh - var(--header-height));
+        z-index: 998;
+        transition: left var(--transition-normal);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    /* Main Content Mobile */
+    .main-content {
+        padding: var(--spacing-md);
+        width: 100%;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .section-title i {
+        font-size: 1.25rem;
+    }
+
+    .section-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .btn-secondary {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.875rem;
+    }
+
+    /* Groups Mobile */
+    .groups-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .group-header {
+        padding: var(--spacing-md);
+    }
+
+    .group-name {
+        font-size: 1.25rem;
+    }
+
+    .group-badge {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .group-table th,
+    .group-table td {
+        padding: var(--spacing-sm);
+        font-size: 0.875rem;
+    }
+
+    .group-table th {
+        font-size: 0.7rem;
+    }
+
+    .team-flag {
+        font-size: 1.25rem;
+    }
+
+    /* Footer Mobile */
+    .footer {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .footer-section {
+        text-align: center;
+    }
+
+    .footer-section ul {
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   Small Mobile (< 480px)
+   ============================================ */
+@media (max-width: 480px) {
+    :root {
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+    }
+
+    .logo h1 {
+        display: none;
+    }
+
+    .theme-toggle {
+        font-size: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+    }
+
+    .group-table {
+        font-size: 0.8rem;
+    }
+
+    .group-table th:nth-child(n+5),
+    .group-table td:nth-child(n+5) {
+        display: none;
+    }
+
+    .btn-secondary span {
+        display: none;
+    }
+
+    .btn-secondary i {
+        margin: 0;
+    }
+}
+
+/* ============================================
+   Landscape Mobile
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+    .sidebar {
+        height: calc(100vh - var(--header-height));
+        overflow-y: auto;
+    }
+
+    .sidebar-info {
+        display: none;
+    }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+    .header,
+    .sidebar,
+    .footer,
+    .section-actions,
+    .loading-overlay {
+        display: none !important;
+    }
+
+    .main-container {
+        margin-top: 0;
+    }
+
+    .main-content {
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .group-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    body {
+        background: white;
+    }
+}
+
+/* ============================================
+   Accessibility - Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================
+   Dark Mode Support (Future Enhancement)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    /* Dark mode styles can be added here if needed */
+}
+
+/* ============================================
+   High Contrast Mode
+   ============================================ */
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #000000;
+        --text-secondary: #000000;
+    }
+
+    .group-card,
+    .btn-secondary {
+        border: 2px solid var(--border-color);
+    }
+}
+
+/* ============================================
+   Hover Support Detection
+   ============================================ */
+@media (hover: none) {
+    .nav-item:hover,
+    .btn-secondary:hover,
+    .group-card:hover {
+        transform: none;
+    }
+}
+
+/* Made with Bob */

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard completo da Copa do Mundo FIFA 2026 - Grupos, Calendário, Resultados e Estatísticas">
+    <meta name="keywords" content="Copa do Mundo 2026, FIFA, Futebol, Mundial, Dashboard">
+    <title>Copa do Mundo FIFA 2026 | Dashboard Oficial</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-trophy"></i>
+                    <h1>FIFA World Cup 2026</h1>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar seleção, jogador ou estádio...">
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button class="share-btn" id="shareSlack" aria-label="Compartilhar no Slack" title="Compartilhar no Slack">
+                    <i class="fab fa-slack"></i>
+                </button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="language-selector">
+                    <button class="lang-btn active">PT</button>
+                    <button class="lang-btn">EN</button>
+                    <button class="lang-btn">ES</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <h3 class="sidebar-title">Navegação</h3>
+                <ul class="nav-list">
+                    <li class="nav-item active" data-tab="groups">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Grupos</span>
+                    </li>
+                    <li class="nav-item" data-tab="calendar">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Calendário</span>
+                    </li>
+                    <li class="nav-item" data-tab="results">
+                        <i class="fas fa-futbol"></i>
+                        <span>Resultados</span>
+                    </li>
+                    <li class="nav-item" data-tab="knockout">
+                        <i class="fas fa-sitemap"></i>
+                        <span>Eliminatórias</span>
+                    </li>
+                    <li class="nav-item" data-tab="stats">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Estatísticas</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-filters">
+                <h3 class="sidebar-title">Filtros</h3>
+                
+                <div class="filter-group">
+                    <label for="groupFilter">Grupo</label>
+                    <select id="groupFilter" class="filter-select">
+                        <option value="all">Todos os Grupos</option>
+                        <option value="A">Grupo A</option>
+                        <option value="B">Grupo B</option>
+                        <option value="C">Grupo C</option>
+                        <option value="D">Grupo D</option>
+                        <option value="E">Grupo E</option>
+                        <option value="F">Grupo F</option>
+                        <option value="G">Grupo G</option>
+                        <option value="H">Grupo H</option>
+                        <option value="I">Grupo I</option>
+                        <option value="J">Grupo J</option>
+                        <option value="K">Grupo K</option>
+                        <option value="L">Grupo L</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="teamFilter">Seleção</label>
+                    <select id="teamFilter" class="filter-select">
+                        <option value="all">Todas as Seleções</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="dateFilter">Data</label>
+                    <input type="date" id="dateFilter" class="filter-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="phaseFilter">Fase</label>
+                    <select id="phaseFilter" class="filter-select">
+                        <option value="all">Todas as Fases</option>
+                        <option value="group">Fase de Grupos</option>
+                        <option value="round16">Oitavas de Final</option>
+                        <option value="quarter">Quartas de Final</option>
+                        <option value="semi">Semifinais</option>
+                        <option value="final">Final</option>
+                    </select>
+                </div>
+
+                <button class="btn-reset-filters" id="resetFilters">
+                    <i class="fas fa-redo"></i>
+                    Limpar Filtros
+                </button>
+            </div>
+
+            <div class="sidebar-info">
+                <div class="info-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="info-content">
+                        <span class="info-label">Próximo Jogo</span>
+                        <span class="info-value" id="nextMatch">Carregando...</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-trophy"></i>
+                    <div class="info-content">
+                        <span class="info-label">Artilheiro</span>
+                        <span class="info-value" id="topScorer">Carregando...</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Groups Tab -->
+            <section class="content-section active" id="groupsSection">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-layer-group"></i>
+                        Fase de Grupos
+                    </h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary" id="expandAllGroups">
+                            <i class="fas fa-expand-alt"></i>
+                            Expandir Todos
+                        </button>
+                    </div>
+                </div>
+                <div class="groups-container" id="groupsContainer">
+                    <!-- Groups will be dynamically loaded here -->
+                </div>
+            </section>
+
+            <!-- Calendar Tab -->
+            <section class="content-section" id="calendarSection">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Calendário de Jogos
+                    </h2>
+                    <div class="section-actions">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                            <button class="view-btn" data-view="grid">
+                                <i class="fas fa-th"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="calendar-container" id="calendarContainer">
+                    <!-- Calendar will be dynamically loaded here -->
+                </div>
+            </section>
+
+            <!-- Results Tab -->
+            <section class="content-section" id="resultsSection">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-futbol"></i>
+                        Resultados
+                    </h2>
+                    <div class="section-actions">
+                        <select class="filter-select" id="resultsDateFilter">
+                            <option value="all">Todas as Datas</option>
+                            <option value="today">Hoje</option>
+                            <option value="yesterday">Ontem</option>
+                            <option value="week">Última Semana</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="results-container" id="resultsContainer">
+                    <!-- Results will be dynamically loaded here -->
+                </div>
+            </section>
+
+            <!-- Knockout Tab -->
+            <section class="content-section" id="knockoutSection">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-sitemap"></i>
+                        Fase Eliminatória
+                    </h2>
+                    <div class="section-actions">
+                        <button class="btn-secondary" id="zoomInBracket">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="btn-secondary" id="zoomOutBracket">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="knockout-container" id="knockoutContainer">
+                    <!-- Knockout bracket will be dynamically loaded here -->
+                </div>
+            </section>
+
+            <!-- Stats Tab -->
+            <section class="content-section" id="statsSection">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Estatísticas
+                    </h2>
+                    <div class="section-actions">
+                        <select class="filter-select" id="statsCategory">
+                            <option value="scorers">Artilharia</option>
+                            <option value="assists">Assistências</option>
+                            <option value="cards">Cartões</option>
+                            <option value="attendance">Público</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="stats-container" id="statsContainer">
+                    <!-- Stats will be dynamically loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Copa do Mundo FIFA 2026</h4>
+                <p>Estados Unidos • Canadá • México</p>
+                <p>11 de junho - 19 de julho de 2026</p>
+            </div>
+            <div class="footer-section">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="#groups">Grupos</a></li>
+                    <li><a href="#calendar">Calendário</a></li>
+                    <li><a href="#stats">Estatísticas</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Informações</h4>
+                <ul>
+                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                    <li><a href="#privacy">Privacidade</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Redes Sociais</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 FIFA World Cup Dashboard. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fas fa-futbol fa-spin"></i>
+            <p>Carregando...</p>
+        </div>
+    </div>
+
+    <!-- Slack Share Modal -->
+    <div class="modal" id="slackModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fab fa-slack"></i> Compartilhar no Slack</h3>
+                <button class="modal-close" id="closeSlackModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="share-options">
+                    <h4>O que você deseja compartilhar?</h4>
+                    <div class="share-option-cards">
+                        <div class="share-card" data-share-type="current-view">
+                            <i class="fas fa-eye"></i>
+                            <h5>Visualização Atual</h5>
+                            <p>Compartilhe o que está vendo agora</p>
+                        </div>
+                        <div class="share-card" data-share-type="group-standings">
+                            <i class="fas fa-layer-group"></i>
+                            <h5>Classificação dos Grupos</h5>
+                            <p>Tabela completa de todos os grupos</p>
+                        </div>
+                        <div class="share-card" data-share-type="latest-results">
+                            <i class="fas fa-futbol"></i>
+                            <h5>Últimos Resultados</h5>
+                            <p>Resultados dos jogos mais recentes</p>
+                        </div>
+                        <div class="share-card" data-share-type="top-scorers">
+                            <i class="fas fa-trophy"></i>
+                            <h5>Artilharia</h5>
+                            <p>Top 10 artilheiros da competição</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slack-config">
+                    <h4>Configuração do Slack</h4>
+                    <div class="form-group">
+                        <label for="slackWebhook">Webhook URL do Slack</label>
+                        <input type="text" id="slackWebhook" class="form-input"
+                               placeholder="https://hooks.slack.com/services/YOUR/WEBHOOK/URL">
+                        <small>Configure um Incoming Webhook no seu workspace Slack</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="slackChannel">Canal (opcional)</label>
+                        <input type="text" id="slackChannel" class="form-input"
+                               placeholder="#copa-2026">
+                    </div>
+                    <div class="form-group">
+                        <label for="slackMessage">Mensagem adicional (opcional)</label>
+                        <textarea id="slackMessage" class="form-textarea" rows="3"
+                                  placeholder="Adicione um comentário..."></textarea>
+                    </div>
+                </div>
+
+                <div class="share-preview" id="sharePreview" style="display: none;">
+                    <h4>Preview da Mensagem</h4>
+                    <div class="preview-content" id="previewContent"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelShare">Cancelar</button>
+                <button class="btn-primary" id="confirmShare">
+                    <i class="fab fa-slack"></i> Compartilhar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- JavaScript Files -->
+    <script src="js/data.js"></script>
+    <script src="js/groups.js"></script>
+    <script src="js/matches.js"></script>
+    <script src="js/knockout.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/slack-share.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,569 @@
+// FIFA World Cup 2026 - Matches Management
+// Handles calendar and results display
+
+let currentView = 'list';
+let filteredMatches = [];
+
+function renderCalendar() {
+    const container = document.getElementById('calendarContainer');
+    if (!container) return;
+
+    filteredMatches = getAllMatches();
+    
+    if (currentView === 'list') {
+        renderListView(container);
+    } else {
+        renderGridView(container);
+    }
+
+    setupViewToggle();
+}
+
+function renderListView(container) {
+    const matchesByDate = groupMatchesByDate(filteredMatches);
+    
+    container.innerHTML = '';
+    
+    Object.keys(matchesByDate).sort().forEach(date => {
+        const dateSection = createDateSection(date, matchesByDate[date]);
+        container.appendChild(dateSection);
+    });
+}
+
+function renderGridView(container) {
+    container.innerHTML = `
+        <div class="matches-grid">
+            ${filteredMatches.map(match => createMatchCard(match)).join('')}
+        </div>
+    `;
+}
+
+function createDateSection(date, matches) {
+    const section = document.createElement('div');
+    section.className = 'date-section';
+    
+    const dateObj = new Date(date);
+    const formattedDate = formatDate(dateObj);
+    
+    section.innerHTML = `
+        <div class="date-header">
+            <i class="fas fa-calendar-day"></i>
+            <h3>${formattedDate}</h3>
+            <span class="match-count">${matches.length} ${matches.length === 1 ? 'jogo' : 'jogos'}</span>
+        </div>
+        <div class="matches-list">
+            ${matches.map(match => createMatchCard(match)).join('')}
+        </div>
+    `;
+    
+    return section;
+}
+
+function createMatchCard(match) {
+    const homeTeam = getTeamInfo(match.homeTeam);
+    const awayTeam = getTeamInfo(match.awayTeam);
+    const stadium = WORLD_CUP_2026.stadiums[match.stadium];
+    const time = new Date(match.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    
+    const statusClass = match.status === 'finished' ? 'finished' : match.status === 'live' ? 'live' : 'scheduled';
+    const statusText = match.status === 'finished' ? 'Encerrado' : match.status === 'live' ? 'AO VIVO' : time;
+    
+    return `
+        <div class="match-card ${statusClass}" data-match-id="${match.id}">
+            <div class="match-header">
+                <span class="match-group">Grupo ${match.group}</span>
+                <span class="match-status ${statusClass}">${statusText}</span>
+            </div>
+            <div class="match-body">
+                <div class="team home-team">
+                    <span class="team-flag">${homeTeam.flag}</span>
+                    <span class="team-name">${homeTeam.name}</span>
+                </div>
+                <div class="match-score">
+                    ${match.status === 'finished' || match.status === 'live' ? `
+                        <span class="score">${match.homeScore} - ${match.awayScore}</span>
+                    ` : `
+                        <span class="vs">VS</span>
+                    `}
+                </div>
+                <div class="team away-team">
+                    <span class="team-flag">${awayTeam.flag}</span>
+                    <span class="team-name">${awayTeam.name}</span>
+                </div>
+            </div>
+            <div class="match-footer">
+                <div class="match-venue">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${match.stadium}</span>
+                </div>
+                <div class="match-location">
+                    <i class="fas fa-city"></i>
+                    <span>${stadium.city}, ${stadium.country}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderResults() {
+    const container = document.getElementById('resultsContainer');
+    if (!container) return;
+
+    const finishedMatches = getAllMatches().filter(m => m.status === 'finished');
+    
+    if (finishedMatches.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-futbol" style="font-size: 48px; color: #ccc;"></i>
+                <h3>Nenhum resultado disponível</h3>
+                <p>Os resultados dos jogos aparecerão aqui após serem finalizados.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const matchesByDate = groupMatchesByDate(finishedMatches);
+    
+    container.innerHTML = '';
+    
+    Object.keys(matchesByDate).sort().reverse().forEach(date => {
+        const dateSection = createResultsDateSection(date, matchesByDate[date]);
+        container.appendChild(dateSection);
+    });
+}
+
+function createResultsDateSection(date, matches) {
+    const section = document.createElement('div');
+    section.className = 'results-date-section';
+    
+    const dateObj = new Date(date);
+    const formattedDate = formatDate(dateObj);
+    
+    section.innerHTML = `
+        <div class="results-date-header">
+            <h3>${formattedDate}</h3>
+        </div>
+        <div class="results-grid">
+            ${matches.map(match => createResultCard(match)).join('')}
+        </div>
+    `;
+    
+    return section;
+}
+
+function createResultCard(match) {
+    const homeTeam = getTeamInfo(match.homeTeam);
+    const awayTeam = getTeamInfo(match.awayTeam);
+    const homeWon = match.homeScore > match.awayScore;
+    const awayWon = match.awayScore > match.homeScore;
+    const draw = match.homeScore === match.awayScore;
+    
+    return `
+        <div class="result-card" data-match-id="${match.id}">
+            <div class="result-header">
+                <span class="result-group">Grupo ${match.group}</span>
+                <span class="result-stadium">${match.stadium}</span>
+            </div>
+            <div class="result-body">
+                <div class="result-team ${homeWon ? 'winner' : ''}">
+                    <span class="team-flag">${homeTeam.flag}</span>
+                    <span class="team-name">${homeTeam.name}</span>
+                    <span class="team-score">${match.homeScore}</span>
+                </div>
+                <div class="result-separator"></div>
+                <div class="result-team ${awayWon ? 'winner' : ''}">
+                    <span class="team-flag">${awayTeam.flag}</span>
+                    <span class="team-name">${awayTeam.name}</span>
+                    <span class="team-score">${match.awayScore}</span>
+                </div>
+            </div>
+            ${draw ? '<div class="result-draw-badge">Empate</div>' : ''}
+        </div>
+    `;
+}
+
+function groupMatchesByDate(matches) {
+    const grouped = {};
+    
+    matches.forEach(match => {
+        const date = match.date.split('T')[0];
+        if (!grouped[date]) {
+            grouped[date] = [];
+        }
+        grouped[date].push(match);
+    });
+    
+    return grouped;
+}
+
+function formatDate(date) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('pt-BR', options);
+}
+
+function setupViewToggle() {
+    const viewBtns = document.querySelectorAll('.view-btn');
+    
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const view = btn.getAttribute('data-view');
+            currentView = view;
+            
+            viewBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            renderCalendar();
+        });
+    });
+}
+
+// Add styles for matches
+const matchStyles = document.createElement('style');
+matchStyles.textContent = `
+    .calendar-container, .results-container {
+        padding: 20px 0;
+    }
+    
+    .date-section {
+        margin-bottom: 30px;
+    }
+    
+    .date-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+        color: white;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+    
+    .date-header h3 {
+        margin: 0;
+        font-size: 18px;
+        flex: 1;
+        text-transform: capitalize;
+    }
+    
+    .match-count {
+        background: rgba(255,255,255,0.2);
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+    
+    .matches-list {
+        display: grid;
+        gap: 16px;
+    }
+    
+    .matches-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+    }
+    
+    .match-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .match-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .match-card.live {
+        border: 2px solid #f44336;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3); }
+        50% { box-shadow: 0 4px 16px rgba(244, 67, 54, 0.6); }
+    }
+    
+    .match-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background: #f5f5f5;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .match-group {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a237e;
+    }
+    
+    .match-status {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 12px;
+    }
+    
+    .match-status.finished {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .match-status.live {
+        background: #f44336;
+        color: white;
+        animation: blink 1.5s infinite;
+    }
+    
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    .match-status.scheduled {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+    
+    .match-body {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 16px;
+        padding: 24px 16px;
+    }
+    
+    .team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .team-flag {
+        font-size: 40px;
+    }
+    
+    .team-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #212121;
+        text-align: center;
+    }
+    
+    .match-score {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .score {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1a237e;
+        font-family: 'Roboto Mono', monospace;
+    }
+    
+    .vs {
+        font-size: 18px;
+        font-weight: 600;
+        color: #999;
+    }
+    
+    .match-footer {
+        padding: 12px 16px;
+        background: #fafafa;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .match-venue, .match-location {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #666;
+    }
+    
+    .match-venue i, .match-location i {
+        color: #1a237e;
+        width: 16px;
+    }
+    
+    .results-date-section {
+        margin-bottom: 30px;
+    }
+    
+    .results-date-header {
+        padding: 12px 20px;
+        background: #f5f5f5;
+        border-left: 4px solid #1a237e;
+        margin-bottom: 16px;
+    }
+    
+    .results-date-header h3 {
+        margin: 0;
+        font-size: 16px;
+        color: #1a237e;
+        text-transform: capitalize;
+    }
+    
+    .results-grid {
+        display: grid;
+        gap: 16px;
+    }
+    
+    .result-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+    
+    .result-card:hover {
+        transform: translateX(4px);
+    }
+    
+    .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 16px;
+        background: #f9f9f9;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .result-group {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a237e;
+    }
+    
+    .result-stadium {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .result-body {
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .result-team {
+        display: grid;
+        grid-template-columns: 40px 1fr auto;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+        border-radius: 6px;
+        transition: background 0.2s ease;
+    }
+    
+    .result-team.winner {
+        background: #e8f5e9;
+    }
+    
+    .result-team .team-score {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a237e;
+        font-family: 'Roboto Mono', monospace;
+    }
+    
+    .result-team.winner .team-score {
+        color: #2e7d32;
+    }
+    
+    .result-separator {
+        height: 1px;
+        background: #e0e0e0;
+        margin: 0 8px;
+    }
+    
+    .result-draw-badge {
+        text-align: center;
+        padding: 8px;
+        background: #fff3e0;
+        color: #e65100;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+    
+    .empty-state h3 {
+        margin: 20px 0 10px;
+        color: #666;
+    }
+    
+    .view-toggle {
+        display: flex;
+        gap: 8px;
+        background: #f5f5f5;
+        padding: 4px;
+        border-radius: 8px;
+    }
+    
+    .view-btn {
+        padding: 8px 16px;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #666;
+        transition: all 0.3s ease;
+    }
+    
+    .view-btn:hover {
+        background: rgba(26, 35, 126, 0.1);
+        color: #1a237e;
+    }
+    
+    .view-btn.active {
+        background: #1a237e;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .matches-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .match-body {
+            padding: 16px 12px;
+        }
+        
+        .team-flag {
+            font-size: 32px;
+        }
+        
+        .team-name {
+            font-size: 12px;
+        }
+        
+        .score {
+            font-size: 24px;
+        }
+    }
+`;
+document.head.appendChild(matchStyles);
+
+console.log('✅ Matches module loaded');
+
+// Made with Bob
