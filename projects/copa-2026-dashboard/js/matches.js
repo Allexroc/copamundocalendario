@@ -122,14 +122,119 @@ function renderResults() {
         return;
     }
 
+    // Create summary section
+    const summaryHTML = createResultsSummary(finishedMatches);
+    
     const matchesByDate = groupMatchesByDate(finishedMatches);
     
-    container.innerHTML = '';
+    container.innerHTML = summaryHTML;
     
+    // Add detailed results
     Object.keys(matchesByDate).sort().reverse().forEach(date => {
         const dateSection = createResultsDateSection(date, matchesByDate[date]);
         container.appendChild(dateSection);
     });
+}
+
+function createResultsSummary(matches) {
+    // Get last 5 matches
+    const recentMatches = matches
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
+    
+    // Calculate statistics
+    let totalGoals = 0;
+    let highestScore = 0;
+    let biggestWin = { match: null, difference: 0 };
+    
+    matches.forEach(match => {
+        const goals = match.homeScore + match.awayScore;
+        totalGoals += goals;
+        
+        if (goals > highestScore) {
+            highestScore = goals;
+        }
+        
+        const difference = Math.abs(match.homeScore - match.awayScore);
+        if (difference > biggestWin.difference) {
+            biggestWin = { match, difference };
+        }
+    });
+    
+    const avgGoals = (totalGoals / matches.length).toFixed(1);
+    
+    return `
+        <div class="results-summary">
+            <div class="summary-header">
+                <h3><i class="fas fa-chart-line"></i> Resumo dos Resultados</h3>
+            </div>
+            
+            <div class="summary-stats">
+                <div class="summary-stat-card">
+                    <i class="fas fa-futbol"></i>
+                    <div class="summary-stat-info">
+                        <span class="summary-stat-value">${matches.length}</span>
+                        <span class="summary-stat-label">Jogos Finalizados</span>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <i class="fas fa-bullseye"></i>
+                    <div class="summary-stat-info">
+                        <span class="summary-stat-value">${totalGoals}</span>
+                        <span class="summary-stat-label">Gols Marcados</span>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <i class="fas fa-chart-bar"></i>
+                    <div class="summary-stat-info">
+                        <span class="summary-stat-value">${avgGoals}</span>
+                        <span class="summary-stat-label">Média de Gols/Jogo</span>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <i class="fas fa-fire"></i>
+                    <div class="summary-stat-info">
+                        <span class="summary-stat-value">${highestScore}</span>
+                        <span class="summary-stat-label">Mais Gols em um Jogo</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recent-matches-section">
+                <h4><i class="fas fa-clock"></i> Últimos Resultados</h4>
+                <div class="recent-matches-grid">
+                    ${recentMatches.map(match => createCompactResultCard(match)).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function createCompactResultCard(match) {
+    const homeTeam = getTeamInfo(match.homeTeam);
+    const awayTeam = getTeamInfo(match.awayTeam);
+    const homeWon = match.homeScore > match.awayScore;
+    const awayWon = match.awayScore > match.homeScore;
+    const matchDate = new Date(match.date);
+    const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    
+    return `
+        <div class="compact-result-card">
+            <div class="compact-result-date">${dateStr} - Grupo ${match.group}</div>
+            <div class="compact-result-teams">
+                <div class="compact-team ${homeWon ? 'winner' : ''}">
+                    <span class="compact-flag">${homeTeam.flag}</span>
+                    <span class="compact-name">${homeTeam.name}</span>
+                    <span class="compact-score">${match.homeScore}</span>
+                </div>
+                <div class="compact-team ${awayWon ? 'winner' : ''}">
+                    <span class="compact-flag">${awayTeam.flag}</span>
+                    <span class="compact-name">${awayTeam.name}</span>
+                    <span class="compact-score">${match.awayScore}</span>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 function createResultsDateSection(date, matches) {
@@ -559,6 +664,159 @@ matchStyles.textContent = `
         
         .score {
             font-size: 24px;
+        }
+    }
+    
+    .results-summary {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .summary-header {
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #1a237e;
+    }
+    
+    .summary-header h3 {
+        margin: 0;
+        color: #1a237e;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .summary-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .summary-stat-card {
+        background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.3s ease;
+    }
+    
+    .summary-stat-card:hover {
+        transform: translateY(-4px);
+    }
+    
+    .summary-stat-card i {
+        font-size: 32px;
+        color: #1a237e;
+    }
+    
+    .summary-stat-info {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .summary-stat-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1a237e;
+    }
+    
+    .summary-stat-label {
+        font-size: 12px;
+        color: #666;
+        font-weight: 600;
+    }
+    
+    .recent-matches-section h4 {
+        margin: 0 0 16px 0;
+        color: #1a237e;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .recent-matches-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+    }
+    
+    .compact-result-card {
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 16px;
+        border-left: 4px solid #1a237e;
+        transition: transform 0.2s ease;
+    }
+    
+    .compact-result-card:hover {
+        transform: translateX(4px);
+        background: #f0f0f0;
+    }
+    
+    .compact-result-date {
+        font-size: 11px;
+        color: #666;
+        font-weight: 600;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+    
+    .compact-result-teams {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .compact-team {
+        display: grid;
+        grid-template-columns: 32px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+        border-radius: 6px;
+        transition: background 0.2s ease;
+    }
+    
+    .compact-team.winner {
+        background: #e8f5e9;
+        font-weight: 600;
+    }
+    
+    .compact-flag {
+        font-size: 24px;
+    }
+    
+    .compact-name {
+        font-size: 14px;
+        color: #212121;
+    }
+    
+    .compact-score {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a237e;
+        font-family: 'Roboto Mono', monospace;
+    }
+    
+    .compact-team.winner .compact-score {
+        color: #2e7d32;
+    }
+    
+    @media (max-width: 768px) {
+        .summary-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .recent-matches-grid {
+            grid-template-columns: 1fr;
         }
     }
 `;

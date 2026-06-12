@@ -8,18 +8,278 @@ function renderStats() {
     if (!container) return;
 
     container.innerHTML = `
+        <div class="stats-overview">
+            ${createGeneralSummary()}
+        </div>
         <div class="stats-grid">
             <div class="stats-main">
                 <div id="statsContent"></div>
             </div>
             <div class="stats-sidebar">
                 ${createQuickStats()}
+                ${createPlayerSelector()}
             </div>
         </div>
     `;
 
     loadStatsCategory(currentStatsCategory);
     setupStatsCategorySelector();
+    setupPlayerSelector();
+}
+
+function createGeneralSummary() {
+    const finishedMatches = getAllMatches().filter(m => m.status === 'finished');
+    
+    if (finishedMatches.length === 0) {
+        return `
+            <div class="stats-empty">
+                <i class="fas fa-chart-bar" style="font-size: 48px; color: #ccc;"></i>
+                <h3>Aguardando Jogos</h3>
+                <p>As estatísticas aparecerão após os primeiros jogos serem finalizados.</p>
+            </div>
+        `;
+    }
+    
+    // Calculate team statistics
+    const teamStats = {};
+    
+    finishedMatches.forEach(match => {
+        // Home team
+        if (!teamStats[match.homeTeam]) {
+            teamStats[match.homeTeam] = {
+                team: match.homeTeam,
+                played: 0,
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                goalsFor: 0,
+                goalsAgainst: 0
+            };
+        }
+        
+        teamStats[match.homeTeam].played++;
+        teamStats[match.homeTeam].goalsFor += match.homeScore;
+        teamStats[match.homeTeam].goalsAgainst += match.awayScore;
+        
+        if (match.homeScore > match.awayScore) teamStats[match.homeTeam].won++;
+        else if (match.homeScore === match.awayScore) teamStats[match.homeTeam].drawn++;
+        else teamStats[match.homeTeam].lost++;
+        
+        // Away team
+        if (!teamStats[match.awayTeam]) {
+            teamStats[match.awayTeam] = {
+                team: match.awayTeam,
+                played: 0,
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                goalsFor: 0,
+                goalsAgainst: 0
+            };
+        }
+        
+        teamStats[match.awayTeam].played++;
+        teamStats[match.awayTeam].goalsFor += match.awayScore;
+        teamStats[match.awayTeam].goalsAgainst += match.homeScore;
+        
+        if (match.awayScore > match.homeScore) teamStats[match.awayTeam].won++;
+        else if (match.awayScore === match.homeScore) teamStats[match.awayTeam].drawn++;
+        else teamStats[match.awayTeam].lost++;
+    });
+    
+    const teamsArray = Object.values(teamStats);
+    
+    // Find best attack and defense
+    const bestAttack = teamsArray.reduce((max, team) =>
+        team.goalsFor > max.goalsFor ? team : max
+    );
+    const bestDefense = teamsArray.reduce((min, team) =>
+        team.goalsAgainst < min.goalsAgainst ? team : min
+    );
+    const mostWins = teamsArray.reduce((max, team) =>
+        team.won > max.won ? team : max
+    );
+    
+    const bestAttackTeam = getTeamInfo(bestAttack.team);
+    const bestDefenseTeam = getTeamInfo(bestDefense.team);
+    const mostWinsTeam = getTeamInfo(mostWins.team);
+    
+    return `
+        <div class="general-summary">
+            <div class="summary-title">
+                <h3><i class="fas fa-trophy"></i> Resumo Geral das Seleções</h3>
+                <p>Estatísticas de todas as seleções com jogos realizados</p>
+            </div>
+            
+            <div class="team-highlights">
+                <div class="highlight-card attack">
+                    <div class="highlight-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <span class="highlight-label">Melhor Ataque</span>
+                        <span class="highlight-team">${bestAttackTeam.flag} ${bestAttackTeam.name}</span>
+                        <span class="highlight-value">${bestAttack.goalsFor} gols em ${bestAttack.played} jogos</span>
+                    </div>
+                </div>
+                
+                <div class="highlight-card defense">
+                    <div class="highlight-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <span class="highlight-label">Melhor Defesa</span>
+                        <span class="highlight-team">${bestDefenseTeam.flag} ${bestDefenseTeam.name}</span>
+                        <span class="highlight-value">${bestDefense.goalsAgainst} gols sofridos em ${bestDefense.played} jogos</span>
+                    </div>
+                </div>
+                
+                <div class="highlight-card wins">
+                    <div class="highlight-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="highlight-content">
+                        <span class="highlight-label">Mais Vitórias</span>
+                        <span class="highlight-team">${mostWinsTeam.flag} ${mostWinsTeam.name}</span>
+                        <span class="highlight-value">${mostWins.won} vitórias em ${mostWins.played} jogos</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="teams-stats-table">
+                <h4>Desempenho por Seleção</h4>
+                <table class="compact-stats-table">
+                    <thead>
+                        <tr>
+                            <th>Seleção</th>
+                            <th>J</th>
+                            <th>V</th>
+                            <th>E</th>
+                            <th>D</th>
+                            <th>GP</th>
+                            <th>GC</th>
+                            <th>SG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${teamsArray
+                            .sort((a, b) => (b.won * 3 + b.drawn) - (a.won * 3 + a.drawn))
+                            .slice(0, 10)
+                            .map(team => {
+                                const teamInfo = getTeamInfo(team.team);
+                                const goalDiff = team.goalsFor - team.goalsAgainst;
+                                return `
+                                    <tr>
+                                        <td class="team-cell">
+                                            <span class="team-flag-small">${teamInfo.flag}</span>
+                                            <span class="team-name-small">${teamInfo.name}</span>
+                                        </td>
+                                        <td>${team.played}</td>
+                                        <td class="win-cell">${team.won}</td>
+                                        <td>${team.drawn}</td>
+                                        <td class="loss-cell">${team.lost}</td>
+                                        <td>${team.goalsFor}</td>
+                                        <td>${team.goalsAgainst}</td>
+                                        <td class="${goalDiff > 0 ? 'positive' : goalDiff < 0 ? 'negative' : ''}">
+                                            ${goalDiff > 0 ? '+' : ''}${goalDiff}
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function createPlayerSelector() {
+    const allPlayers = [...WORLD_CUP_2026.topScorers, ...WORLD_CUP_2026.topAssists];
+    const uniquePlayers = Array.from(new Set(allPlayers.map(p => p.player)))
+        .map(name => allPlayers.find(p => p.player === name))
+        .sort((a, b) => a.player.localeCompare(b.player));
+    
+    return `
+        <div class="player-selector-widget">
+            <h4><i class="fas fa-user"></i> Buscar Jogador</h4>
+            <select id="playerSelect" class="player-select">
+                <option value="">Selecione um jogador</option>
+                ${uniquePlayers.map(player => {
+                    const team = getTeamInfo(player.team);
+                    return `<option value="${player.player}">${player.player} (${team.flag} ${team.code})</option>`;
+                }).join('')}
+            </select>
+            <div id="playerStatsDisplay"></div>
+        </div>
+    `;
+}
+
+function setupPlayerSelector() {
+    const playerSelect = document.getElementById('playerSelect');
+    if (!playerSelect) return;
+    
+    playerSelect.addEventListener('change', (e) => {
+        const playerName = e.target.value;
+        if (playerName) {
+            displayPlayerStats(playerName);
+        } else {
+            document.getElementById('playerStatsDisplay').innerHTML = '';
+        }
+    });
+}
+
+function displayPlayerStats(playerName) {
+    const display = document.getElementById('playerStatsDisplay');
+    if (!display) return;
+    
+    const scorer = WORLD_CUP_2026.topScorers.find(p => p.player === playerName);
+    const assister = WORLD_CUP_2026.topAssists.find(p => p.player === playerName);
+    
+    if (!scorer && !assister) {
+        display.innerHTML = '<p class="no-stats">Estatísticas não disponíveis</p>';
+        return;
+    }
+    
+    const player = scorer || assister;
+    const team = getTeamInfo(player.team);
+    
+    display.innerHTML = `
+        <div class="player-stats-card">
+            <div class="player-header">
+                <span class="player-flag">${team.flag}</span>
+                <div class="player-info-text">
+                    <span class="player-name-display">${playerName}</span>
+                    <span class="player-team-display">${team.name}</span>
+                </div>
+            </div>
+            <div class="player-stats-grid">
+                ${scorer ? `
+                    <div class="player-stat">
+                        <i class="fas fa-futbol"></i>
+                        <span class="stat-value">${scorer.goals}</span>
+                        <span class="stat-label">Gols</span>
+                    </div>
+                    <div class="player-stat">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="stat-value">${(scorer.goals / scorer.matches).toFixed(2)}</span>
+                        <span class="stat-label">Média/Jogo</span>
+                    </div>
+                ` : ''}
+                ${assister ? `
+                    <div class="player-stat">
+                        <i class="fas fa-hands-helping"></i>
+                        <span class="stat-value">${assister.assists}</span>
+                        <span class="stat-label">Assistências</span>
+                    </div>
+                ` : ''}
+                <div class="player-stat">
+                    <i class="fas fa-gamepad"></i>
+                    <span class="stat-value">${player.matches}</span>
+                    <span class="stat-label">Jogos</span>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 function loadStatsCategory(category) {
@@ -731,12 +991,342 @@ statsStyles.textContent = `
         color: #666;
     }
     
+    .stats-overview {
+        margin-bottom: 30px;
+    }
+    
+    .general-summary {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .summary-title {
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #1a237e;
+    }
+    
+    .summary-title h3 {
+        margin: 0 0 8px 0;
+        color: #1a237e;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .summary-title p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .team-highlights {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .highlight-card {
+        padding: 20px;
+        border-radius: 12px;
+        display: flex;
+        gap: 16px;
+        transition: transform 0.3s ease;
+    }
+    
+    .highlight-card:hover {
+        transform: translateY(-4px);
+    }
+    
+    .highlight-card.attack {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-left: 4px solid #4caf50;
+    }
+    
+    .highlight-card.defense {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 4px solid #2196f3;
+    }
+    
+    .highlight-card.wins {
+        background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        border-left: 4px solid #ff9800;
+    }
+    
+    .highlight-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .highlight-icon i {
+        font-size: 24px;
+    }
+    
+    .highlight-card.attack .highlight-icon i {
+        color: #4caf50;
+    }
+    
+    .highlight-card.defense .highlight-icon i {
+        color: #2196f3;
+    }
+    
+    .highlight-card.wins .highlight-icon i {
+        color: #ff9800;
+    }
+    
+    .highlight-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .highlight-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #666;
+        text-transform: uppercase;
+    }
+    
+    .highlight-team {
+        font-size: 16px;
+        font-weight: 700;
+        color: #212121;
+    }
+    
+    .highlight-value {
+        font-size: 13px;
+        color: #666;
+    }
+    
+    .teams-stats-table {
+        margin-top: 30px;
+    }
+    
+    .teams-stats-table h4 {
+        margin: 0 0 16px 0;
+        color: #1a237e;
+        font-size: 18px;
+    }
+    
+    .compact-stats-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+    
+    .compact-stats-table thead {
+        background: #f5f5f5;
+    }
+    
+    .compact-stats-table th {
+        padding: 10px 8px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 700;
+        color: #666;
+        text-transform: uppercase;
+    }
+    
+    .compact-stats-table th:first-child {
+        text-align: left;
+    }
+    
+    .compact-stats-table th:not(:first-child) {
+        text-align: center;
+    }
+    
+    .compact-stats-table td {
+        padding: 12px 8px;
+        border-bottom: 1px solid #f0f0f0;
+        text-align: center;
+    }
+    
+    .compact-stats-table td:first-child {
+        text-align: left;
+    }
+    
+    .compact-stats-table tr:hover {
+        background: #f9f9f9;
+    }
+    
+    .team-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .team-flag-small {
+        font-size: 20px;
+    }
+    
+    .team-name-small {
+        font-weight: 600;
+        color: #212121;
+    }
+    
+    .win-cell {
+        color: #4caf50;
+        font-weight: 600;
+    }
+    
+    .loss-cell {
+        color: #f44336;
+        font-weight: 600;
+    }
+    
+    .compact-stats-table .positive {
+        color: #4caf50;
+        font-weight: 600;
+    }
+    
+    .compact-stats-table .negative {
+        color: #f44336;
+        font-weight: 600;
+    }
+    
+    .stats-empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+    
+    .stats-empty h3 {
+        margin: 20px 0 10px;
+        color: #666;
+    }
+    
+    .player-selector-widget {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+    
+    .player-selector-widget h4 {
+        margin: 0 0 16px 0;
+        color: #1a237e;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .player-select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #212121;
+        background: white;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+    
+    .player-select:focus {
+        outline: none;
+        border-color: #1a237e;
+    }
+    
+    .player-stats-card {
+        margin-top: 16px;
+        padding: 16px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border-left: 4px solid #1a237e;
+    }
+    
+    .player-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .player-flag {
+        font-size: 32px;
+    }
+    
+    .player-info-text {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .player-name-display {
+        font-size: 16px;
+        font-weight: 700;
+        color: #212121;
+    }
+    
+    .player-team-display {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .player-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .player-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        background: white;
+        border-radius: 6px;
+    }
+    
+    .player-stat i {
+        font-size: 20px;
+        color: #1a237e;
+        margin-bottom: 8px;
+    }
+    
+    .player-stat .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a237e;
+    }
+    
+    .player-stat .stat-label {
+        font-size: 11px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    
+    .no-stats {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+        font-size: 13px;
+    }
+    
     @media (max-width: 1024px) {
         .stats-grid {
             grid-template-columns: 1fr;
         }
         
         .attendance-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .team-highlights {
             grid-template-columns: 1fr;
         }
     }
