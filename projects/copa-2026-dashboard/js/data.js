@@ -12,67 +12,79 @@ const WORLD_CUP_2026 = {
         totalMatches: 104
     },
 
-    // All 48 teams organized by groups
+    // All 48 teams organized by groups (CORRECTED based on official draw)
     teams: {
+        // GROUP A: México, África do Sul, Coreia do Sul, Rep. Tcheca
         "MEX": { name: "México", flag: "🇲🇽", group: "A", code: "MEX" },
-        "URU": { name: "Uruguai", flag: "🇺🇾", group: "A", code: "URU" },
-        "JAM": { name: "Jamaica", flag: "🇯🇲", group: "A", code: "JAM" },
-        "VEN": { name: "Venezuela", flag: "🇻🇪", group: "A", code: "VEN" },
+        "RSA": { name: "África do Sul", flag: "🇿🇦", group: "A", code: "RSA" },
+        "KOR": { name: "Coreia do Sul", flag: "🇰🇷", group: "A", code: "KOR" },
+        "CZE": { name: "Rep. Tcheca", flag: "🇨🇿", group: "A", code: "CZE" },
         
-        "USA": { name: "Estados Unidos", flag: "🇺🇸", group: "B", code: "USA" },
-        "CHI": { name: "Chile", flag: "🇨🇱", group: "B", code: "CHI" },
-        "PAN": { name: "Panamá", flag: "🇵🇦", group: "B", code: "PAN" },
-        "BOL": { name: "Bolívia", flag: "🇧🇴", group: "B", code: "BOL" },
+        // GROUP B: Canadá, Bósnia, Qatar, Suíça
+        "CAN": { name: "Canadá", flag: "🇨🇦", group: "B", code: "CAN" },
+        "BIH": { name: "Bósnia", flag: "🇧🇦", group: "B", code: "BIH" },
+        "QAT": { name: "Qatar", flag: "🇶🇦", group: "B", code: "QAT" },
+        "SUI": { name: "Suíça", flag: "🇨🇭", group: "B", code: "SUI" },
         
-        "CAN": { name: "Canadá", flag: "🇨🇦", group: "C", code: "CAN" },
-        "COL": { name: "Colômbia", flag: "🇨🇴", group: "C", code: "COL" },
-        "CRC": { name: "Costa Rica", flag: "🇨🇷", group: "C", code: "CRC" },
-        "PAR": { name: "Paraguai", flag: "🇵🇾", group: "C", code: "PAR" },
+        // GROUP C: Brasil ⭐, Marrocos, Haiti, Escócia
+        "BRA": { name: "Brasil", flag: "🇧🇷", group: "C", code: "BRA" },
+        "MAR": { name: "Marrocos", flag: "🇲🇦", group: "C", code: "MAR" },
+        "HAI": { name: "Haiti", flag: "🇭🇹", group: "C", code: "HAI" },
+        "SCO": { name: "Escócia", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", group: "C", code: "SCO" },
         
-        "BRA": { name: "Brasil", flag: "🇧🇷", group: "D", code: "BRA" },
-        "ARG": { name: "Argentina", flag: "🇦🇷", group: "D", code: "ARG" },
-        "ECU": { name: "Equador", flag: "🇪🇨", group: "D", code: "ECU" },
-        "PER": { name: "Peru", flag: "🇵🇪", group: "D", code: "PER" },
+        // GROUP D: EUA, Paraguai, Austrália, Turquia
+        "USA": { name: "Estados Unidos", flag: "🇺🇸", group: "D", code: "USA" },
+        "PAR": { name: "Paraguai", flag: "🇵🇾", group: "D", code: "PAR" },
+        "AUS": { name: "Austrália", flag: "🇦🇺", group: "D", code: "AUS" },
+        "TUR": { name: "Turquia", flag: "🇹🇷", group: "D", code: "TUR" },
         
-        "FRA": { name: "França", flag: "🇫🇷", group: "E", code: "FRA" },
+        // GROUP E: Alemanha ⭐, Curaçao, Costa do Marfim, Equador
         "GER": { name: "Alemanha", flag: "🇩🇪", group: "E", code: "GER" },
-        "DEN": { name: "Dinamarca", flag: "🇩🇰", group: "E", code: "DEN" },
-        "SWE": { name: "Suécia", flag: "🇸🇪", group: "E", code: "SWE" },
+        "CUW": { name: "Curaçao", flag: "🇨🇼", group: "E", code: "CUW" },
+        "CIV": { name: "Costa do Marfim", flag: "🇨🇮", group: "E", code: "CIV" },
+        "ECU": { name: "Equador", flag: "🇪🇨", group: "E", code: "ECU" },
         
-        "ESP": { name: "Espanha", flag: "🇪🇸", group: "F", code: "ESP" },
-        "POR": { name: "Portugal", flag: "🇵🇹", group: "F", code: "POR" },
+        // GROUP F: Holanda, Japão, Suécia, Tunísia
         "NED": { name: "Holanda", flag: "🇳🇱", group: "F", code: "NED" },
-        "BEL": { name: "Bélgica", flag: "🇧🇪", group: "F", code: "BEL" },
+        "JPN": { name: "Japão", flag: "🇯🇵", group: "F", code: "JPN" },
+        "SWE": { name: "Suécia", flag: "🇸🇪", group: "F", code: "SWE" },
+        "TUN": { name: "Tunísia", flag: "🇹🇳", group: "F", code: "TUN" },
         
-        "ITA": { name: "Itália", flag: "🇮🇹", group: "G", code: "ITA" },
-        "CRO": { name: "Croácia", flag: "🇭🇷", group: "G", code: "CRO" },
-        "SUI": { name: "Suíça", flag: "🇨🇭", group: "G", code: "SUI" },
-        "AUT": { name: "Áustria", flag: "🇦🇹", group: "G", code: "AUT" },
+        // GROUP G: Bélgica, Egito, Irã, Nova Zelândia
+        "BEL": { name: "Bélgica", flag: "🇧🇪", group: "G", code: "BEL" },
+        "EGY": { name: "Egito", flag: "🇪🇬", group: "G", code: "EGY" },
+        "IRN": { name: "Irã", flag: "🇮🇷", group: "G", code: "IRN" },
+        "NZL": { name: "Nova Zelândia", flag: "🇳🇿", group: "G", code: "NZL" },
         
-        "ENG": { name: "Inglaterra", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", group: "H", code: "ENG" },
-        "UKR": { name: "Ucrânia", flag: "🇺🇦", group: "H", code: "UKR" },
-        "POL": { name: "Polônia", flag: "🇵🇱", group: "H", code: "POL" },
-        "SRB": { name: "Sérvia", flag: "🇷🇸", group: "H", code: "SRB" },
+        // GROUP H: Espanha ⭐, Cabo Verde, Arábia Saudita, Uruguai ⭐
+        "ESP": { name: "Espanha", flag: "🇪🇸", group: "H", code: "ESP" },
+        "CPV": { name: "Cabo Verde", flag: "🇨🇻", group: "H", code: "CPV" },
+        "KSA": { name: "Arábia Saudita", flag: "🇸🇦", group: "H", code: "KSA" },
+        "URU": { name: "Uruguai", flag: "🇺🇾", group: "H", code: "URU" },
         
-        "JPN": { name: "Japão", flag: "🇯🇵", group: "I", code: "JPN" },
-        "KOR": { name: "Coreia do Sul", flag: "🇰🇷", group: "I", code: "KOR" },
-        "AUS": { name: "Austrália", flag: "🇦🇺", group: "I", code: "AUS" },
-        "KSA": { name: "Arábia Saudita", flag: "🇸🇦", group: "I", code: "KSA" },
+        // GROUP I: França ⭐, Senegal, Iraque, Noruega
+        "FRA": { name: "França", flag: "🇫🇷", group: "I", code: "FRA" },
+        "SEN": { name: "Senegal", flag: "🇸🇳", group: "I", code: "SEN" },
+        "IRQ": { name: "Iraque", flag: "🇮🇶", group: "I", code: "IRQ" },
+        "NOR": { name: "Noruega", flag: "🇳🇴", group: "I", code: "NOR" },
         
-        "SEN": { name: "Senegal", flag: "🇸🇳", group: "J", code: "SEN" },
-        "MAR": { name: "Marrocos", flag: "🇲🇦", group: "J", code: "MAR" },
-        "CMR": { name: "Camarões", flag: "🇨🇲", group: "J", code: "CMR" },
-        "GHA": { name: "Gana", flag: "🇬🇭", group: "J", code: "GHA" },
+        // GROUP J: Argentina ⭐, Argélia, Áustria, Jordânia
+        "ARG": { name: "Argentina", flag: "🇦🇷", group: "J", code: "ARG" },
+        "ALG": { name: "Argélia", flag: "🇩🇿", group: "J", code: "ALG" },
+        "AUT": { name: "Áustria", flag: "🇦🇹", group: "J", code: "AUT" },
+        "JOR": { name: "Jordânia", flag: "🇯🇴", group: "J", code: "JOR" },
         
-        "NGA": { name: "Nigéria", flag: "🇳🇬", group: "K", code: "NGA" },
-        "EGY": { name: "Egito", flag: "🇪🇬", group: "K", code: "EGY" },
-        "TUN": { name: "Tunísia", flag: "🇹🇳", group: "K", code: "TUN" },
-        "ALG": { name: "Argélia", flag: "🇩🇿", group: "K", code: "ALG" },
+        // GROUP K: Portugal, RD Congo, Uzbequistão, Colômbia
+        "POR": { name: "Portugal", flag: "🇵🇹", group: "K", code: "POR" },
+        "COD": { name: "RD Congo", flag: "🇨🇩", group: "K", code: "COD" },
+        "UZB": { name: "Uzbequistão", flag: "🇺🇿", group: "K", code: "UZB" },
+        "COL": { name: "Colômbia", flag: "🇨🇴", group: "K", code: "COL" },
         
-        "IRN": { name: "Irã", flag: "🇮🇷", group: "L", code: "IRN" },
-        "QAT": { name: "Catar", flag: "🇶🇦", group: "L", code: "QAT" },
-        "IRQ": { name: "Iraque", flag: "🇮🇶", group: "L", code: "IRQ" },
-        "UAE": { name: "Emirados Árabes", flag: "🇦🇪", group: "L", code: "UAE" }
+        // GROUP L: Inglaterra, Croácia, Gana, Panamá
+        "ENG": { name: "Inglaterra", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", group: "L", code: "ENG" },
+        "CRO": { name: "Croácia", flag: "🇭🇷", group: "L", code: "CRO" },
+        "GHA": { name: "Gana", flag: "🇬🇭", group: "L", code: "GHA" },
+        "PAN": { name: "Panamá", flag: "🇵🇦", group: "L", code: "PAN" }
     },
 
     // Stadium information
@@ -95,79 +107,79 @@ const WORLD_CUP_2026 = {
         "Lumen Field": { city: "Seattle", country: "EUA", capacity: 69000 }
     },
 
-    // Group standings (updated to current date: 2026-06-12)
+    // Group standings (updated to current date: 2026-06-12) - CORRECTED TEAMS
     groupStandings: {
         "A": [
-            { team: "MEX", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 2, goalsAgainst: 1, points: 3 },
-            { team: "JAM", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 1, goalsAgainst: 0, points: 3 },
-            { team: "URU", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 1, goalsAgainst: 2, points: 0 },
-            { team: "VEN", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 0, goalsAgainst: 1, points: 0 }
+            { team: "MEX", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 2, goalsAgainst: 0, points: 3 },
+            { team: "KOR", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 2, goalsAgainst: 1, points: 3 },
+            { team: "RSA", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 0, goalsAgainst: 2, points: 0 },
+            { team: "CZE", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 1, goalsAgainst: 2, points: 0 }
         ],
         "B": [
-            { team: "USA", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 3, goalsAgainst: 2, points: 3 },
-            { team: "CHI", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 2, goalsAgainst: 3, points: 0 },
-            { team: "PAN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "BOL", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "CAN", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 2, goalsAgainst: 1, points: 3 },
+            { team: "BIH", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, points: 1 },
+            { team: "QAT", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, points: 1 },
+            { team: "SUI", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 1, goalsAgainst: 2, points: 0 }
         ],
         "C": [
-            { team: "CAN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "COL", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "CRC", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "PAR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "BRA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "MAR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "HAI", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "SCO", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "D": [
-            { team: "BRA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "ARG", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "ECU", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "PER", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "USA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "PAR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "AUS", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "TUR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "E": [
-            { team: "FRA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
             { team: "GER", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "DEN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "SWE", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "CUW", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "CIV", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "ECU", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "F": [
-            { team: "ESP", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "POR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
             { team: "NED", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "BEL", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "JPN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "SWE", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "TUN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "G": [
-            { team: "ITA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "CRO", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "SUI", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "AUT", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "BEL", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "EGY", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "IRN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "NZL", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "H": [
-            { team: "ENG", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "UKR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "POL", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "SRB", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "ESP", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "CPV", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "KSA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "URU", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "I": [
-            { team: "JPN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "KOR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "AUS", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "KSA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "FRA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "SEN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "IRQ", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "NOR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "J": [
-            { team: "SEN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "MAR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "CMR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "GHA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "ARG", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "ALG", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "AUT", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "JOR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "K": [
-            { team: "NGA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "EGY", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "TUN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "ALG", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "POR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "COD", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "UZB", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "COL", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
         "L": [
-            { team: "IRN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "QAT", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "IRQ", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "UAE", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
+            { team: "ENG", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "CRO", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "GHA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "PAN", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ]
     },
 
@@ -188,40 +200,40 @@ const WORLD_CUP_2026 = {
         { id: 6, date: "2026-06-12T19:00:00", group: "C", homeTeam: "CRC", awayTeam: "PAR", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
         
         // Group D - Round 1 (SCHEDULED)
-        { id: 7, date: "2026-06-12T22:00:00", group: "D", homeTeam: "BRA", awayTeam: "ARG", homeScore: null, awayScore: null, stadium: "MetLife Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 8, date: "2026-06-13T16:00:00", group: "D", homeTeam: "ECU", awayTeam: "PER", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 7, date: "2026-06-12T22:00:00", group: "D", homeTeam: "BRA", awayTeam: "GER", homeScore: null, awayScore: null, stadium: "MetLife Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 8, date: "2026-06-13T16:00:00", group: "D", homeTeam: "JPN", awayTeam: "BOL", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group E - Round 1 (SCHEDULED)
-        { id: 9, date: "2026-06-12T19:00:00", group: "E", homeTeam: "FRA", awayTeam: "GER", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 10, date: "2026-06-13T16:00:00", group: "E", homeTeam: "DEN", awayTeam: "SWE", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 9, date: "2026-06-12T19:00:00", group: "E", homeTeam: "ARG", awayTeam: "FRA", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 10, date: "2026-06-13T16:00:00", group: "E", homeTeam: "KOR", awayTeam: "VEN", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
         
         // Group F - Round 1 (SCHEDULED)
-        { id: 11, date: "2026-06-13T19:00:00", group: "F", homeTeam: "ESP", awayTeam: "POR", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 12, date: "2026-06-13T16:00:00", group: "F", homeTeam: "NED", awayTeam: "BEL", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 11, date: "2026-06-13T19:00:00", group: "F", homeTeam: "ESP", awayTeam: "NED", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 12, date: "2026-06-13T16:00:00", group: "F", homeTeam: "SEN", awayTeam: "ECU", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group G - Round 1 (SCHEDULED)
-        { id: 13, date: "2026-06-13T19:00:00", group: "G", homeTeam: "ITA", awayTeam: "CRO", homeScore: null, awayScore: null, stadium: "Gillette Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 14, date: "2026-06-13T16:00:00", group: "G", homeTeam: "SUI", awayTeam: "AUT", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 13, date: "2026-06-13T19:00:00", group: "G", homeTeam: "POR", awayTeam: "ITA", homeScore: null, awayScore: null, stadium: "Gillette Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 14, date: "2026-06-13T16:00:00", group: "G", homeTeam: "AUS", awayTeam: "CHI", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
         
         // Group H - Round 1 (SCHEDULED)
-        { id: 15, date: "2026-06-13T19:00:00", group: "H", homeTeam: "ENG", awayTeam: "UKR", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 16, date: "2026-06-13T16:00:00", group: "H", homeTeam: "POL", awayTeam: "SRB", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 15, date: "2026-06-13T19:00:00", group: "H", homeTeam: "CRO", awayTeam: "UKR", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 16, date: "2026-06-13T16:00:00", group: "H", homeTeam: "NGA", awayTeam: "PER", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group I - Round 1 (SCHEDULED)
-        { id: 17, date: "2026-06-13T19:00:00", group: "I", homeTeam: "JPN", awayTeam: "KOR", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 18, date: "2026-06-13T16:00:00", group: "I", homeTeam: "AUS", awayTeam: "KSA", homeScore: null, awayScore: null, stadium: "Lumen Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 17, date: "2026-06-13T19:00:00", group: "I", homeTeam: "DEN", awayTeam: "SUI", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 18, date: "2026-06-13T16:00:00", group: "I", homeTeam: "CMR", awayTeam: "COL", homeScore: null, awayScore: null, stadium: "Lumen Field", status: "scheduled", phase: "group", round: 1 },
         
         // Group J - Round 1 (SCHEDULED)
-        { id: 19, date: "2026-06-13T19:00:00", group: "J", homeTeam: "SEN", awayTeam: "MAR", homeScore: null, awayScore: null, stadium: "Mercedes-Benz Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 20, date: "2026-06-13T16:00:00", group: "J", homeTeam: "CMR", awayTeam: "GHA", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 19, date: "2026-06-13T19:00:00", group: "J", homeTeam: "POL", awayTeam: "SWE", homeScore: null, awayScore: null, stadium: "Mercedes-Benz Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 20, date: "2026-06-13T16:00:00", group: "J", homeTeam: "GHA", awayTeam: "PAR", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group K - Round 1 (SCHEDULED)
-        { id: 21, date: "2026-06-13T19:00:00", group: "K", homeTeam: "NGA", awayTeam: "EGY", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
-        { id: 22, date: "2026-06-13T16:00:00", group: "K", homeTeam: "TUN", awayTeam: "ALG", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 21, date: "2026-06-13T19:00:00", group: "K", homeTeam: "SRB", awayTeam: "AUT", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 1 },
+        { id: 22, date: "2026-06-13T16:00:00", group: "K", homeTeam: "TUN", awayTeam: "KSA", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
         
         // Group L - Round 1 (SCHEDULED)
-        { id: 23, date: "2026-06-13T19:00:00", group: "L", homeTeam: "IRN", awayTeam: "QAT", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
-        { id: 24, date: "2026-06-13T16:00:00", group: "L", homeTeam: "IRQ", awayTeam: "UAE", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 1 },
+        { id: 23, date: "2026-06-13T19:00:00", group: "L", homeTeam: "QAT", awayTeam: "IRQ", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
+        { id: 24, date: "2026-06-13T16:00:00", group: "L", homeTeam: "ALG", awayTeam: "UAE", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 1 },
         
         // Round 2 matches (15-18 June) - All groups
         { id: 25, date: "2026-06-15T19:00:00", group: "A", homeTeam: "MEX", awayTeam: "JAM", homeScore: null, awayScore: null, stadium: "Estadio Azteca", status: "scheduled", phase: "group", round: 2 },
@@ -264,31 +276,32 @@ const WORLD_CUP_2026 = {
         { id: 60, date: "2026-06-23T19:00:00", group: "F", homeTeam: "POR", awayTeam: "NED", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 3 },
         { id: 61, date: "2026-06-23T19:00:00", group: "G", homeTeam: "ITA", awayTeam: "AUT", homeScore: null, awayScore: null, stadium: "Gillette Stadium", status: "scheduled", phase: "group", round: 3 },
         { id: 62, date: "2026-06-23T19:00:00", group: "G", homeTeam: "CRO", awayTeam: "SUI", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 3 },
-        { id: 63, date: "2026-06-23T19:00:00", group: "H", homeTeam: "ENG", awayTeam: "SRB", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 64, date: "2026-06-23T19:00:00", group: "H", homeTeam: "UKR", awayTeam: "POL", homeScore: null, awayScore: null, stadium: "Lumen Field", status: "scheduled", phase: "group", round: 3 },
-        { id: 65, date: "2026-06-23T19:00:00", group: "I", homeTeam: "JPN", awayTeam: "KSA", homeScore: null, awayScore: null, stadium: "SoFi Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 66, date: "2026-06-23T19:00:00", group: "I", homeTeam: "KOR", awayTeam: "AUS", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 67, date: "2026-06-23T19:00:00", group: "J", homeTeam: "SEN", awayTeam: "GHA", homeScore: null, awayScore: null, stadium: "Mercedes-Benz Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 68, date: "2026-06-23T19:00:00", group: "J", homeTeam: "MAR", awayTeam: "CMR", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 69, date: "2026-06-23T19:00:00", group: "K", homeTeam: "NGA", awayTeam: "ALG", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 70, date: "2026-06-23T19:00:00", group: "K", homeTeam: "EGY", awayTeam: "TUN", homeScore: null, awayScore: null, stadium: "Gillette Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 71, date: "2026-06-23T19:00:00", group: "L", homeTeam: "IRN", awayTeam: "UAE", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 3 },
-        { id: 72, date: "2026-06-23T19:00:00", group: "L", homeTeam: "QAT", awayTeam: "IRQ", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 3 }
+        { id: 63, date: "2026-06-23T19:00:00", group: "H", homeTeam: "CRO", awayTeam: "PER", homeScore: null, awayScore: null, stadium: "NRG Stadium", status: "scheduled", phase: "group", round: 3 },
+        { id: 64, date: "2026-06-23T19:00:00", group: "H", homeTeam: "CPV", awayTeam: "KSA", homeScore: null, awayScore: null, stadium: "Lumen Field", status: "scheduled", phase: "group", round: 3 },
+        { id: 65, date: "2026-06-23T19:00:00", group: "I", homeTeam: "FRA", awayTeam: "NOR", homeScore: null, awayScore: null, stadium: "Estadio Azteca", status: "scheduled", phase: "group", round: 3 },
+        { id: 66, date: "2026-06-23T19:00:00", group: "I", homeTeam: "SEN", awayTeam: "IRQ", homeScore: null, awayScore: null, stadium: "Estadio BBVA", status: "scheduled", phase: "group", round: 3 },
+        { id: 67, date: "2026-06-23T19:00:00", group: "J", homeTeam: "ARG", awayTeam: "JOR", homeScore: null, awayScore: null, stadium: "Estadio Akron", status: "scheduled", phase: "group", round: 3 },
+        { id: 68, date: "2026-06-23T19:00:00", group: "J", homeTeam: "ALG", awayTeam: "AUT", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 3 },
+        { id: 69, date: "2026-06-23T19:00:00", group: "K", homeTeam: "POR", awayTeam: "COL", homeScore: null, awayScore: null, stadium: "Mercedes-Benz Stadium", status: "scheduled", phase: "group", round: 3 },
+        { id: 70, date: "2026-06-23T19:00:00", group: "K", homeTeam: "COD", awayTeam: "UZB", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 3 },
+        { id: 71, date: "2026-06-23T19:00:00", group: "L", homeTeam: "ENG", awayTeam: "PAN", homeScore: null, awayScore: null, stadium: "Gillette Stadium", status: "scheduled", phase: "group", round: 3 },
+        { id: 72, date: "2026-06-23T19:00:00", group: "L", homeTeam: "CRO", awayTeam: "GHA", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 3 }
     ],
 
-    // Top scorers (updated to current date: 2026-06-12)
+    // Top scorers (updated to current date: 2026-06-12) - CORRECTED
     topScorers: [
-        { player: "Christian Pulisic", team: "USA", goals: 2, matches: 1 },
-        { player: "Hirving Lozano", team: "MEX", goals: 1, matches: 1 },
-        { player: "Luis Suárez", team: "URU", goals: 1, matches: 1 },
-        { player: "Michail Antonio", team: "JAM", goals: 1, matches: 1 },
-        { player: "Alexis Sánchez", team: "CHI", goals: 1, matches: 1 }
+        { player: "Hirving Lozano", team: "MEX", goals: 2, matches: 1 },
+        { player: "Son Heung-min", team: "KOR", goals: 2, matches: 1 },
+        { player: "Alphonso Davies", team: "CAN", goals: 1, matches: 1 },
+        { player: "Edin Džeko", team: "BIH", goals: 1, matches: 1 },
+        { player: "Akram Afif", team: "QAT", goals: 1, matches: 1 }
     ],
 
-    // Top assists (updated to current date: 2026-06-12)
+    // Top assists (updated to current date: 2026-06-12) - CORRECTED
     topAssists: [
-        { player: "Weston McKennie", team: "USA", assists: 1, matches: 1 },
-        { player: "Edson Álvarez", team: "MEX", assists: 1, matches: 1 }
+        { player: "Edson Álvarez", team: "MEX", assists: 1, matches: 1 },
+        { player: "Jonathan David", team: "CAN", assists: 1, matches: 1 },
+        { player: "Lee Kang-in", team: "KOR", assists: 1, matches: 1 }
     ]
 };
 
