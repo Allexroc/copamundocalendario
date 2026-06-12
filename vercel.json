@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/projects/copa-2026-dashboard/$1"
+      "destination": "/$1"
     }
   ],
   "headers": [
@@ -51,19 +51,19 @@
   "routes": [
     {
       "src": "^/css/(.*)",
-      "dest": "/projects/copa-2026-dashboard/css/$1"
+      "dest": "/css/$1"
     },
     {
       "src": "^/js/(.*)",
-      "dest": "/projects/copa-2026-dashboard/js/$1"
+      "dest": "/js/$1"
     },
     {
       "src": "^/assets/(.*)",
-      "dest": "/projects/copa-2026-dashboard/assets/$1"
+      "dest": "/assets/$1"
     },
     {
       "src": "^/(.*)",
-      "dest": "/projects/copa-2026-dashboard/$1"
+      "dest": "/$1"
     }
   ]
 }
