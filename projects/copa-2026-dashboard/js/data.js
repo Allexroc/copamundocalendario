@@ -336,6 +336,72 @@ function getTopAssists(limit = 5) {
     return WORLD_CUP_2026.topAssists.slice(0, limit);
 }
 
+// Real-time data update functions
+function updateMatchData(matchId, updates) {
+    const matchIndex = WORLD_CUP_2026.matches.findIndex(m => m.id === matchId);
+    if (matchIndex !== -1) {
+        WORLD_CUP_2026.matches[matchIndex] = {
+            ...WORLD_CUP_2026.matches[matchIndex],
+            ...updates,
+            lastUpdated: new Date().toISOString()
+        };
+        return true;
+    }
+    return false;
+}
+
+function updateGroupStandings(groupId, standings) {
+    if (WORLD_CUP_2026.groupStandings[groupId]) {
+        WORLD_CUP_2026.groupStandings[groupId] = standings;
+        return true;
+    }
+    return false;
+}
+
+function updateTopScorers(scorers) {
+    WORLD_CUP_2026.topScorers = scorers;
+    return true;
+}
+
+function updateTopAssists(assists) {
+    WORLD_CUP_2026.topAssists = assists;
+    return true;
+}
+
+function getLiveMatches() {
+    return WORLD_CUP_2026.matches.filter(m => m.status === 'live');
+}
+
+function getUpcomingMatches(limit = 5) {
+    const now = new Date();
+    return WORLD_CUP_2026.matches
+        .filter(m => m.status === 'scheduled' && new Date(m.date) > now)
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, limit);
+}
+
+function getRecentResults(limit = 5) {
+    return WORLD_CUP_2026.matches
+        .filter(m => m.status === 'finished')
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, limit);
+}
+
+// Subscribe to WebSocket updates if available
+if (typeof worldCupWS !== 'undefined') {
+    worldCupWS.addEventListener('match_update', (data) => {
+        console.log('📊 Data module: Match update received', data);
+    });
+    
+    worldCupWS.addEventListener('standings_update', (data) => {
+        console.log('📊 Data module: Standings update received', data);
+    });
+    
+    worldCupWS.addEventListener('statistics_update', (data) => {
+        console.log('📊 Data module: Statistics update received', data);
+    });
+}
+
 console.log('✅ Data module loaded - Copa 2026 data ready');
 
 // Made with Bob

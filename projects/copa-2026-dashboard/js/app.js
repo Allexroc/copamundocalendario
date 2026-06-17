@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar componentes
     initializeApp();
     setupEventListeners();
+    setupWebSocketListeners();
     showWelcomeMessage();
 });
 
@@ -71,6 +72,139 @@ function setupEventListeners() {
     
     // Filtros
     setupFilters();
+    
+    // Auto-refresh for live matches
+    startAutoRefresh();
+}
+
+function setupWebSocketListeners() {
+    if (typeof worldCupWS === 'undefined') {
+        console.warn('⚠️ WebSocket service not available');
+        return;
+    }
+    
+    // Listen for match updates
+    worldCupWS.addEventListener('match_update', (data) => {
+        console.log('🔄 App: Match update received, refreshing display');
+        refreshCurrentView();
+    });
+    
+    // Listen for live score updates
+    worldCupWS.addEventListener('live_score', (data) => {
+        console.log('⚽ App: Live score update, refreshing display');
+        refreshCurrentView();
+        updateSidebarInfo();
+    });
+    
+    // Listen for standings updates
+    worldCupWS.addEventListener('standings_update', (data) => {
+        console.log('📊 App: Standings update, refreshing display');
+        refreshCurrentView();
+    });
+    
+    // Listen for statistics updates
+    worldCupWS.addEventListener('statistics_update', (data) => {
+        console.log('📈 App: Statistics update, refreshing display');
+        refreshCurrentView();
+        updateSidebarInfo();
+    });
+    
+    // Listen for connection status changes
+    worldCupWS.addEventListener('connection', (data) => {
+        console.log('🔌 App: Connection status changed:', data.status);
+        if (data.status === 'connected') {
+            // Refresh all data when reconnected
+            setTimeout(() => {
+                refreshCurrentView();
+                updateSidebarInfo();
+            }, 1000);
+        }
+    });
+}
+
+function startAutoRefresh() {
+    // Refresh live matches every 30 seconds
+    setInterval(() => {
+        const liveMatches = getLiveMatches();
+        if (liveMatches.length > 0) {
+            console.log('🔄 Auto-refresh: Updating live matches');
+            refreshCurrentView();
+        }
+    }, 30000);
+    
+    // Update sidebar info every minute
+    setInterval(() => {
+        updateSidebarInfo();
+    }, 60000);
+}
+
+function refreshCurrentView() {
+    const activeSection = document.querySelector('.content-section.active');
+    if (!activeSection) return;
+    
+    const sectionId = activeSection.id;
+    const tabName = sectionId.replace('Section', '');
+    
+    // Refresh the current view
+    switch(tabName) {
+        case 'groups':
+            if (typeof renderGroups === 'function') {
+                renderGroups();
+            }
+            break;
+        case 'calendar':
+            if (typeof renderCalendar === 'function') {
+                renderCalendar();
+            }
+            break;
+        case 'results':
+            if (typeof renderResults === 'function') {
+                renderResults();
+            }
+            break;
+        case 'knockout':
+            if (typeof renderKnockout === 'function') {
+                renderKnockout();
+            }
+            break;
+        case 'stats':
+            if (typeof renderStats === 'function') {
+                renderStats();
+            }
+            break;
+    }
+}
+
+function updateSidebarInfo() {
+    // Update next match info
+    const nextMatchEl = document.getElementById('nextMatch');
+    if (nextMatchEl && typeof getUpcomingMatches === 'function') {
+        const upcoming = getUpcomingMatches(1);
+        if (upcoming.length > 0) {
+            const match = upcoming[0];
+            const homeTeam = WORLD_CUP_2026.teams[match.homeTeam];
+            const awayTeam = WORLD_CUP_2026.teams[match.awayTeam];
+            const date = new Date(match.date);
+            const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+            const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            nextMatchEl.textContent = `${homeTeam.flag} vs ${awayTeam.flag} - ${dateStr} ${timeStr}`;
+        } else {
+            nextMatchEl.textContent = 'Nenhum jogo agendado';
+        }
+    }
+    
+    // Update top scorer info
+    const topScorerEl = document.getElementById('topScorer');
+    if (topScorerEl && typeof getTopScorers === 'function') {
+        const scorers = getTopScorers(1);
+        if (scorers.length > 0) {
+            const scorer = scorers[0];
+            const team = WORLD_CUP_2026.teams[scorer.team];
+            topScorerEl.textContent = `${scorer.player} ${team.flag} - ${scorer.goals} gols`;
+        } else {
+            topScorerEl.textContent = 'Aguardando dados';
+        }
+    }
 }
 
 function switchTab(tabName) {

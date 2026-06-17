@@ -9,19 +9,29 @@ Este projeto consiste em um dashboard web moderno e responsivo que permite acomp
 - ✅ **48 seleções** divididas em **12 grupos**
 - ✅ **104 jogos** com calendário completo
 - ✅ Tabelas de classificação em tempo real
+- ✅ **Atualizações em tempo real via WebSocket** 🔴 NOVO!
 - ✅ Fase eliminatória com chaveamento visual
 - ✅ Estatísticas detalhadas (artilharia, assistências, cartões)
 - ✅ Sistema de busca e filtros avançados
 - ✅ Gráficos e visualizações interativas
 - ✅ Design responsivo (mobile, tablet, desktop)
+- ✅ **Notificações de eventos ao vivo** 🔴 NOVO!
 
 ## 🎯 Funcionalidades Principais
+
+### 🔴 NOVO: Atualizações em Tempo Real
+- **WebSocket** para dados ao vivo
+- Placares atualizados instantaneamente
+- Notificações de gols, cartões e eventos
+- Reconexão automática
+- Indicador de status de conexão
+- Auto-refresh de partidas ao vivo
 
 ### 1. Tabelas de Grupos
 - Visualização dos 12 grupos (A-L)
 - Classificação automática por pontos, saldo de gols
 - Indicadores visuais de classificação
-- Atualização em tempo real
+- Atualização em tempo real via WebSocket
 
 ### 2. Calendário de Jogos
 - Lista completa de todos os 104 jogos
@@ -61,6 +71,7 @@ copa-2026-dashboard/
 │   ├── responsive.css     # Media queries
 │   └── animations.css     # Animações
 ├── js/
+│   ├── websocket-service.js  # 🔴 NOVO: Serviço WebSocket
 │   ├── data.js           # Dados da Copa
 │   ├── app.js            # Lógica principal
 │   ├── groups.js         # Gerenciamento de grupos
@@ -69,6 +80,7 @@ copa-2026-dashboard/
 │   ├── stats.js          # Estatísticas
 │   ├── filters.js        # Sistema de filtros
 │   └── charts.js         # Gráficos
+├── mock-websocket-server.js  # 🔴 NOVO: Servidor mock para testes
 ├── assets/
 │   ├── flags/            # Bandeiras das seleções
 │   ├── logos/            # Logos de estádios
@@ -76,6 +88,7 @@ copa-2026-dashboard/
 ├── PLANO_COPA_2026.md    # Plano técnico detalhado
 ├── ARQUITETURA.md        # Diagramas de arquitetura
 ├── DADOS_COPA_2026.md    # Dados estruturados
+├── WEBSOCKET_GUIDE.md    # 🔴 NOVO: Guia completo de WebSocket
 └── README.md             # Este arquivo
 ```
 
@@ -84,8 +97,10 @@ copa-2026-dashboard/
 - **HTML5**: Estrutura semântica
 - **CSS3**: Flexbox, Grid, variáveis CSS, animações
 - **JavaScript (ES6+)**: Vanilla JS para máxima performance
+- **WebSocket API**: 🔴 NOVO: Comunicação em tempo real
 - **Chart.js**: Gráficos e visualizações (via CDN)
 - **Font Awesome**: Ícones (via CDN)
+- **Node.js + ws**: 🔴 NOVO: Servidor WebSocket mock (desenvolvimento)
 
 ## 📱 Responsividade
 
@@ -163,7 +178,9 @@ Os dados incluem:
 - ✨ Interface moderna e intuitiva
 - ⚡ Performance otimizada
 - 📱 Totalmente responsivo
-- 🎯 Sem dependências de backend
+- 🔴 **Atualizações em tempo real via WebSocket**
+- 🔔 **Sistema de notificações ao vivo**
+- 🔄 **Reconexão automática**
 - 🔍 Sistema de busca poderoso
 - 📊 Visualizações ricas
 - 🎨 Design profissional
@@ -173,14 +190,25 @@ Os dados incluem:
 - [`PLANO_COPA_2026.md`](PLANO_COPA_2026.md) - Plano técnico completo
 - [`ARQUITETURA.md`](ARQUITETURA.md) - Diagramas e arquitetura
 - [`DADOS_COPA_2026.md`](DADOS_COPA_2026.md) - Estrutura de dados
+- [`WEBSOCKET_GUIDE.md`](WEBSOCKET_GUIDE.md) - 🔴 **NOVO: Guia completo de WebSocket**
+- [`COMO_EXECUTAR.md`](COMO_EXECUTAR.md) - Como executar o projeto
+- [`GUIA_SLACK.md`](GUIA_SLACK.md) - Integração com Slack
 
 ## 🤝 Como Usar
 
+### Modo Básico (Sem WebSocket)
 1. Clone ou baixe o projeto
 2. Abra `index.html` em um navegador moderno
 3. Navegue pelas diferentes seções usando as abas
 4. Use filtros e busca para encontrar informações específicas
-5. Atualize resultados conforme os jogos acontecem
+
+### Modo Avançado (Com WebSocket - Tempo Real) 🔴 NOVO
+1. Instale as dependências: `npm install ws`
+2. Inicie o servidor mock: `node mock-websocket-server.js`
+3. Abra `index.html` em um navegador
+4. Veja as atualizações em tempo real!
+
+📚 **Guia completo**: Consulte [`WEBSOCKET_GUIDE.md`](WEBSOCKET_GUIDE.md) para instruções detalhadas
 
 ## 📄 Licença
 
