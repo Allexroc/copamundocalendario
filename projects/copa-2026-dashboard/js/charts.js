@@ -293,7 +293,7 @@ function createTeamPerformanceChart(teamCode, canvasId) {
                 },
                 title: {
                     display: true,
-                    text: `${team.flag} ${team.name} - Desempenho`,
+                    text: `${(team || { flag: '🏳️', name: 'Seleção' }).flag} ${(team || { flag: '🏳️', name: 'Seleção' }).name} - Desempenho`,
                     font: {
                         size: 16,
                         weight: 'bold'

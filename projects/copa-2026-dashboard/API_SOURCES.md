@@ -1,16 +1,15 @@
-# 📡 Fontes de Dados em Tempo Real - Copa 2026
+# 📡 Fontes de Dados - Copa 2026
 
 ## 🎯 Resumo das Opções
 
-O dashboard suporta **múltiplas fontes de dados** para atualizações em tempo real. Você pode escolher entre:
+O dashboard suporta **múltiplas fontes de dados** via APIs HTTP. Você pode escolher entre:
 
-1. **Servidor Mock Local** (Desenvolvimento/Testes) ✅ CONFIGURADO
-2. **APIs Públicas HTTP** (Polling) 
-3. **WebSocket Dedicado** (Produção)
+1. **Dados Estáticos** (Desenvolvimento/Testes) ✅ PADRÃO
+2. **APIs Públicas HTTP** (Produção)
 
 ## 🔧 Configuração Atual
 
-### Opção Ativa: **Servidor Mock Local**
+### Opção Ativa: **Dados Estáticos**
 
 ```javascript
 // Em js/api-config.js
@@ -18,21 +17,15 @@ API_CONFIG.active = 'mock'
 ```
 
 **Como funciona:**
-- Servidor Node.js local simula dados em tempo real
-- WebSocket em `ws://localhost:8080`
-- Dados simulados para desenvolvimento
+- Dados simulados armazenados localmente
+- Não requer servidor backend
+- Ideal para desenvolvimento e testes
 - **Não requer API keys ou autenticação**
 
 **Como usar:**
 ```bash
-# 1. Instalar dependências
-npm install ws
-
-# 2. Iniciar servidor mock
-node mock-websocket-server.js
-
-# 3. Abrir dashboard
-# O WebSocket conecta automaticamente
+# Simplesmente abra o index.html no navegador
+# Ou use um servidor local como Live Server
 ```
 
 ---
@@ -148,7 +141,7 @@ API_CONFIG.active = 'fifaOfficial'
 
 **Características:**
 - ✅ Dados oficiais da FIFA
-- ✅ WebSocket real-time
+- ✅ API HTTP
 - ✅ Gratuito
 - ⚠️ Disponível apenas durante competições oficiais
 - 📚 [Site FIFA](https://www.fifa.com/)
@@ -251,7 +244,7 @@ API_CONFIG.active = 'apiFootball'
 API_CONFIG.active = 'fifaOfficial'
 ```
 ✅ Dados oficiais
-✅ WebSocket real-time
+✅ API HTTP
 ✅ Gratuito
 
 ---
@@ -294,7 +287,7 @@ console.log(worldCupWS.getConnectionState());
 
 ## 🔍 Troubleshooting
 
-### Problema: "No WebSocket URL configured"
+### Problema: "API não responde"
 
 **Solução:** Verifique se `API_CONFIG.active` está configurado corretamente.
 
@@ -342,7 +335,7 @@ if (primaryAPI.failed) {
 
 ## 📚 Recursos Adicionais
 
-- [WEBSOCKET_GUIDE.md](WEBSOCKET_GUIDE.md) - Guia completo de WebSocket
+- [SETUP_API_FOOTBALL.md](SETUP_API_FOOTBALL.md) - Configuração de API
 - [README.md](README.md) - Visão geral do projeto
 - [COMO_EXECUTAR.md](COMO_EXECUTAR.md) - Como executar
 

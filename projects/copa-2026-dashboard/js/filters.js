@@ -206,7 +206,7 @@ function showTeamSummaryOld(teamCode) {
                         <div class="team-matches-list">
                             ${finishedMatches.map(match => {
                                 const isHome = match.homeTeam === teamCode;
-                                const opponent = getTeamInfo(isHome ? match.awayTeam : match.homeTeam);
+                                const opponent = getTeamInfo(isHome ? match.awayTeam : match.homeTeam) || { flag: '🏳️', name: isHome ? match.awayTeam : match.homeTeam };
                                 const teamScore = isHome ? match.homeScore : match.awayScore;
                                 const opponentScore = isHome ? match.awayScore : match.homeScore;
                                 const result = teamScore > opponentScore ? 'win' : teamScore === opponentScore ? 'draw' : 'loss';
@@ -229,7 +229,7 @@ function showTeamSummaryOld(teamCode) {
                         <div class="team-matches-list">
                             ${upcomingMatches.slice(0, 3).map(match => {
                                 const isHome = match.homeTeam === teamCode;
-                                const opponent = getTeamInfo(isHome ? match.awayTeam : match.homeTeam);
+                                const opponent = getTeamInfo(isHome ? match.awayTeam : match.homeTeam) || { flag: '🏳️', name: isHome ? match.awayTeam : match.homeTeam };
                                 const matchDate = new Date(match.date);
                                 const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
                                 
@@ -463,8 +463,8 @@ function updateNextMatchInfo() {
 
     if (upcomingMatches.length > 0) {
         const nextMatch = upcomingMatches[0];
-        const homeTeam = getTeamInfo(nextMatch.homeTeam);
-        const awayTeam = getTeamInfo(nextMatch.awayTeam);
+        const homeTeam = getTeamInfo(nextMatch.homeTeam) || { flag: '🏳️', name: nextMatch.homeTeam };
+        const awayTeam = getTeamInfo(nextMatch.awayTeam) || { flag: '🏳️', name: nextMatch.awayTeam };
         const matchDate = new Date(nextMatch.date);
         const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
         const timeStr = matchDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -487,7 +487,7 @@ function updateTopScorerInfo() {
     const scorers = getTopScorers(1);
     if (scorers.length > 0) {
         const topScorer = scorers[0];
-        const team = getTeamInfo(topScorer.team);
+        const team = getTeamInfo(topScorer.team) || { flag: '🏳️', name: topScorer.team };
         
         topScorerEl.innerHTML = `
             <div style="font-size: 12px; font-weight: 600;">
@@ -606,7 +606,7 @@ function displaySearchResults(results, query) {
     if (results.players.length > 0) {
         html += '<div class="search-category"><h4>Jogadores</h4>';
         results.players.slice(0, 5).forEach(player => {
-            const team = getTeamInfo(player.team);
+            const team = getTeamInfo(player.team) || { flag: '🏳️', name: player.team };
             html += `
                 <div class="search-item" data-type="player">
                     <span class="search-name">${player.player}</span>

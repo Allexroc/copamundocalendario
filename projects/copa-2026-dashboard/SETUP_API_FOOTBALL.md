@@ -37,7 +37,6 @@ Edite o arquivo [`js/api-config.js`](js/api-config.js):
 apiFootball: {
     name: 'API-Football',
     baseUrl: 'https://api-football-v1.p.rapidapi.com/v3',
-    websocket: null,
     polling: true,
     pollInterval: 30000, // 30 segundos
     endpoints: {
@@ -106,8 +105,7 @@ apiFootballAdapter.getLiveMatches().then(matches => {
 ✅ API Configuration loaded
 📡 Active API: apiFootball
 ✅ API-Football Adapter initialized
-✅ WebSocket service module loaded
-🔄 API-Football uses HTTP polling instead of WebSocket
+🔄 API-Football uses HTTP polling
 🔄 Starting HTTP polling service
 🔄 Fetching data from API...
 ⚽ 3 live matches found
@@ -168,7 +166,7 @@ API_CONFIG.active = 'mock'
 
 3. Inicie o servidor mock:
 ```bash
-node mock-websocket-server.js
+# Não é mais necessário - use apenas dados estáticos ou API HTTP
 ```
 
 ## 📊 Limites do Plano Gratuito

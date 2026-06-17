@@ -60,18 +60,22 @@ function createDateSection(date, matches) {
 }
 
 function createMatchCard(match) {
-    const homeTeam = getTeamInfo(match.homeTeam);
-    const awayTeam = getTeamInfo(match.awayTeam);
-    const stadium = WORLD_CUP_2026.stadiums[match.stadium];
+    const homeTeam = getTeamInfo(match.homeTeam) || { flag: '🏳️', name: match.homeTeam };
+    const awayTeam = getTeamInfo(match.awayTeam) || { flag: '🏳️', name: match.awayTeam };
+    const stadium = WORLD_CUP_2026.stadiums[match.stadium] || { city: 'Local a confirmar', country: '' };
     const time = new Date(match.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     
     const statusClass = match.status === 'finished' ? 'finished' : match.status === 'live' ? 'live' : 'scheduled';
-    const statusText = match.status === 'finished' ? 'Encerrado' : match.status === 'live' ? 'AO VIVO' : time;
+    const statusText = match.status === 'finished'
+        ? 'Encerrado'
+        : match.status === 'live'
+            ? `AO VIVO${match.minute ? ` • ${match.minute}'` : ''}`
+            : time;
     
     return `
         <div class="match-card ${statusClass}" data-match-id="${match.id}">
             <div class="match-header">
-                <span class="match-group">Grupo ${match.group}</span>
+                <span class="match-group">${match.group ? `Grupo ${match.group}` : 'Copa do Mundo 2026'}</span>
                 <span class="match-status ${statusClass}">${statusText}</span>
             </div>
             <div class="match-body">
@@ -81,7 +85,7 @@ function createMatchCard(match) {
                 </div>
                 <div class="match-score">
                     ${match.status === 'finished' || match.status === 'live' ? `
-                        <span class="score">${match.homeScore} - ${match.awayScore}</span>
+                        <span class="score">${match.homeScore ?? 0} - ${match.awayScore ?? 0}</span>
                     ` : `
                         <span class="vs">VS</span>
                     `}
@@ -94,11 +98,11 @@ function createMatchCard(match) {
             <div class="match-footer">
                 <div class="match-venue">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>${match.stadium}</span>
+                    <span>${match.stadium || 'Estádio a confirmar'}</span>
                 </div>
                 <div class="match-location">
                     <i class="fas fa-city"></i>
-                    <span>${stadium.city}, ${stadium.country}</span>
+                    <span>${stadium.city}${stadium.country ? `, ${stadium.country}` : ''}</span>
                 </div>
             </div>
             ${match.status === 'finished' ? `

@@ -80,8 +80,8 @@ function showTeamDetails(teamCode) {
         <div class="team-details-content">
             <div class="team-details-header">
                 <div class="team-header-info">
-                    <span class="team-header-flag">${team.flag}</span>
-                    <h2>${team.name}</h2>
+                    <span class="team-header-flag">${(team || { flag: '🏳️' }).flag}</span>
+                    <h2>${(team || { name: teamCode }).name}</h2>
                 </div>
                 <button class="close-modal" onclick="closeTeamDetailsModal()">
                     <i class="fas fa-times"></i>
@@ -220,7 +220,10 @@ function createPastMatches(matches, teamCode) {
             <div class="matches-list">
                 ${matches.map(match => {
                     const isHome = match.homeTeam === teamCode;
-                    const opponent = isHome ? getTeamInfo(match.awayTeam) : getTeamInfo(match.homeTeam);
+                    const opponent = (isHome ? getTeamInfo(match.awayTeam) : getTeamInfo(match.homeTeam)) || {
+                        flag: '🏳️',
+                        name: isHome ? match.awayTeam : match.homeTeam
+                    };
                     const teamScore = isHome ? match.homeScore : match.awayScore;
                     const opponentScore = isHome ? match.awayScore : match.homeScore;
                     const result = teamScore > opponentScore ? 'win' : teamScore < opponentScore ? 'loss' : 'draw';
@@ -251,7 +254,10 @@ function createUpcomingMatches(matches, teamCode) {
             <div class="matches-list">
                 ${matches.map(match => {
                     const isHome = match.homeTeam === teamCode;
-                    const opponent = isHome ? getTeamInfo(match.awayTeam) : getTeamInfo(match.homeTeam);
+                    const opponent = (isHome ? getTeamInfo(match.awayTeam) : getTeamInfo(match.homeTeam)) || {
+                        flag: '🏳️',
+                        name: isHome ? match.awayTeam : match.homeTeam
+                    };
                     const matchDate = new Date(match.date);
                     
                     return `

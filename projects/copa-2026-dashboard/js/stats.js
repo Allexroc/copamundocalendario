@@ -100,9 +100,9 @@ function createGeneralSummary() {
         team.won > max.won ? team : max
     );
     
-    const bestAttackTeam = getTeamInfo(bestAttack.team);
-    const bestDefenseTeam = getTeamInfo(bestDefense.team);
-    const mostWinsTeam = getTeamInfo(mostWins.team);
+    const bestAttackTeam = getTeamInfo(bestAttack.team) || { flag: '🏳️', name: bestAttack.team };
+    const bestDefenseTeam = getTeamInfo(bestDefense.team) || { flag: '🏳️', name: bestDefense.team };
+    const mostWinsTeam = getTeamInfo(mostWins.team) || { flag: '🏳️', name: mostWins.team };
     
     return `
         <div class="general-summary">
@@ -166,7 +166,7 @@ function createGeneralSummary() {
                             .sort((a, b) => (b.won * 3 + b.drawn) - (a.won * 3 + a.drawn))
                             .slice(0, 10)
                             .map(team => {
-                                const teamInfo = getTeamInfo(team.team);
+                                const teamInfo = getTeamInfo(team.team) || { flag: '🏳️', name: team.team };
                                 const goalDiff = team.goalsFor - team.goalsAgainst;
                                 return `
                                     <tr>
@@ -205,7 +205,7 @@ function createPlayerSelector() {
             <select id="playerSelect" class="player-select">
                 <option value="">Selecione um jogador</option>
                 ${uniquePlayers.map(player => {
-                    const team = getTeamInfo(player.team);
+                    const team = getTeamInfo(player.team) || { flag: '🏳️', code: player.team };
                     return `<option value="${player.player}">${player.player} (${team.flag} ${team.code})</option>`;
                 }).join('')}
             </select>
@@ -241,7 +241,7 @@ function displayPlayerStats(playerName) {
     }
     
     const player = scorer || assister;
-    const team = getTeamInfo(player.team);
+    const team = getTeamInfo(player.team) || { flag: '🏳️', name: player.team };
     
     display.innerHTML = `
         <div class="player-stats-card">
@@ -335,7 +335,7 @@ function createScorersTable() {
 }
 
 function createScorerRow(scorer, rank) {
-    const team = getTeamInfo(scorer.team);
+    const team = getTeamInfo(scorer.team) || { flag: '🏳️', code: scorer.team };
     const average = (scorer.goals / scorer.matches).toFixed(2);
     const medalClass = rank <= 3 ? `medal-${rank}` : '';
     
@@ -394,7 +394,7 @@ function createAssistsTable() {
 }
 
 function createAssistRow(assist, rank) {
-    const team = getTeamInfo(assist.team);
+    const team = getTeamInfo(assist.team) || { flag: '🏳️', code: assist.team };
     const medalClass = rank <= 3 ? `medal-${rank}` : '';
     
     return `

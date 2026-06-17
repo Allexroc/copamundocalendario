@@ -87,7 +87,7 @@ function createGroupCard(groupId) {
 }
 
 function createTeamRow(teamData, position) {
-    const team = getTeamInfo(teamData.team);
+    const team = getTeamInfo(teamData.team) || { flag: '🏳️', name: teamData.team };
     const goalDifference = teamData.goalsFor - teamData.goalsAgainst;
     const positionClass = getPositionClass(position);
     

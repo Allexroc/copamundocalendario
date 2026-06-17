@@ -31,8 +31,9 @@ function initializeApp() {
         initializeFilters();
     }
 
+    initializeTheme();
+    initializeLanguageSelector();
     updateSidebarInfo();
-    initializeMatchAutoRefresh();
 }
 
 function setupEventListeners() {
@@ -81,13 +82,14 @@ function setupEventListeners() {
 
     const refreshButton = document.getElementById('refreshMatchesButton');
     if (refreshButton) {
-        refreshButton.addEventListener('click', () => {
-            refreshMatchData({ manual: true });
+        refreshButton.addEventListener('click', async () => {
+            await refreshMatchData({ manual: true });
         });
     }
 
     // Auto-refresh for live matches
     startAutoRefresh();
+    initializeMatchAutoRefresh();
 }
 
 
@@ -123,12 +125,13 @@ async function refreshMatchData(options = {}) {
     const { manual = false, silent = false } = options;
 
     if (isRefreshingMatches) {
-        return;
+        updateRefreshStatus('Uma atualização já está em andamento.', 'loading');
+        return false;
     }
 
-    if (typeof apiFootballAdapter === 'undefined' || !apiFootballAdapter) {
-        updateRefreshStatus('API indisponível no momento.', 'error');
-        return;
+    if (typeof fetchDashboardDataWithFallback !== 'function') {
+        updateRefreshStatus('Serviço de atualização indisponível no momento.', 'error');
+        return false;
     }
 
     isRefreshingMatches = true;
@@ -136,10 +139,11 @@ async function refreshMatchData(options = {}) {
     updateRefreshStatus(manual ? 'Atualizando dados dos jogos...' : 'Sincronizando dados da API...', silent ? 'info' : 'loading');
 
     try {
-        const dashboardData = await apiFootballAdapter.getDashboardData();
+        const providerResult = await fetchDashboardDataWithFallback();
+        const dashboardData = providerResult.data;
 
         if (dashboardData.matches.length > 0) {
-            replaceAllMatches(dashboardData.matches);
+            mergeMatchData(dashboardData.matches);
         }
 
         if (Object.keys(dashboardData.standings).length > 0) {
@@ -154,12 +158,20 @@ async function refreshMatchData(options = {}) {
             updateTopAssists(dashboardData.topAssists);
         }
 
-        refreshCurrentView();
+        refreshAllViews();
         updateSidebarInfo();
-        updateRefreshStatus(`Dados atualizados em ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}.`, 'success');
+
+        const providerLabel = providerResult.providerName ? ` via ${providerResult.providerName}` : '';
+        const fallbackLabel = providerResult.isFallback ? ' (fallback)' : '';
+        updateRefreshStatus(
+            `Dados atualizados${providerLabel}${fallbackLabel} em ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}.`,
+            'success'
+        );
+        return true;
     } catch (error) {
         console.error('❌ Error refreshing match data:', error);
         updateRefreshStatus(error.message || 'Não foi possível atualizar os dados.', 'error');
+        return false;
     } finally {
         isRefreshingMatches = false;
         setRefreshButtonState(false, manual);
@@ -222,6 +234,117 @@ function refreshCurrentView() {
     }
 }
 
+function refreshAllViews() {
+    if (typeof renderGroups === 'function') {
+        renderGroups();
+    }
+
+    if (typeof renderCalendar === 'function') {
+        renderCalendar();
+    }
+
+    if (typeof renderResults === 'function') {
+        renderResults();
+    }
+
+    if (typeof renderKnockout === 'function') {
+        renderKnockout();
+    }
+
+    if (typeof renderStats === 'function') {
+        renderStats();
+    }
+
+    if (typeof applyFilters === 'function') {
+        applyFilters();
+    }
+}
+
+function mergeMatchData(apiMatches) {
+    const currentMatches = getAllMatches();
+    const mergedMatches = currentMatches.map(match => {
+        const apiMatch = apiMatches.find(candidate => isSameMatch(candidate, match));
+
+        if (!apiMatch) {
+            return match;
+        }
+
+        return {
+            ...match,
+            ...apiMatch,
+            id: match.id,
+            stadium: apiMatch.stadium || match.stadium,
+            group: apiMatch.group || match.group,
+            phase: apiMatch.phase || match.phase,
+            round: apiMatch.round || match.round
+        };
+    });
+
+    const additionalApiMatches = apiMatches.filter(apiMatch =>
+        !mergedMatches.some(match => isSameMatch(apiMatch, match))
+    );
+
+    replaceAllMatches([...mergedMatches, ...additionalApiMatches]);
+}
+
+function isSameMatch(apiMatch, localMatch) {
+    if (!apiMatch || !localMatch) {
+        return false;
+    }
+
+    const sameTeams =
+        apiMatch.homeTeam === localMatch.homeTeam &&
+        apiMatch.awayTeam === localMatch.awayTeam;
+
+    const sameGroupAndRound =
+        apiMatch.group &&
+        localMatch.group &&
+        apiMatch.group === localMatch.group &&
+        apiMatch.round === localMatch.round;
+
+    const apiDate = apiMatch.date ? new Date(apiMatch.date).getTime() : null;
+    const localDate = localMatch.date ? new Date(localMatch.date).getTime() : null;
+    const closeDate = apiDate && localDate ? Math.abs(apiDate - localDate) <= 24 * 60 * 60 * 1000 : false;
+
+    return sameTeams && (sameGroupAndRound || closeDate);
+}
+
+function initializeTheme() {
+    const savedTheme = localStorage.getItem('dashboard-theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+
+    syncThemeIcon();
+}
+
+function syncThemeIcon() {
+    const icon = document.querySelector('#themeToggle i');
+    if (!icon) return;
+
+    const isDark = document.body.classList.contains('dark-theme');
+    icon.classList.toggle('fa-moon', !isDark);
+    icon.classList.toggle('fa-sun', isDark);
+}
+
+function initializeLanguageSelector() {
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const savedLanguage = localStorage.getItem('dashboard-language') || 'PT';
+
+    langButtons.forEach(button => {
+        const isActive = button.textContent.trim() === savedLanguage;
+        button.classList.toggle('active', isActive);
+
+        button.addEventListener('click', () => {
+            const selectedLanguage = button.textContent.trim();
+            langButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            localStorage.setItem('dashboard-language', selectedLanguage);
+            updateRefreshStatus(`Idioma alterado para ${selectedLanguage}.`, 'success');
+        });
+    });
+}
+
 function updateSidebarInfo() {
     // Update next match info
     const nextMatchEl = document.getElementById('nextMatch');
@@ -231,10 +354,15 @@ function updateSidebarInfo() {
             const match = upcoming[0];
             const homeTeam = WORLD_CUP_2026.teams[match.homeTeam];
             const awayTeam = WORLD_CUP_2026.teams[match.awayTeam];
-            const date = new Date(match.date);
-            const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-            const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            nextMatchEl.textContent = `${homeTeam.flag} vs ${awayTeam.flag} - ${dateStr} ${timeStr}`;
+
+            if (homeTeam && awayTeam) {
+                const date = new Date(match.date);
+                const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                nextMatchEl.textContent = `${homeTeam.flag} vs ${awayTeam.flag} - ${dateStr} ${timeStr}`;
+            } else {
+                nextMatchEl.textContent = 'Próximo jogo disponível';
+            }
         } else {
             nextMatchEl.textContent = 'Nenhum jogo agendado';
         }
@@ -247,7 +375,9 @@ function updateSidebarInfo() {
         if (scorers.length > 0) {
             const scorer = scorers[0];
             const team = WORLD_CUP_2026.teams[scorer.team];
-            topScorerEl.textContent = `${scorer.player} ${team.flag} - ${scorer.goals} gols`;
+            topScorerEl.textContent = team
+                ? `${scorer.player} ${team.flag} - ${scorer.goals} gols`
+                : `${scorer.player} - ${scorer.goals} gols`;
         } else {
             topScorerEl.textContent = 'Aguardando dados';
         }

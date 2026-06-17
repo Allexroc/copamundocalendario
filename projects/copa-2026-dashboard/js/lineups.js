@@ -365,8 +365,8 @@ function showLineupModal(teamCode) {
         <div class="lineup-modal-content">
             <div class="lineup-modal-header">
                 <div class="lineup-team-info">
-                    <span class="lineup-team-flag">${teamInfo.flag}</span>
-                    <h2>${teamInfo.name}</h2>
+                    <span class="lineup-team-flag">${(teamInfo || { flag: '🏳️' }).flag}</span>
+                    <h2>${(teamInfo || { name: teamCode }).name}</h2>
                 </div>
                 <button class="lineup-modal-close" onclick="closeLineupModal()">
                     <i class="fas fa-times"></i>

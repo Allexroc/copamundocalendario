@@ -74,6 +74,17 @@ body {
     color: var(--text-primary);
     background-color: var(--background);
     overflow-x: hidden;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+body.dark-theme {
+    --background: #0f172a;
+    --card-bg: #111827;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --border-color: #334155;
+    --primary: #60a5fa;
+    --secondary: #22d3ee;
 }
 
 a {
@@ -259,6 +270,10 @@ img {
 
 .refresh-status.loading {
     color: #ffe082;
+}
+
+.refresh-status.info {
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .theme-toggle {

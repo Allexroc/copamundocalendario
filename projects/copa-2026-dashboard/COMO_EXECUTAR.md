@@ -8,6 +8,61 @@
 
 ## 📋 Opções para Executar
 
+## 🔌 Novo modo recomendado: frontend + backend proxy
+
+Para atualizar os dados reais da Copa sem problemas de CORS, o dashboard agora pode usar um backend local em [`backend/server.js`](backend/server.js), que faz o proxy seguro para a API [`Football-Data.org`](README.md).
+
+### 1. Configurar o backend
+
+Entre na pasta [`backend`](backend/) e instale as dependências:
+
+```bash
+cd backend
+npm install
+```
+
+Crie um arquivo `.env` com base em [`backend/.env.example`](backend/.env.example):
+
+```env
+PORT=3001
+FOOTBALL_DATA_API_KEY=SUA_CHAVE_AQUI
+FOOTBALL_DATA_BASE_URL=https://api.football-data.org/v4
+COMPETITION_CODE=WC
+```
+
+### 2. Iniciar o backend
+
+Ainda dentro da pasta [`backend`](backend/), execute:
+
+```bash
+npm start
+```
+
+O proxy ficará disponível em `http://localhost:3001` e expõe:
+- `GET /health`
+- `GET /api/football-data/matches`
+- `GET /api/football-data/standings`
+- `GET /api/football-data/scorers`
+- `GET /api/dashboard-data`
+
+### 3. Iniciar o frontend
+
+Depois, abra o frontend com servidor local, preferencialmente usando uma destas opções:
+- [`Live Server`](index.html)
+- `python -m http.server 8000`
+- `http-server -p 8000`
+
+Evite abrir apenas o arquivo [`index.html`](index.html) com duplo clique quando estiver testando integração completa.
+
+### 4. Como o frontend consome os dados
+
+O frontend agora prioriza o provider [`backendProxy`](js/api-config.js), apontando para `http://localhost:3001/api/dashboard-data`.
+
+Se o backend estiver no ar e a chave da API estiver válida:
+- o botão de atualização manual buscará dados reais
+- a atualização automática continuará funcionando
+- o frontend deixará de depender de chamadas diretas bloqueadas por CORS
+
 ### Opção 1: Execução Rápida (Recomendado)
 
 Abra o arquivo [`index.html`](index.html) diretamente no navegador:
