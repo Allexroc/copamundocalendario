@@ -318,6 +318,15 @@ function getAllMatches() {
     return WORLD_CUP_2026.matches;
 }
 
+function replaceAllMatches(matches) {
+    if (!Array.isArray(matches)) {
+        return false;
+    }
+
+    WORLD_CUP_2026.matches = matches;
+    return true;
+}
+
 function getMatchesByGroup(groupId) {
     return WORLD_CUP_2026.matches.filter(m => m.group === groupId);
 }
@@ -358,6 +367,18 @@ function updateGroupStandings(groupId, standings) {
     return false;
 }
 
+function replaceGroupStandings(standingsByGroup) {
+    if (!standingsByGroup || typeof standingsByGroup !== 'object') {
+        return false;
+    }
+
+    Object.keys(standingsByGroup).forEach(groupId => {
+        WORLD_CUP_2026.groupStandings[groupId] = standingsByGroup[groupId];
+    });
+
+    return true;
+}
+
 function updateTopScorers(scorers) {
     WORLD_CUP_2026.topScorers = scorers;
     return true;
@@ -387,20 +408,6 @@ function getRecentResults(limit = 5) {
         .slice(0, limit);
 }
 
-// Subscribe to WebSocket updates if available
-if (typeof worldCupWS !== 'undefined') {
-    worldCupWS.addEventListener('match_update', (data) => {
-        console.log('📊 Data module: Match update received', data);
-    });
-    
-    worldCupWS.addEventListener('standings_update', (data) => {
-        console.log('📊 Data module: Standings update received', data);
-    });
-    
-    worldCupWS.addEventListener('statistics_update', (data) => {
-        console.log('📊 Data module: Statistics update received', data);
-    });
-}
 
 console.log('✅ Data module loaded - Copa 2026 data ready');
 

@@ -1,13 +1,16 @@
 // FIFA World Cup 2026 Dashboard - Main Application
 // Inicialização e controle principal
 
+const MATCH_REFRESH_INTERVAL = 10 * 60 * 1000;
+let matchRefreshIntervalId = null;
+let isRefreshingMatches = false;
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🏆 Copa do Mundo 2026 - Dashboard Iniciado');
     
     // Inicializar componentes
     initializeApp();
     setupEventListeners();
-    setupWebSocketListeners();
     showWelcomeMessage();
 });
 
@@ -27,6 +30,9 @@ function initializeApp() {
     if (typeof initializeFilters === 'function') {
         initializeFilters();
     }
+
+    updateSidebarInfo();
+    initializeMatchAutoRefresh();
 }
 
 function setupEventListeners() {
@@ -72,55 +78,18 @@ function setupEventListeners() {
     
     // Filtros
     setupFilters();
-    
+
+    const refreshButton = document.getElementById('refreshMatchesButton');
+    if (refreshButton) {
+        refreshButton.addEventListener('click', () => {
+            refreshMatchData({ manual: true });
+        });
+    }
+
     // Auto-refresh for live matches
     startAutoRefresh();
 }
 
-function setupWebSocketListeners() {
-    if (typeof worldCupWS === 'undefined') {
-        console.warn('⚠️ WebSocket service not available');
-        return;
-    }
-    
-    // Listen for match updates
-    worldCupWS.addEventListener('match_update', (data) => {
-        console.log('🔄 App: Match update received, refreshing display');
-        refreshCurrentView();
-    });
-    
-    // Listen for live score updates
-    worldCupWS.addEventListener('live_score', (data) => {
-        console.log('⚽ App: Live score update, refreshing display');
-        refreshCurrentView();
-        updateSidebarInfo();
-    });
-    
-    // Listen for standings updates
-    worldCupWS.addEventListener('standings_update', (data) => {
-        console.log('📊 App: Standings update, refreshing display');
-        refreshCurrentView();
-    });
-    
-    // Listen for statistics updates
-    worldCupWS.addEventListener('statistics_update', (data) => {
-        console.log('📈 App: Statistics update, refreshing display');
-        refreshCurrentView();
-        updateSidebarInfo();
-    });
-    
-    // Listen for connection status changes
-    worldCupWS.addEventListener('connection', (data) => {
-        console.log('🔌 App: Connection status changed:', data.status);
-        if (data.status === 'connected') {
-            // Refresh all data when reconnected
-            setTimeout(() => {
-                refreshCurrentView();
-                updateSidebarInfo();
-            }, 1000);
-        }
-    });
-}
 
 function startAutoRefresh() {
     // Refresh live matches every 30 seconds
@@ -136,6 +105,84 @@ function startAutoRefresh() {
     setInterval(() => {
         updateSidebarInfo();
     }, 60000);
+}
+
+function initializeMatchAutoRefresh() {
+    refreshMatchData({ silent: false });
+
+    if (matchRefreshIntervalId) {
+        clearInterval(matchRefreshIntervalId);
+    }
+
+    matchRefreshIntervalId = setInterval(() => {
+        refreshMatchData({ silent: true });
+    }, MATCH_REFRESH_INTERVAL);
+}
+
+async function refreshMatchData(options = {}) {
+    const { manual = false, silent = false } = options;
+
+    if (isRefreshingMatches) {
+        return;
+    }
+
+    if (typeof apiFootballAdapter === 'undefined' || !apiFootballAdapter) {
+        updateRefreshStatus('API indisponível no momento.', 'error');
+        return;
+    }
+
+    isRefreshingMatches = true;
+    setRefreshButtonState(true, manual);
+    updateRefreshStatus(manual ? 'Atualizando dados dos jogos...' : 'Sincronizando dados da API...', silent ? 'info' : 'loading');
+
+    try {
+        const dashboardData = await apiFootballAdapter.getDashboardData();
+
+        if (dashboardData.matches.length > 0) {
+            replaceAllMatches(dashboardData.matches);
+        }
+
+        if (Object.keys(dashboardData.standings).length > 0) {
+            replaceGroupStandings(dashboardData.standings);
+        }
+
+        if (dashboardData.topScorers.length > 0) {
+            updateTopScorers(dashboardData.topScorers);
+        }
+
+        if (dashboardData.topAssists.length > 0) {
+            updateTopAssists(dashboardData.topAssists);
+        }
+
+        refreshCurrentView();
+        updateSidebarInfo();
+        updateRefreshStatus(`Dados atualizados em ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}.`, 'success');
+    } catch (error) {
+        console.error('❌ Error refreshing match data:', error);
+        updateRefreshStatus(error.message || 'Não foi possível atualizar os dados.', 'error');
+    } finally {
+        isRefreshingMatches = false;
+        setRefreshButtonState(false, manual);
+    }
+}
+
+function setRefreshButtonState(isLoading, manual = false) {
+    const refreshButton = document.getElementById('refreshMatchesButton');
+    if (!refreshButton) return;
+
+    refreshButton.disabled = isLoading;
+    refreshButton.classList.toggle('is-loading', isLoading);
+    refreshButton.innerHTML = isLoading
+        ? `<i class="fas fa-spinner fa-spin"></i> ${manual ? 'Atualizando...' : 'Sincronizando...'}`
+        : '<i class="fas fa-rotate-right"></i> Atualizar Agora';
+}
+
+function updateRefreshStatus(message, status = 'info') {
+    const statusElement = document.getElementById('refreshStatus');
+    if (!statusElement) return;
+
+    statusElement.textContent = message;
+    statusElement.className = `refresh-status ${status}`;
 }
 
 function refreshCurrentView() {

@@ -210,6 +210,57 @@ img {
     gap: var(--spacing-md);
 }
 
+.refresh-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-xs);
+}
+
+.refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.14);
+    color: white;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.refresh-btn:disabled {
+    opacity: 0.75;
+    cursor: wait;
+}
+
+.refresh-btn.is-loading {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.refresh-status {
+    max-width: 240px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: right;
+}
+
+.refresh-status.success {
+    color: #c8f7c5;
+}
+
+.refresh-status.error {
+    color: #ffd2d2;
+}
+
+.refresh-status.loading {
+    color: #ffe082;
+}
+
 .theme-toggle {
     color: white;
     font-size: 1.25rem;

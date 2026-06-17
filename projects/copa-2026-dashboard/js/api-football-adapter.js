@@ -10,6 +10,14 @@ class APIFootballAdapter {
         this.season = 2026;
     }
 
+    normalizeResponseItems(data) {
+        if (!data || !Array.isArray(data.response)) {
+            return [];
+        }
+
+        return data.response;
+    }
+
     // Fazer requisição à API
     async fetch(endpoint, params = {}) {
         const url = new URL(`${this.baseUrl}${endpoint}`);
@@ -29,7 +37,7 @@ class APIFootballAdapter {
             return data;
         } catch (error) {
             console.error('❌ API-Football fetch error:', error);
-            throw error;
+            throw new Error(`Falha ao buscar dados da API: ${error.message}`);
         }
     }
 
@@ -42,9 +50,23 @@ class APIFootballAdapter {
                 season: this.season
             });
 
-            return this.convertFixturesToMatches(data.response);
+            return this.convertFixturesToMatches(this.normalizeResponseItems(data));
         } catch (error) {
             console.error('❌ Error fetching live matches:', error);
+            return [];
+        }
+    }
+
+    async getAllMatches() {
+        try {
+            const data = await this.fetch('/fixtures', {
+                league: this.leagueId,
+                season: this.season
+            });
+
+            return this.convertFixturesToMatches(this.normalizeResponseItems(data));
+        } catch (error) {
+            console.error('❌ Error fetching all matches:', error);
             return [];
         }
     }
@@ -58,7 +80,7 @@ class APIFootballAdapter {
                 next: limit
             });
 
-            return this.convertFixturesToMatches(data.response);
+            return this.convertFixturesToMatches(this.normalizeResponseItems(data));
         } catch (error) {
             console.error('❌ Error fetching upcoming matches:', error);
             return [];
@@ -74,11 +96,29 @@ class APIFootballAdapter {
                 last: limit
             });
 
-            return this.convertFixturesToMatches(data.response);
+            return this.convertFixturesToMatches(this.normalizeResponseItems(data));
         } catch (error) {
             console.error('❌ Error fetching recent results:', error);
             return [];
         }
+    }
+
+    async getDashboardData() {
+        const [allMatches, standings, scorers, assists] = await Promise.allSettled([
+            this.getAllMatches(),
+            this.getStandings(),
+            this.getTopScorers(10),
+            this.getTopAssists(5)
+        ]);
+
+        const getValue = (result, fallback) => result.status === 'fulfilled' ? result.value : fallback;
+
+        return {
+            matches: getValue(allMatches, []),
+            standings: getValue(standings, {}),
+            topScorers: getValue(scorers, []),
+            topAssists: getValue(assists, [])
+        };
     }
 
     // Buscar classificações
@@ -89,7 +129,7 @@ class APIFootballAdapter {
                 season: this.season
             });
 
-            return this.convertStandings(data.response);
+            return this.convertStandings(this.normalizeResponseItems(data));
         } catch (error) {
             console.error('❌ Error fetching standings:', error);
             return {};
@@ -104,7 +144,7 @@ class APIFootballAdapter {
                 season: this.season
             });
 
-            return this.convertTopScorers(data.response, limit);
+            return this.convertTopScorers(this.normalizeResponseItems(data), limit);
         } catch (error) {
             console.error('❌ Error fetching top scorers:', error);
             return [];
@@ -119,7 +159,7 @@ class APIFootballAdapter {
                 season: this.season
             });
 
-            return this.convertTopAssists(data.response, limit);
+            return this.convertTopAssists(this.normalizeResponseItems(data), limit);
         } catch (error) {
             console.error('❌ Error fetching top assists:', error);
             return [];

@@ -46,6 +46,13 @@
             </div>
             
             <div class="header-right">
+                <div class="refresh-controls">
+                    <button class="refresh-btn" id="refreshMatchesButton" aria-label="Atualizar dados dos jogos" title="Atualizar dados dos jogos">
+                        <i class="fas fa-rotate-right"></i>
+                        Atualizar Agora
+                    </button>
+                    <span class="refresh-status" id="refreshStatus">Aguardando sincronização com a API...</span>
+                </div>
                 <button class="share-btn" id="shareSlack" aria-label="Compartilhar no Slack" title="Compartilhar no Slack">
                     <i class="fab fa-slack"></i>
                 </button>
@@ -388,7 +395,6 @@
     <!-- JavaScript Files -->
     <script src="js/api-config.js"></script>
     <script src="js/api-football-adapter.js"></script>
-    <script src="js/websocket-service.js"></script>
     <script src="js/data.js"></script>
     <script src="js/lineups.js"></script>
     <script src="js/team-details.js"></script>
