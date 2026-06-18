@@ -1,5 +1,6 @@
 // FIFA World Cup 2026 - WorldCup26.ir API Integration
 // API: https://worldcup26.ir/get/games
+// NOTA: API externa desabilitada - usando dados locais
 
 const WorldCupAPI = {
     baseUrl: 'https://worldcup26.ir/get/games',
@@ -7,6 +8,7 @@ const WorldCupAPI = {
     lastUpdate: null,
     isLoading: false,
     autoRefreshTimer: null,
+    apiEnabled: false, // API externa desabilitada
 
     /**
      * Busca dados dos jogos da API
@@ -194,11 +196,13 @@ const WorldCupAPI = {
         const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
         groups.forEach(group => {
-            const groupMatches = matches.filter(m => m.group === group && m.status === 'finished');
+            // Buscar todos os jogos do grupo (finalizados e agendados)
+            const allGroupMatches = matches.filter(m => m.group === group);
+            const finishedMatches = allGroupMatches.filter(m => m.status === 'finished');
             const teams = {};
 
-            groupMatches.forEach(match => {
-                // Inicializar times
+            // Inicializar todos os times do grupo (mesmo sem jogos finalizados)
+            allGroupMatches.forEach(match => {
                 if (!teams[match.homeTeam]) {
                     teams[match.homeTeam] = {
                         team: match.homeTeam,
@@ -223,8 +227,10 @@ const WorldCupAPI = {
                         points: 0
                     };
                 }
+            });
 
-                // Atualizar estatísticas
+            // Atualizar estatísticas apenas para jogos finalizados
+            finishedMatches.forEach(match => {
                 teams[match.homeTeam].played++;
                 teams[match.awayTeam].played++;
                 teams[match.homeTeam].goalsFor += match.homeScore || 0;
@@ -266,6 +272,13 @@ const WorldCupAPI = {
      * @param {boolean} manual - Se é atualização manual
      */
     async updateData(manual = false) {
+        // Verificar se API está habilitada
+        if (!this.apiEnabled) {
+            console.log('ℹ️ API externa desabilitada - usando dados locais');
+            this.showInfo('Atualização automática desabilitada. Os dados são atualizados manualmente no código.');
+            return false;
+        }
+
         try {
             const apiData = await this.fetchGames();
             if (!apiData) return false;
@@ -312,6 +325,12 @@ const WorldCupAPI = {
      * Inicia atualização automática
      */
     startAutoRefresh() {
+        if (!this.apiEnabled) {
+            console.log('ℹ️ Atualização automática desabilitada - API externa não disponível');
+            this.showInfo('Usando dados locais atualizados manualmente');
+            return;
+        }
+
         // Limpar timer existente
         if (this.autoRefreshTimer) {
             clearInterval(this.autoRefreshTimer);
@@ -383,6 +402,26 @@ const WorldCupAPI = {
         if (status) {
             status.textContent = `Erro: ${message}`;
             status.className = 'refresh-status error';
+        }
+    },
+
+    /**
+     * Exibe mensagem informativa
+     * @param {string} message - Mensagem
+     */
+    showInfo(message) {
+        const status = document.getElementById('refreshStatus');
+        if (status) {
+            status.textContent = message;
+            status.className = 'refresh-status info';
+        }
+        
+        // Desabilitar botão de atualização
+        const button = document.getElementById('refreshMatchesButton');
+        if (button) {
+            button.disabled = true;
+            button.title = 'Atualização automática desabilitada';
+            button.innerHTML = '<i class="fas fa-info-circle"></i> Dados Locais';
         }
     },
 
