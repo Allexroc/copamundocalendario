@@ -230,18 +230,30 @@ function createMatchSummaryCard(match) {
     
     // Handle case where team info is not found
     if (!homeTeam || !awayTeam) {
+        console.warn('Team info not found for match:', match);
         return '';
     }
     
+    // Parse date correctly handling timezone
     const matchDate = new Date(match.date);
-    const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+    const dateStr = matchDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+        timeZone: 'America/Sao_Paulo'
+    });
+    const timeStr = matchDate.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Sao_Paulo'
+    });
+    
     const homeWon = match.homeScore > match.awayScore;
     const awayWon = match.awayScore > match.homeScore;
     const draw = match.homeScore === match.awayScore;
     
     return `
         <div class="match-summary-card">
-            <div class="match-date">${dateStr}</div>
+            <div class="match-date">${dateStr} - ${timeStr}</div>
             <div class="match-result">
                 <div class="team-result ${homeWon ? 'winner' : draw ? 'draw' : ''}">
                     <span class="team-flag">${homeTeam.flag}</span>
@@ -268,21 +280,27 @@ function createScheduledMatchCard(match) {
     
     // Handle case where team info is not found
     if (!homeTeam || !awayTeam) {
+        console.warn('Team info not found for match:', match);
         return '';
     }
     
+    // Parse date correctly handling timezone
     const matchDate = new Date(match.date);
     const dateStr = matchDate.toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'short',
+        timeZone: 'America/Sao_Paulo'
+    });
+    const timeStr = matchDate.toLocaleTimeString('pt-BR', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        timeZone: 'America/Sao_Paulo'
     });
     
     return `
         <div class="scheduled-match-card">
             <div class="match-datetime">
-                <i class="fas fa-clock"></i> ${dateStr}
+                <i class="fas fa-clock"></i> ${dateStr} - ${timeStr}
             </div>
             <div class="match-teams">
                 <div class="team-info">
