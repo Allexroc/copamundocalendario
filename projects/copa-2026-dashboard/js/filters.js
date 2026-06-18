@@ -231,7 +231,11 @@ function showTeamSummaryOld(teamCode) {
                                 const isHome = match.homeTeam === teamCode;
                                 const opponent = getTeamInfo(isHome ? match.awayTeam : match.homeTeam) || { flag: '🏳️', name: isHome ? match.awayTeam : match.homeTeam };
                                 const matchDate = new Date(match.date);
-                                const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                                const dateStr = matchDate.toLocaleDateString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    timeZone: 'America/Sao_Paulo'
+                                });
                                 
                                 return `
                                     <div class="team-match-item upcoming">
@@ -466,8 +470,16 @@ function updateNextMatchInfo() {
         const homeTeam = getTeamInfo(nextMatch.homeTeam) || { flag: '🏳️', name: nextMatch.homeTeam };
         const awayTeam = getTeamInfo(nextMatch.awayTeam) || { flag: '🏳️', name: nextMatch.awayTeam };
         const matchDate = new Date(nextMatch.date);
-        const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-        const timeStr = matchDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = matchDate.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            timeZone: 'America/Sao_Paulo'
+        });
+        const timeStr = matchDate.toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'America/Sao_Paulo'
+        });
         
         nextMatchEl.innerHTML = `
             <div style="font-size: 11px; color: #666;">${dateStr} às ${timeStr}</div>

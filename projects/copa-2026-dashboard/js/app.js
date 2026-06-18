@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     showWelcomeMessage();
     
+    // Inicializar status da API
+    initializeAPIStatus();
+    
     // Iniciar integração com WorldCup API
     if (typeof WorldCupAPI !== 'undefined') {
         WorldCupAPI.startAutoRefresh();
@@ -33,7 +36,6 @@ function initializeApp() {
     }
 
     initializeTheme();
-    initializeLanguageSelector();
     updateSidebarInfo();
 }
 
@@ -84,8 +86,77 @@ function setupEventListeners() {
     const refreshButton = document.getElementById('refreshMatchesButton');
     if (refreshButton) {
         refreshButton.addEventListener('click', async () => {
-            if (typeof WorldCupAPI !== 'undefined') {
-                await WorldCupAPI.updateData(true);
+            const statusEl = document.getElementById('refreshStatus');
+            const icon = refreshButton.querySelector('i');
+            
+            try {
+                // Atualizar status da API para loading
+                updateAPIStatus('loading');
+                
+                // Mostrar loading
+                if (icon) {
+                    icon.classList.add('fa-spin');
+                }
+                if (statusEl) {
+                    statusEl.textContent = 'Buscando dados da API...';
+                    statusEl.className = 'refresh-status loading';
+                }
+                
+                // Buscar dados reais da API
+                if (typeof APIIntegration !== 'undefined') {
+                    const success = await APIIntegration.updateDashboard();
+                    
+                    if (success) {
+                        // Recarregar todas as views com os novos dados
+                        if (typeof renderGroups === 'function') renderGroups();
+                        if (typeof renderCalendar === 'function') renderCalendar();
+                        if (typeof renderResults === 'function') renderResults();
+                        if (typeof renderKnockout === 'function') renderKnockout();
+                        if (typeof renderStats === 'function') renderStats();
+                        
+                        // Atualizar informações da sidebar
+                        updateSidebarInfo();
+                        
+                        // Mostrar sucesso
+                        if (statusEl) {
+                            const now = new Date();
+                            const timeStr = now.toLocaleTimeString('pt-BR', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                timeZone: 'America/Sao_Paulo'
+                            });
+                            const dateStr = now.toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                timeZone: 'America/Sao_Paulo'
+                            });
+                            statusEl.textContent = `✓ Atualizado em ${dateStr} às ${timeStr}`;
+                            statusEl.className = 'refresh-status success';
+                        }
+                        
+                        // Atualizar status da API para conectado
+                        updateAPIStatus('connected');
+                    } else {
+                        throw new Error('Falha ao atualizar dados');
+                    }
+                } else {
+                    throw new Error('Módulo de API não disponível');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao atualizar:', error);
+                
+                // Atualizar status da API para desconectado
+                updateAPIStatus('disconnected');
+                
+                if (statusEl) {
+                    statusEl.textContent = '✗ Erro ao atualizar. Verifique sua conexão.';
+                    statusEl.className = 'refresh-status error';
+                }
+            } finally {
+                if (icon) {
+                    icon.classList.remove('fa-spin');
+                }
             }
         });
     }
@@ -194,22 +265,58 @@ function syncThemeIcon() {
     icon.classList.toggle('fa-sun', isDark);
 }
 
-function initializeLanguageSelector() {
-    const langButtons = document.querySelectorAll('.lang-btn');
-    const savedLanguage = localStorage.getItem('dashboard-language') || 'PT';
+// Função de seletor de idioma removida - mantendo apenas Português
 
-    langButtons.forEach(button => {
-        const isActive = button.textContent.trim() === savedLanguage;
-        button.classList.toggle('active', isActive);
+function initializeAPIStatus() {
+    const badge = document.getElementById('apiStatusBadge');
+    if (!badge) return;
+    
+    // Iniciar como desconectado
+    updateAPIStatus('disconnected');
+    
+    // Verificar status periodicamente (a cada 30 segundos)
+    setInterval(() => {
+        if (typeof APIIntegration !== 'undefined') {
+            const status = APIIntegration.getAPIStatus();
+            if (status.isLoading) {
+                updateAPIStatus('loading');
+            } else if (status.hasData) {
+                updateAPIStatus('connected');
+            } else {
+                updateAPIStatus('disconnected');
+            }
+        }
+    }, 30000);
+}
 
-        button.addEventListener('click', () => {
-            const selectedLanguage = button.textContent.trim();
-            langButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            localStorage.setItem('dashboard-language', selectedLanguage);
-            updateRefreshStatus(`Idioma alterado para ${selectedLanguage}.`, 'success');
-        });
-    });
+function updateAPIStatus(status) {
+    const badge = document.getElementById('apiStatusBadge');
+    if (!badge) return;
+    
+    // Remover classes anteriores
+    badge.classList.remove('connected', 'disconnected', 'loading');
+    
+    // Adicionar nova classe
+    badge.classList.add(status);
+    
+    // Atualizar texto e tooltip
+    const textEl = badge.querySelector('.api-status-text');
+    if (textEl) {
+        switch(status) {
+            case 'connected':
+                textEl.textContent = 'API';
+                badge.title = 'Conectado à API Football-Data.org';
+                break;
+            case 'loading':
+                textEl.textContent = 'API';
+                badge.title = 'Carregando dados da API...';
+                break;
+            case 'disconnected':
+                textEl.textContent = 'API';
+                badge.title = 'Desconectado - Clique em Atualizar para conectar';
+                break;
+        }
+    }
 }
 
 function updateSidebarInfo() {
@@ -224,8 +331,16 @@ function updateSidebarInfo() {
 
             if (homeTeam && awayTeam) {
                 const date = new Date(match.date);
-                const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-                const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = date.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    timeZone: 'America/Sao_Paulo'
+                });
+                const timeStr = date.toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'America/Sao_Paulo'
+                });
                 nextMatchEl.textContent = `${homeTeam.flag} vs ${awayTeam.flag} - ${dateStr} ${timeStr}`;
             } else {
                 nextMatchEl.textContent = 'Próximo jogo disponível';

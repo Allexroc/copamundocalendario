@@ -237,7 +237,11 @@ function createPastMatches(matches, teamCode) {
                                     <span class="opponent-name">${opponent.name}</span>
                                 </div>
                                 <div class="match-score">${teamScore} × ${opponentScore}</div>
-                                <div class="match-date">${new Date(match.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</div>
+                                <div class="match-date">${new Date(match.date).toLocaleDateString('pt-BR', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    timeZone: 'America/Sao_Paulo'
+                                })}</div>
                             </div>
                         </div>
                     `;
@@ -264,7 +268,15 @@ function createUpcomingMatches(matches, teamCode) {
                         <div class="upcoming-match-card">
                             <div class="match-datetime">
                                 <i class="fas fa-clock"></i>
-                                ${matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                ${matchDate.toLocaleDateString('pt-BR', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    timeZone: 'America/Sao_Paulo'
+                                })} ${matchDate.toLocaleTimeString('pt-BR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    timeZone: 'America/Sao_Paulo'
+                                })}
                             </div>
                             <div class="match-opponent">
                                 <span class="opponent-flag">${opponent.flag}</span>

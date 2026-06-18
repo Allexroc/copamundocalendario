@@ -434,12 +434,14 @@ const WorldCupAPI = {
             const timeStr = this.lastUpdate.toLocaleTimeString('pt-BR', {
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit'
+                second: '2-digit',
+                timeZone: 'America/Sao_Paulo'
             });
             const dateStr = this.lastUpdate.toLocaleDateString('pt-BR', {
                 day: '2-digit',
                 month: '2-digit',
-                year: 'numeric'
+                year: 'numeric',
+                timeZone: 'America/Sao_Paulo'
             });
             status.textContent = `Última atualização: ${dateStr} às ${timeStr}`;
             status.className = 'refresh-status info';

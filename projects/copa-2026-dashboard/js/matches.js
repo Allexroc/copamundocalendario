@@ -63,7 +63,11 @@ function createMatchCard(match) {
     const homeTeam = getTeamInfo(match.homeTeam) || { flag: '🏳️', name: match.homeTeam };
     const awayTeam = getTeamInfo(match.awayTeam) || { flag: '🏳️', name: match.awayTeam };
     const stadium = WORLD_CUP_2026.stadiums[match.stadium] || { city: 'Local a confirmar', country: '' };
-    const time = new Date(match.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const time = new Date(match.date).toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Sao_Paulo'
+    });
     
     const statusClass = match.status === 'finished' ? 'finished' : match.status === 'live' ? 'live' : 'scheduled';
     const statusText = match.status === 'finished'
@@ -227,7 +231,11 @@ function createCompactResultCard(match) {
     const homeWon = match.homeScore > match.awayScore;
     const awayWon = match.awayScore > match.homeScore;
     const matchDate = new Date(match.date);
-    const dateStr = matchDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    const dateStr = matchDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        timeZone: 'America/Sao_Paulo'
+    });
     
     return `
         <div class="compact-result-card">
@@ -313,8 +321,24 @@ function groupMatchesByDate(matches) {
 }
 
 function formatDate(date) {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('pt-BR', options);
+    // Formato: Dia da semana, DD/MM/YYYY (horário de Brasília UTC-3)
+    const options = {
+        weekday: 'long',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        timeZone: 'America/Sao_Paulo'
+    };
+    const formatted = date.toLocaleDateString('pt-BR', options);
+    // Converter formato de "segunda-feira, 11 de junho de 2026" para "segunda-feira, 11/06/2026"
+    return formatted.replace(/(\d{2}) de (\w+) de (\d{4})/, (match, day, month, year) => {
+        const months = {
+            'janeiro': '01', 'fevereiro': '02', 'março': '03', 'abril': '04',
+            'maio': '05', 'junho': '06', 'julho': '07', 'agosto': '08',
+            'setembro': '09', 'outubro': '10', 'novembro': '11', 'dezembro': '12'
+        };
+        return `${day}/${months[month]}/${year}`;
+    });
 }
 
 function setupViewToggle() {
@@ -911,7 +935,12 @@ function showMatchDetails(matchId) {
                 </div>
                 <div class="match-details-result">
                     <span class="final-score">${match.homeScore} - ${match.awayScore}</span>
-                    <span class="match-date">${new Date(match.date).toLocaleDateString('pt-BR')}</span>
+                    <span class="match-date">${new Date(match.date).toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        timeZone: 'America/Sao_Paulo'
+                    })}</span>
                 </div>
                 <div class="match-details-team">
                     <span class="team-flag-large">${awayTeam.flag}</span>

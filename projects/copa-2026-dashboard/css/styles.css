@@ -2,6 +2,74 @@
    FIFA World Cup 2026 Dashboard - Main Styles
    Design: FIFA Official (Classic & Professional)
    ============================================ */
+/* ============================================
+   API Status Badge Styles
+   ============================================ */
+.api-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: help;
+    transition: all 0.3s ease;
+}
+
+.api-status-badge i {
+    font-size: 8px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.api-status-badge.connected {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.api-status-badge.connected i {
+    color: #4CAF50;
+}
+
+.api-status-badge.disconnected {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
+.api-status-badge.disconnected i {
+    color: #f44336;
+    animation: none;
+}
+
+.api-status-badge.loading {
+    background: rgba(255, 193, 7, 0.2);
+    color: #FFC107;
+}
+
+.api-status-badge.loading i {
+    color: #FFC107;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 /* ============================================
    CSS Variables (FIFA Official Theme)

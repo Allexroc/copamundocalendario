@@ -92,7 +92,12 @@ class SlackShare {
     }
 
     getShareData(type) {
-        const currentDate = new Date().toLocaleDateString('pt-BR');
+        const currentDate = new Date().toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            timeZone: 'America/Sao_Paulo'
+        });
         
         switch(type) {
             case 'current-view':
@@ -153,7 +158,12 @@ class SlackShare {
         let text = '*⚽ Últimos Resultados - Copa 2026*\n\n';
         
         completedMatches.forEach(match => {
-            const date = new Date(match.date).toLocaleDateString('pt-BR');
+            const date = new Date(match.date).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                timeZone: 'America/Sao_Paulo'
+            });
             text += `${date} - ${match.phase}\n`;
             text += `${match.homeTeam} ${match.homeScore} x ${match.awayScore} ${match.awayTeam}\n`;
             text += `📍 ${match.stadium}\n\n`;

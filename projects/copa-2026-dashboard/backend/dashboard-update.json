@@ -1,0 +1,897 @@
+{
+  "matches": [
+    {
+      "id": 1,
+      "date": "2026-06-11T16:00:00-03:00",
+      "group": "A",
+      "homeTeam": "MEX",
+      "awayTeam": "RSA",
+      "homeScore": 2,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 2,
+      "date": "2026-06-11T23:00:00-03:00",
+      "group": "A",
+      "homeTeam": "KOR",
+      "awayTeam": "CZE",
+      "homeScore": 2,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 3,
+      "date": "2026-06-12T16:00:00-03:00",
+      "group": "B",
+      "homeTeam": "CAN",
+      "awayTeam": "BIH",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 4,
+      "date": "2026-06-12T22:00:00-03:00",
+      "group": "D",
+      "homeTeam": "USA",
+      "awayTeam": "PAR",
+      "homeScore": 4,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 5,
+      "date": "2026-06-13T16:00:00-03:00",
+      "group": "B",
+      "homeTeam": "QAT",
+      "awayTeam": "SUI",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 6,
+      "date": "2026-06-13T19:00:00-03:00",
+      "group": "C",
+      "homeTeam": "BRA",
+      "awayTeam": "MAR",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 7,
+      "date": "2026-06-13T22:00:00-03:00",
+      "group": "C",
+      "homeTeam": "HAI",
+      "awayTeam": "SCO",
+      "homeScore": 0,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 8,
+      "date": "2026-06-14T01:00:00-03:00",
+      "group": "D",
+      "homeTeam": "AUS",
+      "awayTeam": "TUR",
+      "homeScore": 2,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 9,
+      "date": "2026-06-14T14:00:00-03:00",
+      "group": "E",
+      "homeTeam": "GER",
+      "awayTeam": "CUW",
+      "homeScore": 7,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 10,
+      "date": "2026-06-14T17:00:00-03:00",
+      "group": "F",
+      "homeTeam": "NED",
+      "awayTeam": "JPN",
+      "homeScore": 2,
+      "awayScore": 2,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 11,
+      "date": "2026-06-14T20:00:00-03:00",
+      "group": "E",
+      "homeTeam": "CIV",
+      "awayTeam": "ECU",
+      "homeScore": 1,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 12,
+      "date": "2026-06-14T23:00:00-03:00",
+      "group": "F",
+      "homeTeam": "SWE",
+      "awayTeam": "TUN",
+      "homeScore": 5,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 13,
+      "date": "2026-06-15T13:00:00-03:00",
+      "group": "H",
+      "homeTeam": "ESP",
+      "awayTeam": "CPV",
+      "homeScore": 0,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 14,
+      "date": "2026-06-15T16:00:00-03:00",
+      "group": "G",
+      "homeTeam": "BEL",
+      "awayTeam": "EGY",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 15,
+      "date": "2026-06-15T19:00:00-03:00",
+      "group": "H",
+      "homeTeam": "KSA",
+      "awayTeam": "URU",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 16,
+      "date": "2026-06-15T22:00:00-03:00",
+      "group": "G",
+      "homeTeam": "IRN",
+      "awayTeam": "NZL",
+      "homeScore": 2,
+      "awayScore": 2,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 17,
+      "date": "2026-06-16T16:00:00-03:00",
+      "group": "I",
+      "homeTeam": "FRA",
+      "awayTeam": "SEN",
+      "homeScore": 3,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 18,
+      "date": "2026-06-16T19:00:00-03:00",
+      "group": "I",
+      "homeTeam": "IRQ",
+      "awayTeam": "NOR",
+      "homeScore": 1,
+      "awayScore": 4,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 19,
+      "date": "2026-06-16T22:00:00-03:00",
+      "group": "J",
+      "homeTeam": "ARG",
+      "awayTeam": "ALG",
+      "homeScore": 3,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 20,
+      "date": "2026-06-17T01:00:00-03:00",
+      "group": "J",
+      "homeTeam": "AUT",
+      "awayTeam": "JOR",
+      "homeScore": 3,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 21,
+      "date": "2026-06-17T14:00:00-03:00",
+      "group": "K",
+      "homeTeam": "POR",
+      "awayTeam": "COD",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 22,
+      "date": "2026-06-17T17:00:00-03:00",
+      "group": "L",
+      "homeTeam": "ENG",
+      "awayTeam": "CRO",
+      "homeScore": 4,
+      "awayScore": 2,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 23,
+      "date": "2026-06-17T20:00:00-03:00",
+      "group": "L",
+      "homeTeam": "GHA",
+      "awayTeam": "PAN",
+      "homeScore": 1,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 24,
+      "date": "2026-06-17T23:00:00-03:00",
+      "group": "K",
+      "homeTeam": "UZB",
+      "awayTeam": "COL",
+      "homeScore": 1,
+      "awayScore": 3,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 1
+    },
+    {
+      "id": 25,
+      "date": "2026-06-18T13:00:00-03:00",
+      "group": "A",
+      "homeTeam": "CZE",
+      "awayTeam": "RSA",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 2
+    },
+    {
+      "id": 26,
+      "date": "2026-06-18T16:00:00-03:00",
+      "group": "B",
+      "homeTeam": "SUI",
+      "awayTeam": "BIH",
+      "homeScore": 4,
+      "awayScore": 1,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 2
+    }
+  ],
+  "standings": {
+    "A": [
+      {
+        "team": "MEX",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 2,
+        "goalsAgainst": 0,
+        "goalDifference": 2,
+        "points": 3
+      },
+      {
+        "team": "KOR",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 2,
+        "goalsAgainst": 1,
+        "goalDifference": 1,
+        "points": 3
+      },
+      {
+        "team": "CZE",
+        "played": 2,
+        "won": 0,
+        "drawn": 1,
+        "lost": 1,
+        "goalsFor": 2,
+        "goalsAgainst": 3,
+        "goalDifference": -1,
+        "points": 1
+      },
+      {
+        "team": "RSA",
+        "played": 2,
+        "won": 0,
+        "drawn": 1,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 3,
+        "goalDifference": -2,
+        "points": 1
+      }
+    ],
+    "B": [
+      {
+        "team": "SUI",
+        "played": 2,
+        "won": 1,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 5,
+        "goalsAgainst": 2,
+        "goalDifference": 3,
+        "points": 4
+      },
+      {
+        "team": "CAN",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "QAT",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "BIH",
+        "played": 2,
+        "won": 0,
+        "drawn": 1,
+        "lost": 1,
+        "goalsFor": 2,
+        "goalsAgainst": 5,
+        "goalDifference": -3,
+        "points": 1
+      }
+    ],
+    "C": [
+      {
+        "team": "SCO",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 0,
+        "goalDifference": 1,
+        "points": 3
+      },
+      {
+        "team": "BRA",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "MAR",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "HAI",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 0,
+        "goalsAgainst": 1,
+        "goalDifference": -1,
+        "points": 0
+      }
+    ],
+    "D": [
+      {
+        "team": "USA",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 4,
+        "goalsAgainst": 1,
+        "goalDifference": 3,
+        "points": 3
+      },
+      {
+        "team": "AUS",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 2,
+        "goalsAgainst": 0,
+        "goalDifference": 2,
+        "points": 3
+      },
+      {
+        "team": "TUR",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 0,
+        "goalsAgainst": 2,
+        "goalDifference": -2,
+        "points": 0
+      },
+      {
+        "team": "PAR",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 4,
+        "goalDifference": -3,
+        "points": 0
+      }
+    ],
+    "E": [
+      {
+        "team": "GER",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 7,
+        "goalsAgainst": 1,
+        "goalDifference": 6,
+        "points": 3
+      },
+      {
+        "team": "CIV",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 0,
+        "goalDifference": 1,
+        "points": 3
+      },
+      {
+        "team": "ECU",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 0,
+        "goalsAgainst": 1,
+        "goalDifference": -1,
+        "points": 0
+      },
+      {
+        "team": "CUW",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 7,
+        "goalDifference": -6,
+        "points": 0
+      }
+    ],
+    "F": [
+      {
+        "team": "SWE",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 5,
+        "goalsAgainst": 1,
+        "goalDifference": 4,
+        "points": 3
+      },
+      {
+        "team": "NED",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 2,
+        "goalsAgainst": 2,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "JPN",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 2,
+        "goalsAgainst": 2,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "TUN",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 5,
+        "goalDifference": -4,
+        "points": 0
+      }
+    ],
+    "G": [
+      {
+        "team": "IRN",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 2,
+        "goalsAgainst": 2,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "NZL",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 2,
+        "goalsAgainst": 2,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "BEL",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "EGY",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      }
+    ],
+    "H": [
+      {
+        "team": "KSA",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "URU",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "ESP",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 0,
+        "goalsAgainst": 0,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "CPV",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 0,
+        "goalsAgainst": 0,
+        "goalDifference": 0,
+        "points": 1
+      }
+    ],
+    "I": [
+      {
+        "team": "NOR",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 4,
+        "goalsAgainst": 1,
+        "goalDifference": 3,
+        "points": 3
+      },
+      {
+        "team": "FRA",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 3,
+        "goalsAgainst": 1,
+        "goalDifference": 2,
+        "points": 3
+      },
+      {
+        "team": "SEN",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 3,
+        "goalDifference": -2,
+        "points": 0
+      },
+      {
+        "team": "IRQ",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 4,
+        "goalDifference": -3,
+        "points": 0
+      }
+    ],
+    "J": [
+      {
+        "team": "ARG",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 3,
+        "goalsAgainst": 0,
+        "goalDifference": 3,
+        "points": 3
+      },
+      {
+        "team": "AUT",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 3,
+        "goalsAgainst": 1,
+        "goalDifference": 2,
+        "points": 3
+      },
+      {
+        "team": "JOR",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 3,
+        "goalDifference": -2,
+        "points": 0
+      },
+      {
+        "team": "ALG",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 0,
+        "goalsAgainst": 3,
+        "goalDifference": -3,
+        "points": 0
+      }
+    ],
+    "K": [
+      {
+        "team": "COL",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 3,
+        "goalsAgainst": 1,
+        "goalDifference": 2,
+        "points": 3
+      },
+      {
+        "team": "POR",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "COD",
+        "played": 1,
+        "won": 0,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 1,
+        "goalDifference": 0,
+        "points": 1
+      },
+      {
+        "team": "UZB",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 3,
+        "goalDifference": -2,
+        "points": 0
+      }
+    ],
+    "L": [
+      {
+        "team": "ENG",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 4,
+        "goalsAgainst": 2,
+        "goalDifference": 2,
+        "points": 3
+      },
+      {
+        "team": "GHA",
+        "played": 1,
+        "won": 1,
+        "drawn": 0,
+        "lost": 0,
+        "goalsFor": 1,
+        "goalsAgainst": 0,
+        "goalDifference": 1,
+        "points": 3
+      },
+      {
+        "team": "PAN",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 0,
+        "goalsAgainst": 1,
+        "goalDifference": -1,
+        "points": 0
+      },
+      {
+        "team": "CRO",
+        "played": 1,
+        "won": 0,
+        "drawn": 0,
+        "lost": 1,
+        "goalsFor": 2,
+        "goalsAgainst": 4,
+        "goalDifference": -2,
+        "points": 0
+      }
+    ]
+  },
+  "lastUpdate": "2026-06-18T22:53:21.718Z"
+}
