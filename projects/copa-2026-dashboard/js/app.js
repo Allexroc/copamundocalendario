@@ -263,6 +263,11 @@ function refreshAllViews() {
 function mergeMatchData(apiMatches) {
     const currentMatches = getAllMatches();
     const mergedMatches = currentMatches.map(match => {
+        // DO NOT update matches that are already finished - preserve completed game results
+        if (match.status === 'finished') {
+            return match;
+        }
+
         const apiMatch = apiMatches.find(candidate => isSameMatch(candidate, match));
 
         if (!apiMatch) {

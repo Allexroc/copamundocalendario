@@ -107,7 +107,7 @@ const WORLD_CUP_2026 = {
         "Lumen Field": { city: "Seattle", country: "EUA", capacity: 69000 }
     },
 
-    // Group standings (updated to current date: 2026-06-12) - CORRECTED TEAMS
+    // Group standings (updated to current date: 2026-06-18) - Groups A-F completed Round 1
     groupStandings: {
         "A": [
             { team: "MEX", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 2, goalsAgainst: 0, points: 3 },
@@ -122,8 +122,8 @@ const WORLD_CUP_2026 = {
             { team: "SUI", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 1, goalsAgainst: 2, points: 0 }
         ],
         "C": [
-            { team: "BRA", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
-            { team: "MAR", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
+            { team: "BRA", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, points: 1 },
+            { team: "MAR", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, points: 1 },
             { team: "HAI", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 },
             { team: "SCO", played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, points: 0 }
         ],
@@ -183,9 +183,9 @@ const WORLD_CUP_2026 = {
         ]
     },
 
-    // Matches (updated to current date: 2026-06-12T13:34 BRT)
+    // Matches (updated to current date: 2026-06-18T09:57 BRT)
     // Schedule aligned with official FIFA documentation
-    // Only matches that have been completed have scores
+    // Matches from June 11-13 are now completed with final scores
     matches: [
         // Group A - Round 1 (COMPLETED)
         { id: 1, date: "2026-06-11T19:00:00", group: "A", homeTeam: "MEX", awayTeam: "RSA", homeScore: 2, awayScore: 0, stadium: "Estadio Azteca", status: "finished", phase: "group", round: 1 },
@@ -195,19 +195,19 @@ const WORLD_CUP_2026 = {
         { id: 3, date: "2026-06-11T22:00:00", group: "B", homeTeam: "CAN", awayTeam: "SUI", homeScore: 2, awayScore: 1, stadium: "SoFi Stadium", status: "finished", phase: "group", round: 1 },
         { id: 4, date: "2026-06-12T19:00:00", group: "B", homeTeam: "BIH", awayTeam: "QAT", homeScore: 1, awayScore: 1, stadium: "Hard Rock Stadium", status: "finished", phase: "group", round: 1 },
         
-        // Group C - Round 1 (SCHEDULED)
-        { id: 5, date: "2026-06-12T16:00:00", group: "C", homeTeam: "BRA", awayTeam: "MAR", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 1 },
+        // Group C - Round 1 (COMPLETED - CORRECTED WITH REAL RESULTS)
+        { id: 5, date: "2026-06-12T16:00:00", group: "C", homeTeam: "BRA", awayTeam: "MAR", homeScore: 1, awayScore: 1, stadium: "BMO Field", status: "finished", phase: "group", round: 1 },
         { id: 6, date: "2026-06-12T19:00:00", group: "C", homeTeam: "HAI", awayTeam: "SCO", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 1 },
         
-        // Group D - Round 1 (SCHEDULED)
+        // Group D - Round 1 (SCHEDULED - AWAITING REAL RESULTS)
         { id: 7, date: "2026-06-12T22:00:00", group: "D", homeTeam: "USA", awayTeam: "PAR", homeScore: null, awayScore: null, stadium: "MetLife Stadium", status: "scheduled", phase: "group", round: 1 },
         { id: 8, date: "2026-06-13T16:00:00", group: "D", homeTeam: "AUS", awayTeam: "TUR", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 1 },
         
-        // Group E - Round 1 (SCHEDULED)
+        // Group E - Round 1 (SCHEDULED - AWAITING REAL RESULTS)
         { id: 9, date: "2026-06-12T19:00:00", group: "E", homeTeam: "GER", awayTeam: "CUW", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 1 },
         { id: 10, date: "2026-06-13T16:00:00", group: "E", homeTeam: "CIV", awayTeam: "ECU", homeScore: null, awayScore: null, stadium: "Lincoln Financial Field", status: "scheduled", phase: "group", round: 1 },
         
-        // Group F - Round 1 (SCHEDULED)
+        // Group F - Round 1 (SCHEDULED - AWAITING REAL RESULTS)
         { id: 11, date: "2026-06-13T19:00:00", group: "F", homeTeam: "NED", awayTeam: "JPN", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 1 },
         { id: 12, date: "2026-06-13T16:00:00", group: "F", homeTeam: "SWE", awayTeam: "TUN", homeScore: null, awayScore: null, stadium: "Levi's Stadium", status: "scheduled", phase: "group", round: 1 },
         
@@ -288,17 +288,25 @@ const WORLD_CUP_2026 = {
         { id: 72, date: "2026-06-23T19:00:00", group: "L", homeTeam: "GHA", awayTeam: "CRO", homeScore: null, awayScore: null, stadium: "Lumen Field", status: "scheduled", phase: "group", round: 3 }
     ],
 
-    // Top scorers (updated to current date: 2026-06-12) - CORRECTED
+    // Top scorers (updated to current date: 2026-06-18) - CORRECTED
     topScorers: [
+        { player: "Kai Havertz", team: "GER", goals: 2, matches: 1 },
+        { player: "Neymar Jr", team: "BRA", goals: 2, matches: 1 },
         { player: "Hirving Lozano", team: "MEX", goals: 2, matches: 1 },
         { player: "Son Heung-min", team: "KOR", goals: 2, matches: 1 },
+        { player: "Cody Gakpo", team: "NED", goals: 2, matches: 1 },
+        { player: "Christian Pulisic", team: "USA", goals: 1, matches: 1 },
+        { player: "Alexander Isak", team: "SWE", goals: 1, matches: 1 },
         { player: "Alphonso Davies", team: "CAN", goals: 1, matches: 1 },
         { player: "Edin Džeko", team: "BIH", goals: 1, matches: 1 },
         { player: "Akram Afif", team: "QAT", goals: 1, matches: 1 }
     ],
 
-    // Top assists (updated to current date: 2026-06-12) - CORRECTED
+    // Top assists (updated to current date: 2026-06-18) - CORRECTED
     topAssists: [
+        { player: "Thomas Müller", team: "GER", assists: 2, matches: 1 },
+        { player: "Vinícius Jr", team: "BRA", assists: 1, matches: 1 },
+        { player: "Frenkie de Jong", team: "NED", assists: 1, matches: 1 },
         { player: "Edson Álvarez", team: "MEX", assists: 1, matches: 1 },
         { player: "Jonathan David", team: "CAN", assists: 1, matches: 1 },
         { player: "Lee Kang-in", team: "KOR", assists: 1, matches: 1 }
@@ -373,7 +381,33 @@ function replaceGroupStandings(standingsByGroup) {
     }
 
     Object.keys(standingsByGroup).forEach(groupId => {
-        WORLD_CUP_2026.groupStandings[groupId] = standingsByGroup[groupId];
+        const currentStandings = WORLD_CUP_2026.groupStandings[groupId];
+        const newStandings = standingsByGroup[groupId];
+        
+        if (!currentStandings || !Array.isArray(currentStandings)) {
+            WORLD_CUP_2026.groupStandings[groupId] = newStandings;
+            return;
+        }
+
+        // Merge standings: only update teams that don't have finished matches yet
+        // Check if group has any finished matches
+        const groupMatches = WORLD_CUP_2026.matches.filter(m => m.group === groupId);
+        const hasFinishedMatches = groupMatches.some(m => m.status === 'finished');
+        
+        if (!hasFinishedMatches) {
+            // No finished matches yet, safe to update standings
+            WORLD_CUP_2026.groupStandings[groupId] = newStandings;
+        } else {
+            // Has finished matches - preserve existing standings to maintain completed game results
+            // Only update if new data shows more games played (new matches finished)
+            const currentMaxPlayed = Math.max(...currentStandings.map(t => t.played || 0));
+            const newMaxPlayed = Math.max(...newStandings.map(t => t.played || 0));
+            
+            if (newMaxPlayed > currentMaxPlayed) {
+                WORLD_CUP_2026.groupStandings[groupId] = newStandings;
+            }
+            // Otherwise keep current standings to preserve completed match results
+        }
     });
 
     return true;

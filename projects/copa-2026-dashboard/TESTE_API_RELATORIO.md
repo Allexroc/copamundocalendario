@@ -109,9 +109,9 @@ Verificar se o projeto copa-2026 está funcionando corretamente, incluindo:
 ##### 2.3.2 Calendário de Jogos
 - ✅ **Status:** Funcionando
 - ✅ **Dados Exibidos:** Jogos programados
-- ✅ **Exemplo:** Sábado, 23 de maio de 2026
-  - WES 3-0 LEE
-  - Local: London Stadium
+- ✅ **Exemplo:** Quinta-feira, 11 de junho de 2026
+  - México 2-0 África do Sul
+  - Local: Estadio Azteca
   - Status: Encerrado
 - ✅ **Funcionalidades:**
   - Visualização por data
@@ -121,17 +121,18 @@ Verificar se o projeto copa-2026 está funcionando corretamente, incluindo:
 ##### 2.3.3 Estatísticas
 - ✅ **Status:** Funcionando
 - ✅ **Dados Exibidos:**
-  - **Melhor Ataque:** WES (3 gols em 1 jogo)
+  - **Melhor Ataque:** México e Coreia do Sul (2 gols em 1 jogo)
   - **Melhor Defesa:** México (0 gols sofridos em 1 jogo)
   - **Desempenho por Seleção:** Tabela completa com J, V, E, D, GP, GC, SG
 - ✅ **Seleções Listadas:**
   - México: 1J, 1V, 0E, 0D, 2GP, 0GC, +2SG
   - Coreia do Sul: 1J, 1V, 0E, 0D, 2GP, 1GC, +1SG
   - Canadá: 1J, 1V, 0E, 0D, 2GP, 1GC, +1SG
-  - WES: 1J, 1V, 0E, 0D, 3GP, 0GC, +3SG
   - Bósnia: 1J, 0V, 1E, 0D, 1GP, 1GC, 0SG
   - Qatar: 1J, 0V, 1E, 0D, 1GP, 1GC, 0SG
+  - Suíça: 1J, 0V, 0E, 1D, 1GP, 2GC, -1SG
   - África do Sul: 1J, 0V, 0E, 1D, 0GP, 2GC, -2SG
+  - Rep. Tcheca: 1J, 0V, 0E, 1D, 1GP, 2GC, -1SG
 
 ##### 2.3.4 Botão "Atualizar Agora"
 - ✅ **Status:** Funcionando
