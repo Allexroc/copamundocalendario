@@ -1,10 +1,6 @@
 // FIFA World Cup 2026 Dashboard - Main Application
 // Inicialização e controle principal
 
-const MATCH_REFRESH_INTERVAL = 10 * 60 * 1000;
-let matchRefreshIntervalId = null;
-let isRefreshingMatches = false;
-
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🏆 Copa do Mundo 2026 - Dashboard Iniciado');
     
@@ -12,6 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     setupEventListeners();
     showWelcomeMessage();
+    
+    // Iniciar integração com WorldCup API
+    if (typeof WorldCupAPI !== 'undefined') {
+        WorldCupAPI.startAutoRefresh();
+    }
 });
 
 function initializeApp() {
@@ -83,13 +84,14 @@ function setupEventListeners() {
     const refreshButton = document.getElementById('refreshMatchesButton');
     if (refreshButton) {
         refreshButton.addEventListener('click', async () => {
-            await refreshMatchData({ manual: true });
+            if (typeof WorldCupAPI !== 'undefined') {
+                await WorldCupAPI.updateData(true);
+            }
         });
     }
 
-    // Auto-refresh for live matches
+    // Auto-refresh for live matches (mantido para compatibilidade)
     startAutoRefresh();
-    initializeMatchAutoRefresh();
 }
 
 
@@ -109,93 +111,6 @@ function startAutoRefresh() {
     }, 60000);
 }
 
-function initializeMatchAutoRefresh() {
-    refreshMatchData({ silent: false });
-
-    if (matchRefreshIntervalId) {
-        clearInterval(matchRefreshIntervalId);
-    }
-
-    matchRefreshIntervalId = setInterval(() => {
-        refreshMatchData({ silent: true });
-    }, MATCH_REFRESH_INTERVAL);
-}
-
-async function refreshMatchData(options = {}) {
-    const { manual = false, silent = false } = options;
-
-    if (isRefreshingMatches) {
-        updateRefreshStatus('Uma atualização já está em andamento.', 'loading');
-        return false;
-    }
-
-    if (typeof fetchDashboardDataWithFallback !== 'function') {
-        updateRefreshStatus('Serviço de atualização indisponível no momento.', 'error');
-        return false;
-    }
-
-    isRefreshingMatches = true;
-    setRefreshButtonState(true, manual);
-    updateRefreshStatus(manual ? 'Atualizando dados dos jogos...' : 'Sincronizando dados da API...', silent ? 'info' : 'loading');
-
-    try {
-        const providerResult = await fetchDashboardDataWithFallback();
-        const dashboardData = providerResult.data;
-
-        if (dashboardData.matches.length > 0) {
-            mergeMatchData(dashboardData.matches);
-        }
-
-        if (Object.keys(dashboardData.standings).length > 0) {
-            replaceGroupStandings(dashboardData.standings);
-        }
-
-        if (dashboardData.topScorers.length > 0) {
-            updateTopScorers(dashboardData.topScorers);
-        }
-
-        if (dashboardData.topAssists.length > 0) {
-            updateTopAssists(dashboardData.topAssists);
-        }
-
-        refreshAllViews();
-        updateSidebarInfo();
-
-        const providerLabel = providerResult.providerName ? ` via ${providerResult.providerName}` : '';
-        const fallbackLabel = providerResult.isFallback ? ' (fallback)' : '';
-        updateRefreshStatus(
-            `Dados atualizados${providerLabel}${fallbackLabel} em ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}.`,
-            'success'
-        );
-        return true;
-    } catch (error) {
-        console.error('❌ Error refreshing match data:', error);
-        updateRefreshStatus(error.message || 'Não foi possível atualizar os dados.', 'error');
-        return false;
-    } finally {
-        isRefreshingMatches = false;
-        setRefreshButtonState(false, manual);
-    }
-}
-
-function setRefreshButtonState(isLoading, manual = false) {
-    const refreshButton = document.getElementById('refreshMatchesButton');
-    if (!refreshButton) return;
-
-    refreshButton.disabled = isLoading;
-    refreshButton.classList.toggle('is-loading', isLoading);
-    refreshButton.innerHTML = isLoading
-        ? `<i class="fas fa-spinner fa-spin"></i> ${manual ? 'Atualizando...' : 'Sincronizando...'}`
-        : '<i class="fas fa-rotate-right"></i> Atualizar Agora';
-}
-
-function updateRefreshStatus(message, status = 'info') {
-    const statusElement = document.getElementById('refreshStatus');
-    if (!statusElement) return;
-
-    statusElement.textContent = message;
-    statusElement.className = `refresh-status ${status}`;
-}
 
 function refreshCurrentView() {
     const activeSection = document.querySelector('.content-section.active');
@@ -260,59 +175,6 @@ function refreshAllViews() {
     }
 }
 
-function mergeMatchData(apiMatches) {
-    const currentMatches = getAllMatches();
-    const mergedMatches = currentMatches.map(match => {
-        // DO NOT update matches that are already finished - preserve completed game results
-        if (match.status === 'finished') {
-            return match;
-        }
-
-        const apiMatch = apiMatches.find(candidate => isSameMatch(candidate, match));
-
-        if (!apiMatch) {
-            return match;
-        }
-
-        return {
-            ...match,
-            ...apiMatch,
-            id: match.id,
-            stadium: apiMatch.stadium || match.stadium,
-            group: apiMatch.group || match.group,
-            phase: apiMatch.phase || match.phase,
-            round: apiMatch.round || match.round
-        };
-    });
-
-    const additionalApiMatches = apiMatches.filter(apiMatch =>
-        !mergedMatches.some(match => isSameMatch(apiMatch, match))
-    );
-
-    replaceAllMatches([...mergedMatches, ...additionalApiMatches]);
-}
-
-function isSameMatch(apiMatch, localMatch) {
-    if (!apiMatch || !localMatch) {
-        return false;
-    }
-
-    const sameTeams =
-        apiMatch.homeTeam === localMatch.homeTeam &&
-        apiMatch.awayTeam === localMatch.awayTeam;
-
-    const sameGroupAndRound =
-        apiMatch.group &&
-        localMatch.group &&
-        apiMatch.group === localMatch.group &&
-        apiMatch.round === localMatch.round;
-
-    const apiDate = apiMatch.date ? new Date(apiMatch.date).getTime() : null;
-    const localDate = localMatch.date ? new Date(localMatch.date).getTime() : null;
-    const closeDate = apiDate && localDate ? Math.abs(apiDate - localDate) <= 24 * 60 * 60 * 1000 : false;
-
-    return sameTeams && (sameGroupAndRound || closeDate);
-}
 
 function initializeTheme() {
     const savedTheme = localStorage.getItem('dashboard-theme');

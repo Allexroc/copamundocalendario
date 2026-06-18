@@ -289,27 +289,21 @@ const WORLD_CUP_2026 = {
     ],
 
     // Top scorers (updated to current date: 2026-06-18) - CORRECTED
+    // Only players who have actually played and scored
     topScorers: [
-        { player: "Kai Havertz", team: "GER", goals: 2, matches: 1 },
-        { player: "Neymar Jr", team: "BRA", goals: 2, matches: 1 },
         { player: "Hirving Lozano", team: "MEX", goals: 2, matches: 1 },
         { player: "Son Heung-min", team: "KOR", goals: 2, matches: 1 },
-        { player: "Cody Gakpo", team: "NED", goals: 2, matches: 1 },
-        { player: "Christian Pulisic", team: "USA", goals: 1, matches: 1 },
-        { player: "Alexander Isak", team: "SWE", goals: 1, matches: 1 },
         { player: "Alphonso Davies", team: "CAN", goals: 1, matches: 1 },
+        { player: "Jonathan David", team: "CAN", goals: 1, matches: 1 },
         { player: "Edin Džeko", team: "BIH", goals: 1, matches: 1 },
         { player: "Akram Afif", team: "QAT", goals: 1, matches: 1 }
     ],
 
     // Top assists (updated to current date: 2026-06-18) - CORRECTED
+    // Only players who have actually played and assisted
     topAssists: [
-        { player: "Thomas Müller", team: "GER", assists: 2, matches: 1 },
-        { player: "Vinícius Jr", team: "BRA", assists: 1, matches: 1 },
-        { player: "Frenkie de Jong", team: "NED", assists: 1, matches: 1 },
         { player: "Edson Álvarez", team: "MEX", assists: 1, matches: 1 },
-        { player: "Jonathan David", team: "CAN", assists: 1, matches: 1 },
-        { player: "Lee Kang-in", team: "KOR", assists: 1, matches: 1 }
+        { player: "Jonathan David", team: "CAN", assists: 1, matches: 1 }
     ]
 };
 
