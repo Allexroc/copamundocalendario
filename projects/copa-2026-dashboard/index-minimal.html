@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copa 2026 - Teste Mínimo</title>
+    <link rel="stylesheet" href="css/styles.css?v=20260619-1822">
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        .header { background: #1a237e; color: white; padding: 20px; text-align: center; }
+        .container { max-width: 1400px; margin: 20px auto; padding: 20px; }
+        .status { background: #f5f5f5; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .success { color: #42BE65; }
+        .error { color: #DA1E28; }
+        .groups-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏆 Copa do Mundo 2026 - Teste Mínimo</h1>
+        <p>Versão simplificada para diagnóstico</p>
+    </div>
+
+    <div class="container">
+        <div class="status" id="status">
+            <h2>Status:</h2>
+            <div id="statusContent">Carregando...</div>
+        </div>
+
+        <h2>Grupos:</h2>
+        <div class="groups-container" id="groupsContainer"></div>
+    </div>
+
+    <!-- Carregar apenas os scripts essenciais -->
+    <script>
+        console.log('=== INÍCIO DO CARREGAMENTO ===');
+        
+        // Verificar se estamos em produção
+        console.log('URL:', window.location.href);
+        console.log('Protocol:', window.location.protocol);
+        console.log('Host:', window.location.host);
+    </script>
+    
+    <script src="js/data.js?v=20260619-1822"></script>
+    
+    <script>
+        console.log('=== APÓS CARREGAR DATA.JS ===');
+        
+        // Verificar se WORLD_CUP_2026 foi carregado
+        if (typeof WORLD_CUP_2026 !== 'undefined') {
+            console.log('✅ WORLD_CUP_2026 carregado!');
+            console.log('Teams:', Object.keys(WORLD_CUP_2026.teams).length);
+            console.log('Matches:', WORLD_CUP_2026.matches.length);
+            console.log('Groups:', Object.keys(WORLD_CUP_2026.groupStandings).length);
+            
+            document.getElementById('statusContent').innerHTML = `
+                <p class="success">✅ WORLD_CUP_2026 carregado com sucesso!</p>
+                <ul>
+                    <li>Teams: ${Object.keys(WORLD_CUP_2026.teams).length}</li>
+                    <li>Matches: ${WORLD_CUP_2026.matches.length}</li>
+                    <li>Groups: ${Object.keys(WORLD_CUP_2026.groupStandings).length}</li>
+                </ul>
+            `;
+        } else {
+            console.error('❌ WORLD_CUP_2026 NÃO foi carregado!');
+            document.getElementById('statusContent').innerHTML = `
+                <p class="error">❌ WORLD_CUP_2026 não foi carregado!</p>
+                <p>Verifique se o arquivo js/data.js existe e está acessível.</p>
+            `;
+        }
+    </script>
+    
+    <script src="js/groups.js?v=20260619-1822"></script>
+    
+    <script>
+        console.log('=== APÓS CARREGAR GROUPS.JS ===');
+        
+        // Verificar se renderGroups existe
+        if (typeof renderGroups === 'function') {
+            console.log('✅ renderGroups() encontrada!');
+            
+            // Tentar renderizar
+            try {
+                console.log('🔄 Chamando renderGroups()...');
+                renderGroups();
+                console.log('✅ renderGroups() executada!');
+                
+                // Verificar se grupos foram renderizados
+                setTimeout(() => {
+                    const container = document.getElementById('groupsContainer');
+                    const cards = container.querySelectorAll('.group-card');
+                    console.log('📊 Grupos renderizados:', cards.length);
+                    
+                    if (cards.length > 0) {
+                        document.getElementById('statusContent').innerHTML += `
+                            <p class="success">✅ ${cards.length} grupos renderizados com sucesso!</p>
+                        `;
+                    } else {
+                        document.getElementById('statusContent').innerHTML += `
+                            <p class="error">❌ Nenhum grupo foi renderizado</p>
+                        `;
+                    }
+                }, 500);
+            } catch (error) {
+                console.error('❌ Erro ao executar renderGroups():', error);
+                document.getElementById('statusContent').innerHTML += `
+                    <p class="error">❌ Erro: ${error.message}</p>
+                `;
+            }
+        } else {
+            console.error('❌ renderGroups() NÃO encontrada!');
+            document.getElementById('statusContent').innerHTML += `
+                <p class="error">❌ Função renderGroups() não foi carregada!</p>
+            `;
+        }
+    </script>
+</body>
+</html>
