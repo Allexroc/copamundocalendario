@@ -215,7 +215,35 @@ const WORLD_CUP_2026 = {
         { id: 26, date: "2026-06-18T16:00:00-03:00", group: "B", homeTeam: "SUI", awayTeam: "BIH", homeScore: 4, awayScore: 1, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
         { id: 27, date: "2026-06-18T19:00:00-03:00", group: "B", homeTeam: "CAN", awayTeam: "QAT", homeScore: 6, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
         { id: 28, date: "2026-06-18T22:00:00-03:00", group: "A", homeTeam: "MEX", awayTeam: "KOR", homeScore: 1, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 2 }
-    ]
+    ],
+
+    // Top scorers (updated to current date: 2026-06-18T18:24 BRT) - All Round 1 matches completed
+    topScorers: [
+        { player: "Kai Havertz", team: "GER", goals: 2, matches: 1 },
+        { player: "Hirving Lozano", team: "MEX", goals: 2, matches: 1 },
+        { player: "Son Heung-min", team: "KOR", goals: 2, matches: 1 },
+        { player: "Cody Gakpo", team: "NED", goals: 2, matches: 1 },
+        { player: "Erling Haaland", team: "NOR", goals: 2, matches: 1 },
+        { player: "Christian Pulisic", team: "USA", goals: 2, matches: 1 },
+        { player: "Álvaro Morata", team: "ESP", goals: 2, matches: 1 },
+        { player: "Cristiano Ronaldo", team: "POR", goals: 2, matches: 1 },
+        { player: "Kylian Mbappé", team: "FRA", goals: 1, matches: 1 },
+        { player: "Harry Kane", team: "ENG", goals: 1, matches: 1 },
+        { player: "Lionel Messi", team: "ARG", goals: 1, matches: 1 },
+        { player: "Luis Suárez", team: "URU", goals: 1, matches: 1 },
+        { player: "Alexander Isak", team: "SWE", goals: 1, matches: 1 },
+        { player: "Romelu Lukaku", team: "BEL", goals: 1, matches: 1 },
+        { player: "Alphonso Davies", team: "CAN", goals: 1, matches: 1 },
+        { player: "Jonathan David", team: "CAN", goals: 1, matches: 1 },
+        { player: "Edin Džeko", team: "BIH", goals: 1, matches: 1 },
+        { player: "Akram Afif", team: "QAT", goals: 1, matches: 1 },
+        { player: "Sébastien Haller", team: "CIV", goals: 1, matches: 1 },
+        { player: "Enner Valencia", team: "ECU", goals: 1, matches: 1 },
+        { player: "Hakan Çalhanoğlu", team: "TUR", goals: 1, matches: 1 },
+        { player: "Marcel Sabitzer", team: "AUT", goals: 1, matches: 1 },
+        { player: "Luis Díaz", team: "COL", goals: 1, matches: 1 },
+        { player: "Mohammed Kudus", team: "GHA", goals: 1, matches: 1 }
+    ],
 
     // Top assists (updated to current date: 2026-06-18T18:24 BRT) - All Round 1 matches completed
     topAssists: [
