@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar componentes
     initializeApp();
     setupEventListeners();
+    initializeBobBanner();
     showWelcomeMessage();
     
     // Inicializar status da API

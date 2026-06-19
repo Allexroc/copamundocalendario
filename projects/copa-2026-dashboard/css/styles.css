@@ -1,6 +1,141 @@
 /* ============================================
    FIFA World Cup 2026 Dashboard - Main Styles
    Design: FIFA Official (Classic & Professional)
+
+/* ============================================
+   Bob Update Banner Styles
+   ============================================ */
+.bob-update-banner {
+    background: linear-gradient(135deg, #0F62FE 0%, #0043CE 100%);
+    color: white;
+    padding: 16px 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: slideDown 0.5s ease-out;
+    position: relative;
+    z-index: 999;
+}
+
+.bob-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.bob-banner-icon {
+    font-size: 32px;
+    color: #42BE65;
+    animation: bounce 2s infinite;
+}
+
+.bob-banner-message {
+    flex: 1;
+}
+
+.bob-banner-message strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.bob-banner-message p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.95;
+}
+
+.bob-banner-message a {
+    color: #42BE65;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.bob-banner-message a:hover {
+    color: #24A148;
+}
+
+.bob-banner-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.bob-banner-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.bob-banner-timestamp {
+    text-align: right;
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 8px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Responsive adjustments for banner */
+@media (max-width: 768px) {
+    .bob-update-banner {
+        padding: 12px 16px;
+    }
+    
+    .bob-banner-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .bob-banner-icon {
+        font-size: 24px;
+    }
+    
+    .bob-banner-message strong {
+        font-size: 14px;
+    }
+    
+    .bob-banner-message p {
+        font-size: 13px;
+    }
+    
+    .bob-banner-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+}
+
    ============================================ */
 /* ============================================
    API Status Badge Styles

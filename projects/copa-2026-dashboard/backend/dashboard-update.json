@@ -337,30 +337,56 @@
       "status": "finished",
       "phase": "group",
       "round": 2
+    },
+    {
+      "id": 27,
+      "date": "2026-06-18T19:00:00-03:00",
+      "group": "B",
+      "homeTeam": "CAN",
+      "awayTeam": "QAT",
+      "homeScore": 6,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 2
+    },
+    {
+      "id": 28,
+      "date": "2026-06-18T22:00:00-03:00",
+      "group": "A",
+      "homeTeam": "MEX",
+      "awayTeam": "KOR",
+      "homeScore": 1,
+      "awayScore": 0,
+      "stadium": "Stadium",
+      "status": "finished",
+      "phase": "group",
+      "round": 2
     }
   ],
   "standings": {
     "A": [
       {
         "team": "MEX",
-        "played": 1,
-        "won": 1,
+        "played": 2,
+        "won": 2,
         "drawn": 0,
         "lost": 0,
-        "goalsFor": 2,
+        "goalsFor": 3,
         "goalsAgainst": 0,
-        "goalDifference": 2,
-        "points": 3
+        "goalDifference": 3,
+        "points": 6
       },
       {
         "team": "KOR",
-        "played": 1,
+        "played": 2,
         "won": 1,
         "drawn": 0,
-        "lost": 0,
+        "lost": 1,
         "goalsFor": 2,
-        "goalsAgainst": 1,
-        "goalDifference": 1,
+        "goalsAgainst": 2,
+        "goalDifference": 0,
         "points": 3
       },
       {
@@ -388,6 +414,17 @@
     ],
     "B": [
       {
+        "team": "CAN",
+        "played": 2,
+        "won": 1,
+        "drawn": 1,
+        "lost": 0,
+        "goalsFor": 7,
+        "goalsAgainst": 1,
+        "goalDifference": 6,
+        "points": 4
+      },
+      {
         "team": "SUI",
         "played": 2,
         "won": 1,
@@ -399,28 +436,6 @@
         "points": 4
       },
       {
-        "team": "CAN",
-        "played": 1,
-        "won": 0,
-        "drawn": 1,
-        "lost": 0,
-        "goalsFor": 1,
-        "goalsAgainst": 1,
-        "goalDifference": 0,
-        "points": 1
-      },
-      {
-        "team": "QAT",
-        "played": 1,
-        "won": 0,
-        "drawn": 1,
-        "lost": 0,
-        "goalsFor": 1,
-        "goalsAgainst": 1,
-        "goalDifference": 0,
-        "points": 1
-      },
-      {
         "team": "BIH",
         "played": 2,
         "won": 0,
@@ -429,6 +444,17 @@
         "goalsFor": 2,
         "goalsAgainst": 5,
         "goalDifference": -3,
+        "points": 1
+      },
+      {
+        "team": "QAT",
+        "played": 2,
+        "won": 0,
+        "drawn": 1,
+        "lost": 1,
+        "goalsFor": 1,
+        "goalsAgainst": 7,
+        "goalDifference": -6,
         "points": 1
       }
     ],
@@ -893,5 +919,5 @@
       }
     ]
   },
-  "lastUpdate": "2026-06-18T22:53:21.718Z"
+  "lastUpdate": "2026-06-19T15:26:20.221Z"
 }

@@ -336,5 +336,31 @@
     "status": "finished",
     "phase": "group",
     "round": 2
+  },
+  {
+    "id": 27,
+    "date": "2026-06-18T19:00:00-03:00",
+    "group": "B",
+    "homeTeam": "CAN",
+    "awayTeam": "QAT",
+    "homeScore": 6,
+    "awayScore": 0,
+    "stadium": "Stadium",
+    "status": "finished",
+    "phase": "group",
+    "round": 2
+  },
+  {
+    "id": 28,
+    "date": "2026-06-18T22:00:00-03:00",
+    "group": "A",
+    "homeTeam": "MEX",
+    "awayTeam": "KOR",
+    "homeScore": 1,
+    "awayScore": 0,
+    "stadium": "Stadium",
+    "status": "finished",
+    "phase": "group",
+    "round": 2
   }
 ]
