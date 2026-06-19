@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico - Copa 2026 Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0F62FE;
+            border-bottom: 3px solid #0F62FE;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            color: #42BE65;
+            font-weight: bold;
+        }
+        .error {
+            color: #DA1E28;
+            font-weight: bold;
+        }
+        .warning {
+            color: #F1C21B;
+            font-weight: bold;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .logo-test {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        .logo-test img {
+            max-width: 100px;
+            border: 2px solid #ddd;
+            padding: 10px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico do Dashboard Copa 2026</h1>
+        
+        <div class="test-section">
+            <h2>1. Teste de Carregamento de Scripts</h2>
+            <div id="scriptTest">Testando...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>2. Teste do Objeto WORLD_CUP_2026</h2>
+            <div id="dataTest">Testando...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. Teste de Funções</h2>
+            <div id="functionTest">Testando...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Teste do Logo do Bob</h2>
+            <div class="logo-test">
+                <p><strong>Caminho 1:</strong> assets/logos/bob-ibm-logo.svg</p>
+                <img src="assets/logos/bob-ibm-logo.svg" alt="Logo Bob 1" onerror="this.style.border='2px solid red'">
+                
+                <p><strong>Caminho 2:</strong> ./assets/logos/bob-ibm-logo.svg</p>
+                <img src="./assets/logos/bob-ibm-logo.svg" alt="Logo Bob 2" onerror="this.style.border='2px solid red'">
+                
+                <p><strong>Caminho 3:</strong> /assets/logos/bob-ibm-logo.svg</p>
+                <img src="/assets/logos/bob-ibm-logo.svg" alt="Logo Bob 3" onerror="this.style.border='2px solid red'">
+            </div>
+            <div id="logoTest">Testando caminhos...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>5. Informações do Ambiente</h2>
+            <div id="envInfo">
+                <p><strong>URL:</strong> <span id="currentUrl"></span></p>
+                <p><strong>Protocolo:</strong> <span id="protocol"></span></p>
+                <p><strong>Host:</strong> <span id="host"></span></p>
+                <p><strong>Pathname:</strong> <span id="pathname"></span></p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>6. Console de Erros</h2>
+            <div id="consoleErrors">
+                <p>Abra o Console do Navegador (F12) para ver erros detalhados.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carregar scripts na mesma ordem do index.html -->
+    <script src="js/api-integration.js"></script>
+    <script src="js/worldcup-api.js"></script>
+    <script src="js/data.js?v=20260619-1736"></script>
+    <script src="js/lineups.js"></script>
+    <script src="js/team-details.js"></script>
+    <script src="js/groups.js"></script>
+    <script src="js/matches.js"></script>
+    <script src="js/knockout.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/slack-share.js"></script>
+    <script src="js/bob-banner.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        // Capturar erros
+        window.addEventListener('error', function(e) {
+            console.error('Erro capturado:', e.message, e.filename, e.lineno);
+        });
+
+        // Executar testes após carregamento
+        window.addEventListener('load', function() {
+            runDiagnostics();
+        });
+
+        function runDiagnostics() {
+            // Teste 1: Scripts carregados
+            const scriptTest = document.getElementById('scriptTest');
+            const scripts = document.querySelectorAll('script[src]');
+            let scriptHtml = '<p>Total de scripts: ' + scripts.length + '</p><ul>';
+            scripts.forEach(script => {
+                const loaded = script.src ? '✅' : '❌';
+                scriptHtml += '<li>' + loaded + ' ' + script.src + '</li>';
+            });
+            scriptHtml += '</ul>';
+            scriptTest.innerHTML = scriptHtml;
+
+            // Teste 2: WORLD_CUP_2026
+            const dataTest = document.getElementById('dataTest');
+            if (typeof WORLD_CUP_2026 !== 'undefined') {
+                dataTest.innerHTML = `
+                    <p class="success">✅ WORLD_CUP_2026 carregado com sucesso!</p>
+                    <ul>
+                        <li>Teams: ${Object.keys(WORLD_CUP_2026.teams).length}</li>
+                        <li>Matches: ${WORLD_CUP_2026.matches.length}</li>
+                        <li>Groups: ${Object.keys(WORLD_CUP_2026.groupStandings).length}</li>
+                    </ul>
+                    <details>
+                        <summary>Ver estrutura completa</summary>
+                        <pre>${JSON.stringify(WORLD_CUP_2026.tournament, null, 2)}</pre>
+                    </details>
+                `;
+            } else {
+                dataTest.innerHTML = '<p class="error">❌ WORLD_CUP_2026 NÃO foi carregado!</p>';
+            }
+
+            // Teste 3: Funções
+            const functionTest = document.getElementById('functionTest');
+            let funcHtml = '<ul>';
+            
+            const functions = [
+                'getTeamInfo',
+                'getGroupStandings',
+                'getAllMatches',
+                'renderGroups',
+                'initializeApp'
+            ];
+            
+            functions.forEach(funcName => {
+                const exists = typeof window[funcName] === 'function';
+                const status = exists ? '<span class="success">✅</span>' : '<span class="error">❌</span>';
+                funcHtml += '<li>' + status + ' ' + funcName + '()</li>';
+            });
+            funcHtml += '</ul>';
+            
+            // Testar getGroupStandings
+            if (typeof getGroupStandings === 'function') {
+                try {
+                    const grupoC = getGroupStandings('C');
+                    funcHtml += '<p class="success">✅ getGroupStandings("C") retornou ' + grupoC.length + ' times</p>';
+                    funcHtml += '<pre>' + JSON.stringify(grupoC, null, 2) + '</pre>';
+                } catch (e) {
+                    funcHtml += '<p class="error">❌ Erro ao executar getGroupStandings: ' + e.message + '</p>';
+                }
+            }
+            
+            functionTest.innerHTML = funcHtml;
+
+            // Teste 4: Logo
+            const logoTest = document.getElementById('logoTest');
+            setTimeout(() => {
+                const imgs = document.querySelectorAll('.logo-test img');
+                let logoHtml = '<p>Resultados:</p><ul>';
+                imgs.forEach((img, index) => {
+                    const loaded = img.complete && img.naturalHeight !== 0;
+                    const status = loaded ? '<span class="success">✅ Carregado</span>' : '<span class="error">❌ Falhou</span>';
+                    logoHtml += '<li>Caminho ' + (index + 1) + ': ' + status + '</li>';
+                });
+                logoHtml += '</ul>';
+                logoTest.innerHTML += logoHtml;
+            }, 1000);
+
+            // Teste 5: Ambiente
+            document.getElementById('currentUrl').textContent = window.location.href;
+            document.getElementById('protocol').textContent = window.location.protocol;
+            document.getElementById('host').textContent = window.location.host;
+            document.getElementById('pathname').textContent = window.location.pathname;
+        }
+    </script>
+</body>
+</html>
