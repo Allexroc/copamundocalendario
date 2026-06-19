@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Completo - Copa 2026</title>
+    
+    <!-- Carregar TODOS os CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-header {
+            background: #0F62FE;
+            color: white;
+            padding: 20px;
+            margin: -20px -20px 20px -20px;
+        }
+        .test-info {
+            background: #f5f5f5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .success { color: #42BE65; font-weight: bold; }
+        .error { color: #DA1E28; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>🧪 Teste Completo com CSS - Dashboard Copa 2026</h1>
+        <p>Este teste carrega todos os arquivos CSS para verificar a renderização</p>
+    </div>
+
+    <div class="test-info">
+        <h2>Status do Carregamento:</h2>
+        <div id="loadStatus">Verificando...</div>
+    </div>
+
+    <h2>Grupos Renderizados:</h2>
+    <div class="groups-container" id="groupsContainer">
+        <!-- Os grupos serão renderizados aqui -->
+    </div>
+
+    <!-- Carregar scripts na mesma ordem do index.html -->
+    <script src="js/data.js?v=20260619-1736"></script>
+    <script src="js/groups.js"></script>
+
+    <script>
+        window.addEventListener('load', function() {
+            const statusDiv = document.getElementById('loadStatus');
+            let html = '<ul>';
+
+            // Verificar CSS
+            const styles = document.styleSheets;
+            html += '<li>Arquivos CSS carregados: ' + styles.length + '</li>';
+            
+            // Verificar se variáveis CSS estão disponíveis
+            const root = document.documentElement;
+            const primaryColor = getComputedStyle(root).getPropertyValue('--primary');
+            if (primaryColor) {
+                html += '<li class="success">✅ Variáveis CSS carregadas (--primary: ' + primaryColor + ')</li>';
+            } else {
+                html += '<li class="error">❌ Variáveis CSS NÃO carregadas</li>';
+            }
+
+            // Verificar dados
+            if (typeof WORLD_CUP_2026 !== 'undefined') {
+                html += '<li class="success">✅ WORLD_CUP_2026 carregado</li>';
+            } else {
+                html += '<li class="error">❌ WORLD_CUP_2026 NÃO carregado</li>';
+            }
+
+            // Verificar funções
+            if (typeof renderGroups === 'function') {
+                html += '<li class="success">✅ renderGroups() disponível</li>';
+            } else {
+                html += '<li class="error">❌ renderGroups() NÃO disponível</li>';
+            }
+
+            html += '</ul>';
+            statusDiv.innerHTML = html;
+
+            // Renderizar grupos
+            console.log('=== INICIANDO RENDERIZAÇÃO COM CSS COMPLETO ===');
+            try {
+                if (typeof renderGroups === 'function') {
+                    renderGroups();
+                    
+                    // Verificar se foram renderizados
+                    setTimeout(() => {
+                        const container = document.getElementById('groupsContainer');
+                        const cards = container.querySelectorAll('.group-card');
+                        if (cards.length > 0) {
+                            statusDiv.innerHTML += '<p class="success">✅ ' + cards.length + ' grupos renderizados e VISÍVEIS!</p>';
+                            
+                            // Verificar se têm altura (visíveis)
+                            const firstCard = cards[0];
+                            const height = firstCard.offsetHeight;
+                            if (height > 0) {
+                                statusDiv.innerHTML += '<p class="success">✅ Grupos têm altura: ' + height + 'px (VISÍVEIS)</p>';
+                            } else {
+                                statusDiv.innerHTML += '<p class="error">❌ Grupos têm altura 0 (INVISÍVEIS)</p>';
+                            }
+                        } else {
+                            statusDiv.innerHTML += '<p class="error">❌ Nenhum grupo foi renderizado</p>';
+                        }
+                    }, 500);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                statusDiv.innerHTML += '<p class="error">❌ Erro: ' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>
