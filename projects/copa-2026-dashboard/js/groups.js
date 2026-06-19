@@ -2,24 +2,62 @@
 // Handles group standings display and logic
 
 function renderGroups() {
+    console.log('🔄 renderGroups() iniciado');
+    
     const container = document.getElementById('groupsContainer');
-    if (!container) return;
+    if (!container) {
+        console.error('❌ Container groupsContainer não encontrado!');
+        return;
+    }
+    
+    console.log('✅ Container encontrado:', container);
+
+    // Verificar se WORLD_CUP_2026 existe
+    if (typeof WORLD_CUP_2026 === 'undefined') {
+        console.error('❌ WORLD_CUP_2026 não está definido!');
+        container.innerHTML = '<div style="padding: 20px; text-align: center; color: red;"><h3>⚠️ Erro: Dados não carregados</h3><p>O objeto WORLD_CUP_2026 não foi encontrado. Verifique se o arquivo data.js foi carregado corretamente.</p></div>';
+        return;
+    }
+    
+    console.log('✅ WORLD_CUP_2026 encontrado');
 
     const groupIds = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
     
     container.innerHTML = '';
     
-    groupIds.forEach(groupId => {
-        const groupCard = createGroupCard(groupId);
-        container.appendChild(groupCard);
-    });
+    try {
+        groupIds.forEach(groupId => {
+            console.log(`📊 Renderizando Grupo ${groupId}`);
+            const groupCard = createGroupCard(groupId);
+            container.appendChild(groupCard);
+        });
+        
+        console.log('✅ Todos os grupos renderizados com sucesso!');
+    } catch (error) {
+        console.error('❌ Erro ao renderizar grupos:', error);
+        container.innerHTML = '<div style="padding: 20px; text-align: center; color: red;"><h3>⚠️ Erro ao renderizar grupos</h3><p>' + error.message + '</p></div>';
+    }
 
     // Setup expand all button
     setupExpandAllButton();
 }
 
 function createGroupCard(groupId) {
+    console.log(`🔧 createGroupCard(${groupId}) iniciado`);
+    
+    // Verificar se getGroupStandings existe
+    if (typeof getGroupStandings !== 'function') {
+        console.error('❌ Função getGroupStandings não encontrada!');
+        throw new Error('Função getGroupStandings não está definida');
+    }
+    
     const standings = getGroupStandings(groupId);
+    console.log(`📊 Standings do Grupo ${groupId}:`, standings);
+    
+    if (!standings || standings.length === 0) {
+        console.warn(`⚠️ Nenhum dado encontrado para o Grupo ${groupId}`);
+    }
+    
     const groupColor = getGroupColor(groupId);
     
     const card = document.createElement('div');
