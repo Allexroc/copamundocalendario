@@ -122,8 +122,8 @@ const WORLD_CUP_2026 = {
             { team: "QAT", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 0, goalsAgainst: 3, goalDifference: -3, points: 0 }
         ],
         "C": [
-            { team: "MAR", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, goalDifference: 0, points: 1 },
             { team: "SCO", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 1, goalsAgainst: 0, goalDifference: 1, points: 3 },
+            { team: "MAR", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, goalDifference: 0, points: 1 },
             { team: "BRA", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, goalDifference: 0, points: 1 },
             { team: "HAI", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 0, goalsAgainst: 1, goalDifference: -1, points: 0 }
         ],
@@ -235,14 +235,14 @@ const WORLD_CUP_2026 = {
         { id: 23, date: "2026-06-17T17:00:00-03:00", group: "L", homeTeam: "ENG", awayTeam: "CRO", homeScore: 4, awayScore: 2, stadium: "BC Place", status: "finished", phase: "group", round: 1 },
         { id: 24, date: "2026-06-17T20:00:00-03:00", group: "L", homeTeam: "GHA", awayTeam: "PAN", homeScore: 1, awayScore: 0, stadium: "BMO Field", status: "finished", phase: "group", round: 1 },
         
-        // Round 2 matches (17-18 June) - UTC-3 times
-        // CORREÇÃO: Baseado em dados do Bing Sports (19/06/2026) - Maioria dos jogos NÃO foram realizados
+        // Round 2 matches (17-19 June) - UTC-3 times
+        // CORREÇÃO: Baseado em dados do Bing Sports (19/06/2026)
         { id: 25, date: "2026-06-17T16:00:00-03:00", group: "A", homeTeam: "MEX", awayTeam: "KOR", homeScore: null, awayScore: null, stadium: "Estadio Azteca", status: "scheduled", phase: "group", round: 2 },
         { id: 26, date: "2026-06-17T13:00:00-03:00", group: "A", homeTeam: "RSA", awayTeam: "CZE", homeScore: null, awayScore: null, stadium: "Estadio Akron", status: "scheduled", phase: "group", round: 2 },
         { id: 27, date: "2026-06-17T16:00:00-03:00", group: "B", homeTeam: "CAN", awayTeam: "QAT", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 2 },
         { id: 28, date: "2026-06-17T13:00:00-03:00", group: "B", homeTeam: "BIH", awayTeam: "SUI", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 2 },
-        { id: 29, date: "2026-06-17T16:00:00-03:00", group: "C", homeTeam: "BRA", awayTeam: "SCO", homeScore: null, awayScore: null, stadium: "SoFi Stadium", status: "scheduled", phase: "group", round: 2 },
-        { id: 30, date: "2026-06-17T13:00:00-03:00", group: "C", homeTeam: "MAR", awayTeam: "HAI", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 2 },
+        { id: 29, date: "2026-06-17T13:00:00-03:00", group: "C", homeTeam: "MAR", awayTeam: "HAI", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 2 },
+        { id: 30, date: "2026-06-19T21:30:00-03:00", group: "C", homeTeam: "BRA", awayTeam: "HAI", homeScore: null, awayScore: null, stadium: "SoFi Stadium", status: "scheduled", phase: "group", round: 2 },
         { id: 31, date: "2026-06-17T16:00:00-03:00", group: "D", homeTeam: "USA", awayTeam: "TUR", homeScore: null, awayScore: null, stadium: "MetLife Stadium", status: "scheduled", phase: "group", round: 2 },
         { id: 32, date: "2026-06-17T16:00:00-03:00", group: "D", homeTeam: "PAR", awayTeam: "AUS", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 2 },
         { id: 33, date: "2026-06-17T13:00:00-03:00", group: "E", homeTeam: "GER", awayTeam: "ECU", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 2 },
@@ -271,8 +271,8 @@ const WORLD_CUP_2026 = {
         { id: 50, date: "2026-06-20T16:00:00-03:00", group: "A", homeTeam: "CZE", awayTeam: "MEX", homeScore: null, awayScore: null, stadium: "Estadio Azteca", status: "scheduled", phase: "group", round: 3 },
         { id: 51, date: "2026-06-20T16:00:00-03:00", group: "B", homeTeam: "SUI", awayTeam: "QAT", homeScore: null, awayScore: null, stadium: "BC Place", status: "scheduled", phase: "group", round: 3 },
         { id: 52, date: "2026-06-20T16:00:00-03:00", group: "B", homeTeam: "BIH", awayTeam: "CAN", homeScore: null, awayScore: null, stadium: "BMO Field", status: "scheduled", phase: "group", round: 3 },
-        { id: 53, date: "2026-06-20T16:00:00-03:00", group: "C", homeTeam: "HAI", awayTeam: "BRA", homeScore: null, awayScore: null, stadium: "SoFi Stadium", status: "scheduled", phase: "group", round: 3 },
-        { id: 54, date: "2026-06-20T16:00:00-03:00", group: "C", homeTeam: "SCO", awayTeam: "MAR", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 3 },
+        { id: 53, date: "2026-06-23T16:00:00-03:00", group: "C", homeTeam: "SCO", awayTeam: "BRA", homeScore: null, awayScore: null, stadium: "Hard Rock Stadium", status: "scheduled", phase: "group", round: 3 },
+        { id: 54, date: "2026-06-23T16:00:00-03:00", group: "C", homeTeam: "HAI", awayTeam: "MAR", homeScore: null, awayScore: null, stadium: "SoFi Stadium", status: "scheduled", phase: "group", round: 3 },
         { id: 55, date: "2026-06-21T16:00:00-03:00", group: "D", homeTeam: "AUS", awayTeam: "USA", homeScore: null, awayScore: null, stadium: "MetLife Stadium", status: "scheduled", phase: "group", round: 3 },
         { id: 56, date: "2026-06-21T16:00:00-03:00", group: "D", homeTeam: "TUR", awayTeam: "PAR", homeScore: null, awayScore: null, stadium: "AT&T Stadium", status: "scheduled", phase: "group", round: 3 },
         { id: 57, date: "2026-06-21T16:00:00-03:00", group: "E", homeTeam: "CIV", awayTeam: "GER", homeScore: null, awayScore: null, stadium: "Arrowhead Stadium", status: "scheduled", phase: "group", round: 3 },
