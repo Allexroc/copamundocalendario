@@ -539,34 +539,66 @@ function createTopStadiumsList() {
 }
 
 function createQuickStats() {
+    // Calculate real statistics from finished matches
+    const finishedMatches = getAllMatches().filter(m => m.status === 'finished');
+    
+    // Calculate total goals
+    let totalGoals = 0;
+    let biggestWin = { homeTeam: '', awayTeam: '', homeScore: 0, awayScore: 0, difference: 0 };
+    
+    finishedMatches.forEach(match => {
+        const matchGoals = match.homeScore + match.awayScore;
+        totalGoals += matchGoals;
+        
+        // Find biggest win
+        const difference = Math.abs(match.homeScore - match.awayScore);
+        if (difference > biggestWin.difference) {
+            biggestWin = {
+                homeTeam: match.homeTeam,
+                awayTeam: match.awayTeam,
+                homeScore: match.homeScore,
+                awayScore: match.awayScore,
+                difference: difference
+            };
+        }
+    });
+    
+    const matchesPlayed = finishedMatches.length;
+    const averageGoals = matchesPlayed > 0 ? (totalGoals / matchesPlayed).toFixed(2) : '0.00';
+    
+    // Format biggest win
+    const biggestWinText = biggestWin.difference > 0
+        ? `${biggestWin.homeScore}-${biggestWin.awayScore}`
+        : 'N/A';
+    
     return `
         <div class="quick-stats">
             <h4>Estatísticas Rápidas</h4>
             <div class="quick-stat-item">
                 <i class="fas fa-futbol"></i>
                 <div class="quick-stat-info">
-                    <span class="quick-stat-value">127</span>
+                    <span class="quick-stat-value">${totalGoals}</span>
                     <span class="quick-stat-label">Gols Marcados</span>
                 </div>
             </div>
             <div class="quick-stat-item">
                 <i class="fas fa-chart-line"></i>
                 <div class="quick-stat-info">
-                    <span class="quick-stat-value">5.29</span>
+                    <span class="quick-stat-value">${averageGoals}</span>
                     <span class="quick-stat-label">Média de Gols/Jogo</span>
                 </div>
             </div>
             <div class="quick-stat-item">
                 <i class="fas fa-clock"></i>
                 <div class="quick-stat-info">
-                    <span class="quick-stat-value">24</span>
+                    <span class="quick-stat-value">${matchesPlayed}</span>
                     <span class="quick-stat-label">Jogos Realizados</span>
                 </div>
             </div>
             <div class="quick-stat-item">
                 <i class="fas fa-fire"></i>
                 <div class="quick-stat-info">
-                    <span class="quick-stat-value">7-1</span>
+                    <span class="quick-stat-value">${biggestWinText}</span>
                     <span class="quick-stat-label">Maior Goleada</span>
                 </div>
             </div>
