@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Data.js</title>
+</head>
+<body>
+    <h1>Test Data.js Loading</h1>
+    <div id="output"></div>
+    
+    <script src="js/data.js?v=20260619-1736"></script>
+    <script>
+        const output = document.getElementById('output');
+        
+        try {
+            output.innerHTML += '<p>✅ data.js loaded successfully</p>';
+            output.innerHTML += '<p>WORLD_CUP_2026 exists: ' + (typeof WORLD_CUP_2026 !== 'undefined') + '</p>';
+            
+            if (typeof WORLD_CUP_2026 !== 'undefined') {
+                output.innerHTML += '<p>Teams count: ' + Object.keys(WORLD_CUP_2026.teams).length + '</p>';
+                output.innerHTML += '<p>Matches count: ' + WORLD_CUP_2026.matches.length + '</p>';
+                output.innerHTML += '<p>Group standings keys: ' + Object.keys(WORLD_CUP_2026.groupStandings).join(', ') + '</p>';
+                
+                // Test Grupo C
+                const grupoC = WORLD_CUP_2026.groupStandings['C'];
+                output.innerHTML += '<h2>Grupo C:</h2>';
+                output.innerHTML += '<pre>' + JSON.stringify(grupoC, null, 2) + '</pre>';
+                
+                // Test matches Grupo C
+                const matchesC = WORLD_CUP_2026.matches.filter(m => m.group === 'C');
+                output.innerHTML += '<h2>Jogos Grupo C:</h2>';
+                output.innerHTML += '<pre>' + JSON.stringify(matchesC, null, 2) + '</pre>';
+            }
+        } catch (error) {
+            output.innerHTML += '<p style="color: red;">❌ Error: ' + error.message + '</p>';
+            output.innerHTML += '<pre>' + error.stack + '</pre>';
+        }
+    </script>
+</body>
+</html>
