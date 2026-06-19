@@ -70,6 +70,40 @@
     }
 }
 
+/* ============================================
+   IBM BOB Badge Styles
+   ============================================ */
+.ibm-bob-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #0F62FE 0%, #0043CE 100%);
+    border-radius: 20px;
+    margin-left: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(15, 98, 254, 0.3);
+}
+
+.ibm-bob-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 98, 254, 0.4);
+}
+
+.ibm-bob-badge svg {
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.ibm-bob-text {
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
 
 /* ============================================
    CSS Variables (FIFA Official Theme)
