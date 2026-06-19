@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150">
+  <!-- Capacete -->
+  <ellipse cx="75" cy="35" rx="45" ry="25" fill="#1E90FF"/>
+  <rect x="30" y="25" width="90" height="20" fill="#1E90FF" rx="5"/>
+  <rect x="65" y="10" width="20" height="20" fill="#4169E1" rx="3"/>
+  
+  <!-- Cabeça -->
+  <rect x="45" y="45" width="60" height="50" fill="white" rx="10"/>
+  
+  <!-- Olhos -->
+  <circle cx="60" cy="65" r="8" fill="black"/>
+  <circle cx="90" cy="65" r="8" fill="black"/>
+  <circle cx="62" cy="63" r="3" fill="white"/>
+  <circle cx="92" cy="63" r="3" fill="white"/>
+  
+  <!-- Boca sorridente -->
+  <path d="M 55 80 Q 75 90 95 80" stroke="black" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Corpo -->
+  <rect x="50" y="95" width="50" height="35" fill="white" rx="8"/>
+  
+  <!-- Símbolo de código no peito -->
+  <rect x="60" y="105" width="30" height="20" fill="#1E90FF" rx="3"/>
+  <text x="75" y="120" font-family="monospace" font-size="12" fill="white" text-anchor="middle" font-weight="bold"></></text>
+  
+  <!-- Braços -->
+  <rect x="25" y="100" width="20" height="40" fill="white" rx="8"/>
+  <rect x="105" y="100" width="20" height="40" fill="white" rx="8"/>
+  
+  <!-- Pernas -->
+  <rect x="55" y="130" width="15" height="15" fill="#1E90FF" rx="5"/>
+  <rect x="80" y="130" width="15" height="15" fill="#1E90FF" rx="5"/>
+</svg>
+
+<!-- Made with Bob -->
