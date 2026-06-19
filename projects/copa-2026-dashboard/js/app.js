@@ -1,21 +1,56 @@
 // FIFA World Cup 2026 Dashboard - Main Application
 // Inicialização e controle principal
 
+// Capturar erros globais
+window.addEventListener('error', function(e) {
+    console.error('❌ Erro global capturado:', e.message, e.filename, e.lineno, e.colno);
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('❌ Promise rejeitada:', e.reason);
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🏆 Copa do Mundo 2026 - Dashboard Iniciado');
     
-    // Inicializar componentes
-    initializeApp();
-    setupEventListeners();
-    initializeBobBanner();
-    showWelcomeMessage();
-    
-    // Inicializar status da API
-    initializeAPIStatus();
-    
-    // Iniciar integração com WorldCup API
-    if (typeof WorldCupAPI !== 'undefined') {
-        WorldCupAPI.startAutoRefresh();
+    try {
+        // Verificar dependências críticas
+        if (typeof WORLD_CUP_2026 === 'undefined') {
+            console.error('❌ WORLD_CUP_2026 não está definido!');
+            alert('Erro: Dados não carregados. Por favor, recarregue a página.');
+            return;
+        }
+        
+        console.log('✅ WORLD_CUP_2026 carregado:', {
+            teams: Object.keys(WORLD_CUP_2026.teams).length,
+            matches: WORLD_CUP_2026.matches.length,
+            groups: Object.keys(WORLD_CUP_2026.groupStandings).length
+        });
+        
+        // Inicializar componentes
+        initializeApp();
+        setupEventListeners();
+        
+        if (typeof initializeBobBanner === 'function') {
+            initializeBobBanner();
+        }
+        
+        if (typeof showWelcomeMessage === 'function') {
+            showWelcomeMessage();
+        }
+        
+        // Inicializar status da API
+        initializeAPIStatus();
+        
+        // Iniciar integração com WorldCup API
+        if (typeof WorldCupAPI !== 'undefined') {
+            WorldCupAPI.startAutoRefresh();
+        }
+        
+        console.log('✅ Dashboard inicializado com sucesso!');
+    } catch (error) {
+        console.error('❌ Erro ao inicializar dashboard:', error);
+        alert('Erro ao inicializar o dashboard. Verifique o console para mais detalhes.');
     }
 });
 
@@ -368,43 +403,68 @@ function updateSidebarInfo() {
 }
 
 function switchTab(tabName) {
-    // Esconder todas as seções
-    const sections = document.querySelectorAll('.content-section');
-    sections.forEach(section => section.classList.remove('active'));
+    console.log('🔄 Mudando para aba:', tabName);
     
-    // Mostrar seção selecionada
-    const targetSection = document.getElementById(`${tabName}Section`);
-    if (targetSection) {
+    try {
+        // Esconder todas as seções
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(section => section.classList.remove('active'));
+        
+        // Mostrar seção selecionada
+        const targetSection = document.getElementById(`${tabName}Section`);
+        if (!targetSection) {
+            console.error('❌ Seção não encontrada:', `${tabName}Section`);
+            return;
+        }
+        
         targetSection.classList.add('active');
+        console.log('✅ Seção ativada:', tabName);
         
         // Carregar conteúdo específico usando as funções dos módulos
         switch(tabName) {
             case 'groups':
+                console.log('📊 Renderizando grupos...');
                 if (typeof renderGroups === 'function') {
                     renderGroups();
+                } else {
+                    console.error('❌ renderGroups não está definida');
                 }
                 break;
             case 'calendar':
+                console.log('📅 Renderizando calendário...');
                 if (typeof renderCalendar === 'function') {
                     renderCalendar();
+                } else {
+                    console.error('❌ renderCalendar não está definida');
                 }
                 break;
             case 'results':
+                console.log('⚽ Renderizando resultados...');
                 if (typeof renderResults === 'function') {
                     renderResults();
+                } else {
+                    console.error('❌ renderResults não está definida');
                 }
                 break;
             case 'knockout':
+                console.log('🏆 Renderizando eliminatórias...');
                 if (typeof renderKnockout === 'function') {
                     renderKnockout();
+                } else {
+                    console.error('❌ renderKnockout não está definida');
                 }
                 break;
             case 'stats':
+                console.log('📈 Renderizando estatísticas...');
                 if (typeof renderStats === 'function') {
                     renderStats();
+                } else {
+                    console.error('❌ renderStats não está definida');
                 }
                 break;
         }
+    } catch (error) {
+        console.error('❌ Erro ao mudar de aba:', error);
     }
 }
 
