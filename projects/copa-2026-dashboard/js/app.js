@@ -10,48 +10,73 @@ window.addEventListener('unhandledrejection', function(e) {
     console.error('❌ Promise rejeitada:', e.reason);
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+// Usar window.load ao invés de DOMContentLoaded para garantir que todos os scripts carregaram
+window.addEventListener('load', function() {
     console.log('🏆 Copa do Mundo 2026 - Dashboard Iniciado');
     
-    try {
-        // Verificar dependências críticas
-        if (typeof WORLD_CUP_2026 === 'undefined') {
-            console.error('❌ WORLD_CUP_2026 não está definido!');
-            alert('Erro: Dados não carregados. Por favor, recarregue a página.');
-            return;
+    // Aguardar 200ms para garantir que todos os scripts foram processados
+    setTimeout(function() {
+        try {
+            // Verificar dependências críticas
+            if (typeof WORLD_CUP_2026 === 'undefined') {
+                console.error('❌ WORLD_CUP_2026 não está definido!');
+                console.error('Tentando recarregar em 2 segundos...');
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+                return;
+            }
+            
+            console.log('✅ WORLD_CUP_2026 carregado:', {
+                teams: Object.keys(WORLD_CUP_2026.teams).length,
+                matches: WORLD_CUP_2026.matches.length,
+                groups: Object.keys(WORLD_CUP_2026.groupStandings).length
+            });
+            
+            // Verificar funções essenciais
+            const requiredFunctions = ['renderGroups', 'getGroupStandings', 'getTeamInfo'];
+            const missingFunctions = requiredFunctions.filter(fn => typeof window[fn] !== 'function');
+            
+            if (missingFunctions.length > 0) {
+                console.error('❌ Funções faltando:', missingFunctions);
+                console.error('Tentando recarregar em 2 segundos...');
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+                return;
+            }
+            
+            console.log('✅ Todas as funções essenciais carregadas');
+            
+            // Inicializar componentes
+            initializeApp();
+            setupEventListeners();
+            
+            if (typeof initializeBobBanner === 'function') {
+                initializeBobBanner();
+            }
+            
+            if (typeof showWelcomeMessage === 'function') {
+                showWelcomeMessage();
+            }
+            
+            // Inicializar status da API
+            initializeAPIStatus();
+            
+            // Iniciar integração com WorldCup API
+            if (typeof WorldCupAPI !== 'undefined') {
+                WorldCupAPI.startAutoRefresh();
+            }
+            
+            console.log('✅ Dashboard inicializado com sucesso!');
+        } catch (error) {
+            console.error('❌ Erro ao inicializar dashboard:', error);
+            alert('Erro ao inicializar o dashboard. A página será recarregada.');
+            setTimeout(function() {
+                window.location.reload();
+            }, 2000);
         }
-        
-        console.log('✅ WORLD_CUP_2026 carregado:', {
-            teams: Object.keys(WORLD_CUP_2026.teams).length,
-            matches: WORLD_CUP_2026.matches.length,
-            groups: Object.keys(WORLD_CUP_2026.groupStandings).length
-        });
-        
-        // Inicializar componentes
-        initializeApp();
-        setupEventListeners();
-        
-        if (typeof initializeBobBanner === 'function') {
-            initializeBobBanner();
-        }
-        
-        if (typeof showWelcomeMessage === 'function') {
-            showWelcomeMessage();
-        }
-        
-        // Inicializar status da API
-        initializeAPIStatus();
-        
-        // Iniciar integração com WorldCup API
-        if (typeof WorldCupAPI !== 'undefined') {
-            WorldCupAPI.startAutoRefresh();
-        }
-        
-        console.log('✅ Dashboard inicializado com sucesso!');
-    } catch (error) {
-        console.error('❌ Erro ao inicializar dashboard:', error);
-        alert('Erro ao inicializar o dashboard. Verifique o console para mais detalhes.');
-    }
+    }, 200);
 });
 
 function initializeApp() {
