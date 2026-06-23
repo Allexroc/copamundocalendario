@@ -107,7 +107,7 @@ const WORLD_CUP_2026 = {
         "Lumen Field": { city: "Seattle", country: "EUA", capacity: 69000 }
     },
 
-    // Group standings (updated: 19/06/2026, 12:13 BRT) - Rodada 2 em andamento - Dados da API Football-Data.org
+    // Group standings (updated: 23/06/2026, 09:20 BRT) - Rodada 2 completa - Dados atualizados manualmente
     groupStandings: {
         "A": [
             { team: "MEX", played: 2, won: 2, drawn: 0, lost: 0, goalsFor: 3, goalsAgainst: 0, goalDifference: 3, points: 6 },
@@ -122,10 +122,10 @@ const WORLD_CUP_2026 = {
             { team: "QAT", played: 2, won: 0, drawn: 1, lost: 1, goalsFor: 1, goalsAgainst: 7, goalDifference: -6, points: 1 }
         ],
         "C": [
-            { team: "SCO", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 1, goalsAgainst: 0, goalDifference: 1, points: 3 },
-            { team: "BRA", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, goalDifference: 0, points: 1 },
-            { team: "MAR", played: 1, won: 0, drawn: 1, lost: 0, goalsFor: 1, goalsAgainst: 1, goalDifference: 0, points: 1 },
-            { team: "HAI", played: 1, won: 0, drawn: 0, lost: 1, goalsFor: 0, goalsAgainst: 1, goalDifference: -1, points: 0 }
+            { team: "BRA", played: 2, won: 1, drawn: 1, lost: 0, goalsFor: 4, goalsAgainst: 1, goalDifference: 3, points: 4 },
+            { team: "SCO", played: 2, won: 1, drawn: 0, lost: 1, goalsFor: 1, goalsAgainst: 2, goalDifference: -1, points: 3 },
+            { team: "MAR", played: 2, won: 1, drawn: 1, lost: 0, goalsFor: 3, goalsAgainst: 1, goalDifference: 2, points: 4 },
+            { team: "HAI", played: 2, won: 0, drawn: 0, lost: 2, goalsFor: 0, goalsAgainst: 4, goalDifference: -4, points: 0 }
         ],
         "D": [
             { team: "USA", played: 1, won: 1, drawn: 0, lost: 0, goalsFor: 4, goalsAgainst: 1, goalDifference: 3, points: 3 },
@@ -185,7 +185,7 @@ const WORLD_CUP_2026 = {
 
     // Matches (updated: 19/06/2026, 12:13 BRT / UTC-3) - Real API data from Football-Data.org
     // All times shown in UTC-3 (Brasília timezone)
-    // 28 matches completed (Round 1 complete + 4 matches from Round 2)
+    // 32 matches completed (Round 1 complete + 8 matches from Round 2)
     matches: [
         { id: 1, date: "2026-06-11T16:00:00-03:00", group: "A", homeTeam: "MEX", awayTeam: "RSA", homeScore: 2, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 1 },
         { id: 2, date: "2026-06-11T23:00:00-03:00", group: "A", homeTeam: "KOR", awayTeam: "CZE", homeScore: 2, awayScore: 1, stadium: "Stadium", status: "finished", phase: "group", round: 1 },
@@ -214,7 +214,11 @@ const WORLD_CUP_2026 = {
         { id: 25, date: "2026-06-18T13:00:00-03:00", group: "A", homeTeam: "CZE", awayTeam: "RSA", homeScore: 1, awayScore: 1, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
         { id: 26, date: "2026-06-18T16:00:00-03:00", group: "B", homeTeam: "SUI", awayTeam: "BIH", homeScore: 4, awayScore: 1, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
         { id: 27, date: "2026-06-18T19:00:00-03:00", group: "B", homeTeam: "CAN", awayTeam: "QAT", homeScore: 6, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
-        { id: 28, date: "2026-06-18T22:00:00-03:00", group: "A", homeTeam: "MEX", awayTeam: "KOR", homeScore: 1, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 2 }
+        { id: 28, date: "2026-06-18T22:00:00-03:00", group: "A", homeTeam: "MEX", awayTeam: "KOR", homeScore: 1, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
+        { id: 29, date: "2026-06-22T16:00:00-03:00", group: "C", homeTeam: "BRA", awayTeam: "HAI", homeScore: 3, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
+        { id: 30, date: "2026-06-22T16:00:00-03:00", group: "C", homeTeam: "MAR", awayTeam: "SCO", homeScore: 2, awayScore: 0, stadium: "Stadium", status: "finished", phase: "group", round: 2 },
+        { id: 31, date: "2026-06-23T13:00:00-03:00", group: "D", homeTeam: "USA", awayTeam: "TUR", homeScore: null, awayScore: null, stadium: "Stadium", status: "scheduled", phase: "group", round: 2 },
+        { id: 32, date: "2026-06-23T13:00:00-03:00", group: "D", homeTeam: "PAR", awayTeam: "AUS", homeScore: null, awayScore: null, stadium: "Stadium", status: "scheduled", phase: "group", round: 2 }
     ],
 
     // Top scorers (updated to current date: 2026-06-18T18:24 BRT) - All Round 1 matches completed
