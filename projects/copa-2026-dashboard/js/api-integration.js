@@ -91,10 +91,32 @@ const APIIntegration = {
         let matchId = 1;
 
         apiData.matches.forEach(apiMatch => {
-            // Converter data UTC para UTC-3 (Brasília)
+            // Converter data UTC para horário de Brasília (UTC-3)
             const utcDate = new Date(apiMatch.utcDate);
-            const brasiliaDate = new Date(utcDate.getTime() - (3 * 60 * 60 * 1000));
-            const dateStr = brasiliaDate.toISOString().slice(0, 19) + '-03:00';
+            
+            // Obter componentes da data em UTC
+            const utcYear = utcDate.getUTCFullYear();
+            const utcMonth = utcDate.getUTCMonth();
+            const utcDay = utcDate.getUTCDate();
+            const utcHours = utcDate.getUTCHours();
+            const utcMinutes = utcDate.getUTCMinutes();
+            const utcSeconds = utcDate.getUTCSeconds();
+            
+            // Criar data em UTC e ajustar para Brasília (UTC-3)
+            const brasiliaDate = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHours, utcMinutes, utcSeconds));
+            brasiliaDate.setHours(brasiliaDate.getHours() - 3); // Ajustar para UTC-3
+            
+            // Formatar como YYYY-MM-DDTHH:mm:ss-03:00
+            const year = brasiliaDate.getUTCFullYear();
+            const month = String(brasiliaDate.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(brasiliaDate.getUTCDate()).padStart(2, '0');
+            const hours = String(brasiliaDate.getUTCHours()).padStart(2, '0');
+            const minutes = String(brasiliaDate.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(brasiliaDate.getUTCSeconds()).padStart(2, '0');
+            
+            const dateStr = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}-03:00`;
+            
+            console.log(`🕐 Conversão: ${apiMatch.utcDate} (UTC) → ${dateStr} (Brasília)`);
 
             // Mapear códigos de times
             const homeTeam = this.teamMapping[apiMatch.homeTeam.tla] || apiMatch.homeTeam.tla;

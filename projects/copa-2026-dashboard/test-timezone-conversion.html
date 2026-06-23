@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Conversão de Timezone - Copa 2026</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .test-section h2 {
+            color: #764ba2;
+            margin-top: 0;
+        }
+        .result {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .result strong {
+            color: #667eea;
+        }
+        .success {
+            border-left: 4px solid #28a745;
+        }
+        .info {
+            border-left: 4px solid #17a2b8;
+        }
+        .warning {
+            border-left: 4px solid #ffc107;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+        .match-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .team {
+            flex: 1;
+            text-align: center;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 0 20px;
+        }
+        .timezone-info {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Teste de Conversão de Timezone - Copa 2026</h1>
+        
+        <div class="test-section">
+            <h2>📍 Informações do Sistema</h2>
+            <div class="result info">
+                <strong>Timezone do Navegador:</strong> <span id="browserTimezone"></span>
+            </div>
+            <div class="result info">
+                <strong>Hora Atual (Local):</strong> <span id="currentTimeLocal"></span>
+            </div>
+            <div class="result info">
+                <strong>Hora Atual (UTC):</strong> <span id="currentTimeUTC"></span>
+            </div>
+            <div class="result info">
+                <strong>Hora Atual (Brasília):</strong> <span id="currentTimeBrasilia"></span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 Teste de Conversão Manual</h2>
+            <div class="timezone-info">
+                <strong>Exemplo:</strong> Vamos converter uma data UTC para o horário de Brasília (UTC-3)
+            </div>
+            <button onclick="testManualConversion()">Executar Teste Manual</button>
+            <div id="manualTestResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔄 Teste de Integração com API</h2>
+            <div class="timezone-info">
+                <strong>Nota:</strong> Este teste busca dados da API e verifica se as datas estão sendo convertidas corretamente para o horário de Brasília.
+            </div>
+            <button onclick="testAPIIntegration()" id="apiTestBtn">Buscar Dados da API</button>
+            <div id="apiTestResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📅 Partidas com Timezone Convertido</h2>
+            <div id="matchesDisplay"></div>
+        </div>
+    </div>
+
+    <script src="js/api-integration.js"></script>
+    <script>
+        // Exibir informações do sistema
+        function displaySystemInfo() {
+            document.getElementById('browserTimezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            const now = new Date();
+            document.getElementById('currentTimeLocal').textContent = now.toLocaleString('pt-BR');
+            document.getElementById('currentTimeUTC').textContent = now.toISOString();
+            document.getElementById('currentTimeBrasilia').textContent = now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+        }
+
+        // Teste de conversão manual
+        function testManualConversion() {
+            const resultsDiv = document.getElementById('manualTestResults');
+            resultsDiv.innerHTML = '<div class="loading">Executando testes...</div>';
+            
+            setTimeout(() => {
+                let html = '';
+                
+                // Teste 1: Data UTC conhecida
+                const utcDateStr = '2026-06-11T18:00:00Z'; // 18:00 UTC
+                const utcDate = new Date(utcDateStr);
+                
+                // Método correto de conversão
+                const utcYear = utcDate.getUTCFullYear();
+                const utcMonth = utcDate.getUTCMonth();
+                const utcDay = utcDate.getUTCDate();
+                const utcHours = utcDate.getUTCHours();
+                const utcMinutes = utcDate.getUTCMinutes();
+                const utcSeconds = utcDate.getUTCSeconds();
+                
+                const brasiliaDate = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHours, utcMinutes, utcSeconds));
+                brasiliaDate.setHours(brasiliaDate.getHours() - 3); // UTC-3
+                
+                const year = brasiliaDate.getUTCFullYear();
+                const month = String(brasiliaDate.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(brasiliaDate.getUTCDate()).padStart(2, '0');
+                const hours = String(brasiliaDate.getUTCHours()).padStart(2, '0');
+                const minutes = String(brasiliaDate.getUTCMinutes()).padStart(2, '0');
+                const seconds = String(brasiliaDate.getUTCSeconds()).padStart(2, '0');
+                
+                const dateStr = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}-03:00`;
+                
+                html += `
+                    <div class="result success">
+                        <strong>✅ Teste 1: Conversão UTC → Brasília</strong><br>
+                        <strong>Entrada (UTC):</strong> ${utcDateStr}<br>
+                        <strong>Saída (Brasília):</strong> ${dateStr}<br>
+                        <strong>Esperado:</strong> 2026-06-11T15:00:00-03:00 (18:00 UTC - 3 horas = 15:00 BRT)<br>
+                        <strong>Status:</strong> ${dateStr === '2026-06-11T15:00:00-03:00' ? '✅ CORRETO' : '❌ INCORRETO'}
+                    </div>
+                `;
+                
+                // Teste 2: Verificar formatação de exibição
+                const displayDate = new Date(dateStr);
+                const displayTime = displayDate.toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'America/Sao_Paulo'
+                });
+                
+                html += `
+                    <div class="result success">
+                        <strong>✅ Teste 2: Formatação para Exibição</strong><br>
+                        <strong>Data Convertida:</strong> ${dateStr}<br>
+                        <strong>Hora Formatada:</strong> ${displayTime}<br>
+                        <strong>Esperado:</strong> 15:00<br>
+                        <strong>Status:</strong> ${displayTime === '15:00' ? '✅ CORRETO' : '❌ INCORRETO'}
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML = html;
+            }, 500);
+        }
+
+        // Teste de integração com API
+        async function testAPIIntegration() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            const btn = document.getElementById('apiTestBtn');
+            
+            btn.disabled = true;
+            resultsDiv.innerHTML = '<div class="loading">🔄 Buscando dados da API...</div>';
+            
+            try {
+                const apiData = await APIIntegration.fetchMatches();
+                
+                if (!apiData || !apiData.matches || apiData.matches.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="result warning">
+                            <strong>⚠️ Aviso:</strong> Nenhuma partida encontrada na API.<br>
+                            Isso pode ser normal se a Copa ainda não começou ou se não há dados disponíveis.
+                        </div>
+                    `;
+                    btn.disabled = false;
+                    return;
+                }
+                
+                const convertedData = APIIntegration.convertAPIData(apiData);
+                
+                let html = `
+                    <div class="result success">
+                        <strong>✅ Dados Recebidos da API</strong><br>
+                        <strong>Total de Partidas:</strong> ${apiData.matches.length}<br>
+                        <strong>Partidas Convertidas:</strong> ${convertedData.matches.length}
+                    </div>
+                `;
+                
+                // Mostrar exemplos de conversão
+                const sampleMatches = convertedData.matches.slice(0, 3);
+                sampleMatches.forEach((match, index) => {
+                    const originalMatch = apiData.matches[index];
+                    html += `
+                        <div class="result info">
+                            <strong>📋 Exemplo ${index + 1}: ${match.homeTeam} vs ${match.awayTeam}</strong><br>
+                            <strong>UTC Original:</strong> ${originalMatch.utcDate}<br>
+                            <strong>Brasília Convertido:</strong> ${match.date}<br>
+                            <strong>Status:</strong> ${match.status}
+                        </div>
+                    `;
+                });
+                
+                resultsDiv.innerHTML = html;
+                
+                // Exibir partidas
+                displayMatches(convertedData.matches);
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result warning">
+                        <strong>❌ Erro ao buscar dados:</strong><br>
+                        ${error.message}<br><br>
+                        <strong>Possíveis causas:</strong><br>
+                        • Servidor proxy não está rodando (execute: node proxy-server.js)<br>
+                        • API key inválida ou expirada<br>
+                        • Problemas de conexão com a internet
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Exibir partidas
+        function displayMatches(matches) {
+            const container = document.getElementById('matchesDisplay');
+            
+            if (matches.length === 0) {
+                container.innerHTML = '<div class="result info">Nenhuma partida para exibir.</div>';
+                return;
+            }
+            
+            const matchesToShow = matches.slice(0, 10); // Mostrar apenas as primeiras 10
+            
+            let html = '<h3>🏆 Primeiras 10 Partidas (Horário de Brasília)</h3>';
+            
+            matchesToShow.forEach(match => {
+                const matchDate = new Date(match.date);
+                const dateStr = matchDate.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+                const timeStr = matchDate.toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'America/Sao_Paulo'
+                });
+                
+                const statusText = match.status === 'finished' ? 'Finalizado' : 
+                                 match.status === 'live' ? 'Ao Vivo' : 'Agendado';
+                
+                html += `
+                    <div class="match-card">
+                        <div class="match-header">
+                            <span>Grupo ${match.group} • Rodada ${match.round}</span>
+                            <span>${statusText}</span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team">${match.homeTeam}</div>
+                            ${match.status === 'finished' || match.status === 'live' ? 
+                                `<div class="score">${match.homeScore ?? 0} - ${match.awayScore ?? 0}</div>` :
+                                `<div class="score">VS</div>`
+                            }
+                            <div class="team">${match.awayTeam}</div>
+                        </div>
+                        <div class="timezone-info">
+                            📅 ${dateStr} às ${timeStr} (Horário de Brasília - UTC-3)
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Inicializar
+        displaySystemInfo();
+        
+        // Atualizar hora a cada segundo
+        setInterval(displaySystemInfo, 1000);
+    </script>
+</body>
+</html>
