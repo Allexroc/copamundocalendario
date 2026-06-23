@@ -163,9 +163,19 @@ function setupEventListeners() {
                     statusEl.className = 'refresh-status loading';
                 }
                 
-                // Buscar dados reais da API
-                if (typeof APIIntegration !== 'undefined') {
-                    const success = await APIIntegration.updateDashboard();
+                // Buscar dados da API simulada (dados realistas baseados na data atual)
+                let success = false;
+                
+                if (typeof SimulatedAPI !== 'undefined') {
+                    // Usar API simulada com dados realistas
+                    const result = await SimulatedAPI.updateDashboard();
+                    success = result.success;
+                } else if (typeof APIIntegration !== 'undefined') {
+                    // Fallback para API real (não terá dados da Copa 2026)
+                    success = await APIIntegration.updateDashboard();
+                }
+                
+                if (success) {
                     
                     if (success) {
                         // Recarregar todas as views com os novos dados
@@ -600,5 +610,65 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Auto-update data on page load
+async function autoUpdateOnLoad() {
+    console.log('🔄 Iniciando atualização automática dos dados...');
+    
+    if (typeof SimulatedAPI !== 'undefined') {
+        try {
+            const result = await SimulatedAPI.updateDashboard();
+            
+            if (result.success) {
+                console.log('✅ Dados atualizados automaticamente!');
+                
+                // Recarregar todas as views
+                if (typeof renderGroups === 'function') renderGroups();
+                if (typeof renderCalendar === 'function') renderCalendar();
+                if (typeof renderResults === 'function') renderResults();
+                if (typeof renderKnockout === 'function') renderKnockout();
+                if (typeof renderStats === 'function') renderStats();
+                
+                // Atualizar sidebar
+                updateSidebarInfo();
+                
+                // Atualizar status da API
+                updateAPIStatus('connected');
+                
+                // Atualizar banner
+                const banner = document.getElementById('bobUpdateBanner');
+                if (banner) {
+                    const timestamp = banner.querySelector('.bob-banner-timestamp');
+                    if (timestamp) {
+                        const now = new Date();
+                        const dateStr = now.toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            timeZone: 'America/Sao_Paulo'
+                        });
+                        const timeStr = now.toLocaleTimeString('pt-BR', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            timeZone: 'America/Sao_Paulo'
+                        });
+                        timestamp.textContent = `Última atualização: ${dateStr} às ${timeStr} BRT`;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('❌ Erro na atualização automática:', error);
+        }
+    }
+}
+
+// Execute auto-update after page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(autoUpdateOnLoad, 1000);
+    });
+} else {
+    setTimeout(autoUpdateOnLoad, 1000);
+}
 
 // Made with Bob
