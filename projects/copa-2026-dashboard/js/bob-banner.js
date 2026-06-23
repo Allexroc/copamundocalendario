@@ -104,8 +104,8 @@ function closeUpdateDetailsModal() {
 }
 
 // Add animations to CSS dynamically
-const style = document.createElement('style');
-style.textContent = `
+const bannerStyle = document.createElement('style');
+bannerStyle.textContent = `
     @keyframes slideUp {
         from {
             transform: translateY(0);
@@ -122,7 +122,7 @@ style.textContent = `
         to { opacity: 0; }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(bannerStyle);
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', initializeBobBanner);

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Funções API Copa 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            border-left: 4px solid #1a237e;
+        }
+
+        .test-section h2 {
+            color: #1a237e;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .test-button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .test-button:hover {
+            background: #283593;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+        }
+
+        .test-button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .info {
+            color: #2196f3;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin: 5px;
+        }
+
+        .live-badge {
+            background: #f44336;
+            color: white;
+        }
+
+        .finished-badge {
+            background: #4caf50;
+            color: white;
+        }
+
+        .scheduled-badge {
+            background: #2196f3;
+            color: white;
+        }
+
+        .status-bar {
+            background: #1a237e;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Funções - Copa 2026 API</h1>
+        <p class="subtitle">Teste todas as novas funcionalidades implementadas</p>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="live-dot"></span>
+                <span>Sistema de Testes Ativo</span>
+            </div>
+            <div class="status-item">
+                <span id="currentTime">--:--:--</span>
+            </div>
+            <div class="status-item">
+                <span>Horário de Brasília (UTC-3)</span>
+            </div>
+        </div>
+
+        <!-- Teste 1: Intervalo de Atualização -->
+        <div class="test-section">
+            <h2>1️⃣ Intervalo de Atualização</h2>
+            <p>Verificar se o intervalo está configurado para 60 minutos</p>
+            <button class="test-button" onclick="testUpdateInterval()">Testar Intervalo</button>
+            <div id="result1" class="result" style="display:none;"></div>
+        </div>
+
+        <!-- Teste 2: Conversão UTC-3 -->
+        <div class="test-section">
+            <h2>2️⃣ Conversão de Horário UTC-3</h2>
+            <p>Testar conversão de datas UTC para horário de Brasília</p>
+            <button class="test-button" onclick="testUTC3Conversion()">Testar Conversão</button>
+            <div id="result2" class="result" style="display:none;"></div>
+        </div>
+
+        <!-- Teste 3: Formatação de Datas -->
+        <div class="test-section">
+            <h2>3️⃣ Formatação de Datas de Partidas</h2>
+            <p>Testar labels especiais: HOJE, AMANHÃ, dia da semana</p>
+            <button class="test-button" onclick="testDateFormatting()">Testar Hoje</button>
+            <button class="test-button" onclick="testTomorrowFormatting()">Testar Amanhã</button>
+            <button class="test-button" onclick="testFutureFormatting()">Testar Futuro</button>
+            <div id="result3" class="result" style="display:none;"></div>
+        </div>
+
+        <!-- Teste 4: Badges de Status -->
+        <div class="test-section">
+            <h2>4️⃣ Badges de Status</h2>
+            <p>Testar geração de badges para diferentes status de partidas</p>
+            <button class="test-button" onclick="testStatusBadges()">Testar Todos os Badges</button>
+            <div id="result4" class="result" style="display:none;"></div>
+        </div>
+
+        <!-- Teste 5: Contador Regressivo -->
+        <div class="test-section">
+            <h2>5️⃣ Contador Regressivo</h2>
+            <p>Testar contador para próxima atualização</p>
+            <button class="test-button" onclick="testCountdown()">Iniciar Contador</button>
+            <button class="test-button" onclick="stopCountdown()">Parar Contador</button>
+            <div id="result5" class="result" style="display:none;"></div>
+            <div id="countdown-display" style="margin-top: 10px; font-size: 1.2rem; font-weight: bold; color: #1a237e;"></div>
+        </div>
+
+        <!-- Teste 6: Verificação Geral -->
+        <div class="test-section">
+            <h2>6️⃣ Verificação Geral do Sistema</h2>
+            <p>Executar todos os testes de uma vez</p>
+            <button class="test-button" onclick="runAllTests()">Executar Todos os Testes</button>
+            <div id="result6" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- Carregar o módulo WorldCupAPI -->
+    <script src="js/worldcup-api.js"></script>
+
+    <script>
+        // Atualizar relógio
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'America/Sao_Paulo'
+            });
+            document.getElementById('currentTime').textContent = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Teste 1: Intervalo de Atualização
+        function testUpdateInterval() {
+            const result = document.getElementById('result1');
+            result.style.display = 'block';
+            
+            try {
+                const interval = WorldCupAPI.updateInterval;
+                const minutes = interval / 60000;
+                
+                let output = `<span class="info">📊 Configuração do Intervalo:</span>\n\n`;
+                output += `Intervalo em ms: ${interval}\n`;
+                output += `Intervalo em minutos: ${minutes}\n\n`;
+                
+                if (minutes === 60) {
+                    output += `<span class="success">✅ PASSOU: Intervalo configurado corretamente para 60 minutos!</span>`;
+                } else {
+                    output += `<span class="error">❌ FALHOU: Intervalo deveria ser 60 minutos, mas está em ${minutes} minutos</span>`;
+                }
+                
+                result.innerHTML = output;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ ERRO: ${error.message}</span>`;
+            }
+        }
+
+        // Teste 2: Conversão UTC-3
+        function testUTC3Conversion() {
+            const result = document.getElementById('result2');
+            result.style.display = 'block';
+            
+            try {
+                const testDate = "2026-06-22T20:00:00Z"; // 20:00 UTC
+                const converted = WorldCupAPI.convertToUTC3(testDate);
+                
+                let output = `<span class="info">🌍 Teste de Conversão UTC para UTC-3:</span>\n\n`;
+                output += `Data original (UTC): ${testDate}\n`;
+                output += `Data convertida: ${converted.formatted}\n`;
+                output += `Apenas hora: ${converted.time}\n`;
+                output += `Apenas data: ${converted.dateOnly}\n\n`;
+                
+                // Verificar se a hora foi convertida corretamente (20:00 UTC = 17:00 UTC-3)
+                if (converted.time === '17:00') {
+                    output += `<span class="success">✅ PASSOU: Conversão UTC-3 funcionando corretamente!</span>`;
+                } else {
+                    output += `<span class="error">❌ FALHOU: Hora esperada 17:00, recebida ${converted.time}</span>`;
+                }
+                
+                result.innerHTML = output;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ ERRO: ${error.message}</span>`;
+            }
+        }
+
+        // Teste 3a: Formatação HOJE
+        function testDateFormatting() {
+            const result = document.getElementById('result3');
+            result.style.display = 'block';
+            
+            try {
+                const today = new Date().toISOString();
+                const formatted = WorldCupAPI.formatMatchDate(today);
+                
+                let output = `<span class="info">📅 Teste de Formatação - HOJE:</span>\n\n`;
+                output += `Data testada: ${today}\n`;
+                output += `Label: ${formatted.label}\n`;
+                output += `Hora: ${formatted.time}\n`;
+                output += `Completo: ${formatted.full}\n\n`;
+                
+                if (formatted.label === 'HOJE') {
+                    output += `<span class="success">✅ PASSOU: Label "HOJE" gerado corretamente!</span>`;
+                } else {
+                    output += `<span class="error">❌ FALHOU: Esperado "HOJE", recebido "${formatted.label}"</span>`;
+                }
+                
+                result.innerHTML = output;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ ERRO: ${error.message}</span>`;
+            }
+        }
+
+        // Teste 3b: Formatação AMANHÃ
+        function testTomorrowFormatting() {
+            const result = document.getElementById('result3');
+            result.style.display = 'block';
+            
+            try {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const formatted = WorldCupAPI.formatMatchDate(tomorrow.toISOString());
+                
+                let output = `<span class="info">📅 Teste de Formatação - AMANHÃ:</span>\n\n`;
+                output += `Data testada: ${tomorrow.toISOString()}\n`;
+                output += `Label: ${formatted.label}\n`;
+                output += `Hora: ${formatted.time}\n\n`;
+                
+                if (formatted.label === 'AMANHÃ') {
+                    output += `<span class="success">✅ PASSOU: Label "AMANHÃ" gerado corretamente!</span>`;
+                } else {
+                    output += `<span class="error">❌ FALHOU: Esperado "AMANHÃ", recebido "${formatted.label}"</span>`;
+                }
+                
+                result.innerHTML = output;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ ERRO: ${error.message}</span>`;
+            }
+        }
+
+        // Teste 3c: Formatação Futuro
+        function testFutureFormatting() {
+            const result = document.getElementById('result3');
+            result.style.display = 'block';
+            
+            try {
+                const future = new Date();
+                future.setDate(future.getDate() + 7);
+                const formatted = WorldCupAPI.formatMatchDate(future.toISOString());
+                
+                let output = `<span class="info">📅 Teste de Formatação - Data Futura:</span>\n\n`;
+                output += `Data testada: ${future.toISOString()}\n`;
+                output += `Label: ${formatted.label}\n`;
+                output += `Hora: ${formatted.time}\n\n`;
+                
+                if (formatted.label !== 'HOJE' && formatted.label !== 'AMANHÃ') {
+                    output += `<span class="success">✅ PASSOU: Label de dia da semana gerado corretamente!</span>`;
+                } else {
+                    output += `<span class="error">❌ FALHOU: Não deveria ser HOJE ou AMANHÃ</span>`;
+                }
+                
+                result.innerHTML = output;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ ERRO: ${error.message}</span>`;
+            }
+        }
+
+        // Teste 4: Badges de Status
+        function testStatusBadges() {
+            const result = document.getElementById('result4');
+            result.style.display = 'block';
+            
+            try {
+                let output = `<span class="info">🏷️ Teste de Badges de Status:</span>\n\n`;
+                
+                const statuses = [
+                    { status: 'live', minute: 45, expected: 'AO VIVO' },
+                    { status: 'finished', minute: null, expected: 'ENCERRADO' },
+                    { status: 'scheduled', minute: null, expected: 'AGENDADO' },
+                    { status: 'postponed', minute: null, expected: 'ADIADO' },
+                    { status: 'cancelled', minute: null, expected: 'CANCELADO' }
+                ];
+                
+                let allPassed = true;
+                
+                statuses.forEach(test => {
+                    const badge = WorldCupAPI.getStatusBadge(test.status, test.minute);
+                    const passed = badge.includes(test.expected);
+                    
+                    output += `Status: ${test.status}\n`;
+                    output += `Badge HTML: ${badge}\n`;
+                    output += `Renderizado: `;
+                    
+                    if (passed) {
+                        output += `<span class="success">✅ PASSOU</span>\n\n`;
+                    } else {
+                        output += `<span class="error">❌ FALHOU</span>\n\n`;
+                        allPassed = false;
+                    }
+                });
+                
+                if (allPassed) {
+                    output += `<span class="success">✅ TODOS OS BADGES PASSARAM!</span>`;
+                } else {
+                    output += `<span class="error">❌ ALGUNS BADGES FALHARAM</span>`;
+                }
+                
+                result.innerHTML = output;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ ERRO: ${error.message}</span>`;
+            }
+        }
+
+        // Teste 5: Contador Regressivo
+        let testCountdownInterval = null;
+        
+        function testCountdown() {
+            const result = document.getElementById('result5');
+            const display = document.getElementById('countdown-display');
+            result.style.display = 'block';
+            
+            try {
+                // Simular próxima atualização em 5 minutos
+                WorldCupAPI.nextUpdateTime = new Date(Date.now() + 5 * 60 * 1000);
+                
+                // Limpar intervalo anterior
+                if (testCountdownInterval) {
+                    clearInterval(testCountdownInterval);
+                }
+                
+                // Atualizar display a cada segundo
+                testCountdownInterval = setInterval(() => {
+                    const now = new Date();
+                    const diff = WorldCupAPI.nextUpdateTime - now;
+                    
+                    if (diff <= 0) {
+                        display.textContent = 'Tempo esgotado!';
+                        clearInterval(testCountdownInterval);
+                        return;
+                    }
+                    
+                    const minutes = Math.floor(diff / 60000);
+                    const seconds = Math.floor((diff % 60000) / 1000);
+                    display.textContent = `⏱️ Próxima atualização em: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+                
+                result.innerHTML = `<span class="success">✅ Contador iniciado! Próxima atualização em 5 minutos (simulado)</span>`;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ ERRO: ${error.message}</span>`;
+            }
+        }
+        
+        function stopCountdown() {
+            if (testCountdownInterval) {
+                clearInterval(testCountdownInterval);
+                testCountdownInterval = null;
+                document.getElementById('countdown-display').textContent = '⏹️ Contador parado';
+                document.getElementById('result5').innerHTML = `<span class="info">ℹ️ Contador regressivo parado</span>`;
+            }
+        }
+
+        // Teste 6: Executar Todos
+        function runAllTests() {
+            const result = document.getElementById('result6');
+            result.style.display = 'block';
+            result.innerHTML = '<span class="info">🔄 Executando todos os testes...</span>';
+            
+            setTimeout(() => {
+                let output = '<span class="info">📊 RELATÓRIO COMPLETO DE TESTES</span>\n\n';
+                let totalTests = 0;
+                let passedTests = 0;
+                
+                // Teste 1: Intervalo
+                totalTests++;
+                if (WorldCupAPI.updateInterval / 60000 === 60) {
+                    output += '✅ Intervalo de 60 minutos: PASSOU\n';
+                    passedTests++;
+                } else {
+                    output += '❌ Intervalo de 60 minutos: FALHOU\n';
+                }
+                
+                // Teste 2: Conversão UTC-3
+                totalTests++;
+                try {
+                    const conv = WorldCupAPI.convertToUTC3("2026-06-22T20:00:00Z");
+                    if (conv.time === '17:00') {
+                        output += '✅ Conversão UTC-3: PASSOU\n';
+                        passedTests++;
+                    } else {
+                        output += '❌ Conversão UTC-3: FALHOU\n';
+                    }
+                } catch (e) {
+                    output += '❌ Conversão UTC-3: ERRO\n';
+                }
+                
+                // Teste 3: Formatação HOJE
+                totalTests++;
+                try {
+                    const fmt = WorldCupAPI.formatMatchDate(new Date().toISOString());
+                    if (fmt.label === 'HOJE') {
+                        output += '✅ Formatação HOJE: PASSOU\n';
+                        passedTests++;
+                    } else {
+                        output += '❌ Formatação HOJE: FALHOU\n';
+                    }
+                } catch (e) {
+                    output += '❌ Formatação HOJE: ERRO\n';
+                }
+                
+                // Teste 4: Badges
+                totalTests++;
+                try {
+                    const badge = WorldCupAPI.getStatusBadge('live', 45);
+                    if (badge.includes('AO VIVO')) {
+                        output += '✅ Badges de Status: PASSOU\n';
+                        passedTests++;
+                    } else {
+                        output += '❌ Badges de Status: FALHOU\n';
+                    }
+                } catch (e) {
+                    output += '❌ Badges de Status: ERRO\n';
+                }
+                
+                // Resumo
+                output += `\n<span class="info">━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>\n`;
+                output += `Total de Testes: ${totalTests}\n`;
+                output += `Testes Passados: ${passedTests}\n`;
+                output += `Testes Falhados: ${totalTests - passedTests}\n`;
+                output += `Taxa de Sucesso: ${((passedTests / totalTests) * 100).toFixed(1)}%\n\n`;
+                
+                if (passedTests === totalTests) {
+                    output += '<span class="success">🎉 TODOS OS TESTES PASSARAM!</span>';
+                } else {
+                    output += '<span class="error">⚠️ ALGUNS TESTES FALHARAM</span>';
+                }
+                
+                result.innerHTML = output;
+            }, 500);
+        }
+    </script>
+</body>
+</html>

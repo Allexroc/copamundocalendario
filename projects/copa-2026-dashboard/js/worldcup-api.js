@@ -4,10 +4,12 @@
 
 const WorldCupAPI = {
     baseUrl: 'https://worldcup26.ir/get/games',
-    updateInterval: 10 * 60 * 1000, // 10 minutos
+    updateInterval: 60 * 60 * 1000, // 60 minutos (1 hora)
     lastUpdate: null,
     isLoading: false,
     autoRefreshTimer: null,
+    countdownTimer: null,
+    nextUpdateTime: null,
     apiEnabled: false, // API externa desabilitada
 
     /**
@@ -331,7 +333,7 @@ const WorldCupAPI = {
             return;
         }
 
-        // Limpar timer existente
+        // Limpar timers existentes
         if (this.autoRefreshTimer) {
             clearInterval(this.autoRefreshTimer);
         }
@@ -339,10 +341,14 @@ const WorldCupAPI = {
         // Atualização inicial
         this.updateData(false);
 
+        // Iniciar contador regressivo
+        this.startCountdown();
+
         // Configurar atualização periódica
         this.autoRefreshTimer = setInterval(() => {
             console.log('🔄 Atualização automática iniciada...');
             this.updateData(false);
+            this.startCountdown(); // Reiniciar contador após cada atualização
         }, this.updateInterval);
 
         console.log(`✅ Atualização automática configurada (${this.updateInterval / 60000} minutos)`);
@@ -466,6 +472,156 @@ const WorldCupAPI = {
         const hours = Math.floor(minutes / 60);
         if (hours === 1) return '1 hora atrás';
         return `${hours} horas atrás`;
+    },
+
+    /**
+     * Converte data UTC para UTC-3 (Brasília)
+     * @param {string} utcDateString - Data em formato UTC
+     * @returns {Object} Objeto com data convertida e formatações
+     */
+    convertToUTC3(utcDateString) {
+        const utcDate = new Date(utcDateString);
+        
+        return {
+            date: utcDate,
+            formatted: utcDate.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'America/Sao_Paulo'
+            }),
+            time: utcDate.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'America/Sao_Paulo'
+            }),
+            dateOnly: utcDate.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                timeZone: 'America/Sao_Paulo'
+            })
+        };
+    },
+
+    /**
+     * Inicia contador regressivo para próxima atualização
+     */
+    startCountdown() {
+        // Limpar contador existente
+        if (this.countdownTimer) {
+            clearInterval(this.countdownTimer);
+        }
+
+        // Definir próximo horário de atualização
+        this.nextUpdateTime = new Date(Date.now() + this.updateInterval);
+
+        // Atualizar contador a cada segundo
+        this.countdownTimer = setInterval(() => {
+            this.updateCountdownDisplay();
+        }, 1000);
+
+        // Atualizar imediatamente
+        this.updateCountdownDisplay();
+    },
+
+    /**
+     * Atualiza exibição do contador regressivo
+     */
+    updateCountdownDisplay() {
+        const countdownElement = document.getElementById('nextUpdateTimer');
+        if (!countdownElement || !this.nextUpdateTime) return;
+
+        const now = new Date();
+        const diff = this.nextUpdateTime - now;
+
+        if (diff <= 0) {
+            countdownElement.textContent = 'Atualizando...';
+            return;
+        }
+
+        const minutes = Math.floor(diff / 60000);
+        const seconds = Math.floor((diff % 60000) / 1000);
+
+        countdownElement.textContent = `Próxima atualização em: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+    },
+
+    /**
+     * Para contador regressivo
+     */
+    stopCountdown() {
+        if (this.countdownTimer) {
+            clearInterval(this.countdownTimer);
+            this.countdownTimer = null;
+        }
+    },
+
+    /**
+     * Formata data de partida com labels especiais
+     * @param {string} dateString - Data da partida
+     * @returns {Object} Objeto com labels formatados
+     */
+    formatMatchDate(dateString) {
+        const utc3 = this.convertToUTC3(dateString);
+        const now = new Date();
+        const matchDate = utc3.date;
+        
+        // Verificar se é hoje
+        const isToday = matchDate.toDateString() === now.toDateString();
+        
+        // Verificar se é amanhã
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const isTomorrow = matchDate.toDateString() === tomorrow.toDateString();
+        
+        let dateLabel = '';
+        if (isToday) {
+            dateLabel = 'HOJE';
+        } else if (isTomorrow) {
+            dateLabel = 'AMANHÃ';
+        } else {
+            dateLabel = matchDate.toLocaleDateString('pt-BR', {
+                weekday: 'short',
+                day: '2-digit',
+                month: '2-digit',
+                timeZone: 'America/Sao_Paulo'
+            }).toUpperCase();
+        }
+        
+        return {
+            label: dateLabel,
+            time: utc3.time,
+            full: utc3.formatted,
+            dateOnly: utc3.dateOnly
+        };
+    },
+
+    /**
+     * Obtém label de status da partida
+     * @param {string} status - Status da partida
+     * @param {number} minute - Minuto do jogo (opcional)
+     * @returns {string} HTML do badge de status
+     */
+    getStatusBadge(status, minute = null) {
+        switch(status) {
+            case 'live':
+                return `<span class="live-badge">
+                    <span class="live-dot"></span>
+                    AO VIVO ${minute ? `- ${minute}'` : ''}
+                </span>`;
+            case 'finished':
+                return '<span class="finished-badge">ENCERRADO</span>';
+            case 'scheduled':
+                return '<span class="scheduled-badge">AGENDADO</span>';
+            case 'postponed':
+                return '<span class="postponed-badge">ADIADO</span>';
+            case 'cancelled':
+                return '<span class="cancelled-badge">CANCELADO</span>';
+            default:
+                return '';
+        }
     }
 };
 
