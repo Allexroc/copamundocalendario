@@ -3,9 +3,10 @@
 
 const APIIntegration = {
     apiKey: '093dce6688974c83ad7a4adae69e5cfd',
-    baseUrl: 'https://api.football-data.org/v4',
+    baseUrl: 'http://localhost:3001', // Proxy server para evitar CORS
     lastUpdate: null,
     isLoading: false,
+    useProxy: true, // Flag para usar proxy local
     
     // Mapeamento de códigos de times
     teamMapping: {
@@ -44,12 +45,18 @@ const APIIntegration = {
         try {
             console.log('🔄 Buscando dados da API Football-Data.org...');
             
-            const response = await fetch(`${this.baseUrl}/competitions/WC/matches`, {
+            // Usar proxy local ou API direta
+            const url = this.useProxy
+                ? `${this.baseUrl}/competitions/WC/matches`
+                : `https://api.football-data.org/v4/competitions/WC/matches`;
+            
+            const headers = this.useProxy
+                ? { 'Accept': 'application/json' } // Proxy já adiciona o token
+                : { 'X-Auth-Token': this.apiKey, 'Accept': 'application/json' };
+            
+            const response = await fetch(url, {
                 method: 'GET',
-                headers: {
-                    'X-Auth-Token': this.apiKey,
-                    'Accept': 'application/json'
-                }
+                headers: headers
             });
 
             if (!response.ok) {
