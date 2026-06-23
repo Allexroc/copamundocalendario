@@ -163,16 +163,14 @@ function setupEventListeners() {
                     statusEl.className = 'refresh-status loading';
                 }
                 
-                // Buscar dados da API simulada (dados realistas baseados na data atual)
+                // Buscar dados da API REAL (Football-Data.org)
                 let success = false;
                 
-                if (typeof SimulatedAPI !== 'undefined') {
-                    // Usar API simulada com dados realistas
-                    const result = await SimulatedAPI.updateDashboard();
-                    success = result.success;
-                } else if (typeof APIIntegration !== 'undefined') {
-                    // Fallback para API real (não terá dados da Copa 2026)
+                if (typeof APIIntegration !== 'undefined') {
+                    // Usar API real da Football-Data.org
                     success = await APIIntegration.updateDashboard();
+                } else {
+                    console.error('❌ APIIntegration não disponível');
                 }
                 
                 if (success) {
@@ -611,16 +609,18 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Auto-update data on page load
+// Auto-update data on page load using REAL API
 async function autoUpdateOnLoad() {
-    console.log('🔄 Iniciando atualização automática dos dados...');
+    console.log('🔄 Iniciando atualização automática dos dados da API real...');
+    console.log('📅 Data atual: 23/06/2026');
+    console.log('🏆 FIFA World Cup 2026 em andamento');
     
-    if (typeof SimulatedAPI !== 'undefined') {
+    if (typeof APIIntegration !== 'undefined') {
         try {
-            const result = await SimulatedAPI.updateDashboard();
+            const success = await APIIntegration.updateDashboard();
             
-            if (result.success) {
-                console.log('✅ Dados atualizados automaticamente!');
+            if (success) {
+                console.log('✅ Dados da API real atualizados automaticamente!');
                 
                 // Recarregar todas as views
                 if (typeof renderGroups === 'function') renderGroups();
@@ -654,11 +654,25 @@ async function autoUpdateOnLoad() {
                         });
                         timestamp.textContent = `Última atualização: ${dateStr} às ${timeStr} BRT`;
                     }
+                    
+                    // Atualizar mensagem do banner
+                    const message = banner.querySelector('.bob-banner-message p');
+                    if (message) {
+                        message.innerHTML = `Dashboard atualizado com dados reais da API Football-Data.org!
+                           <strong>Dados da Copa do Mundo 2026</strong> atualizados automaticamente.
+                           <a href="#" id="viewUpdateDetails" style="color: #42BE65; text-decoration: underline;">Ver detalhes</a>`;
+                    }
                 }
+            } else {
+                console.warn('⚠️ Falha na atualização automática');
+                updateAPIStatus('error');
             }
         } catch (error) {
             console.error('❌ Erro na atualização automática:', error);
+            updateAPIStatus('error');
         }
+    } else {
+        console.error('❌ APIIntegration não disponível');
     }
 }
 

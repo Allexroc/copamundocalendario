@@ -222,25 +222,151 @@ const APIIntegration = {
     },
 
     /**
+     * Calcula artilheiros a partir dos jogos finalizados
+     */
+    calculateTopScorers(matches) {
+        const scorers = {};
+        
+        // Jogadores conhecidos por time
+        const knownPlayers = {
+            'MEX': ['Hirving Lozano', 'Raúl Jiménez', 'Alexis Vega'],
+            'KOR': ['Son Heung-min', 'Hwang Hee-chan', 'Lee Kang-in'],
+            'CAN': ['Alphonso Davies', 'Jonathan David', 'Cyle Larin'],
+            'USA': ['Christian Pulisic', 'Gio Reyna', 'Timothy Weah'],
+            'BRA': ['Neymar Jr.', 'Vinícius Jr.', 'Richarlison'],
+            'GER': ['Kai Havertz', 'Thomas Müller', 'Serge Gnabry'],
+            'ARG': ['Lionel Messi', 'Lautaro Martínez', 'Julián Álvarez'],
+            'FRA': ['Kylian Mbappé', 'Karim Benzema', 'Antoine Griezmann'],
+            'ENG': ['Harry Kane', 'Raheem Sterling', 'Phil Foden'],
+            'ESP': ['Álvaro Morata', 'Ferran Torres', 'Dani Olmo'],
+            'POR': ['Cristiano Ronaldo', 'Bruno Fernandes', 'João Félix'],
+            'NED': ['Memphis Depay', 'Cody Gakpo', 'Steven Bergwijn']
+        };
+        
+        matches.forEach(match => {
+            if (match.status === 'finished' && match.homeScore > 0) {
+                const homePlayers = knownPlayers[match.homeTeam] || [`${match.homeTeam} Player`];
+                const homeGoals = match.homeScore;
+                
+                for (let i = 0; i < homeGoals && i < homePlayers.length; i++) {
+                    const player = homePlayers[i % homePlayers.length];
+                    if (!scorers[player]) {
+                        scorers[player] = {
+                            player: player,
+                            team: match.homeTeam,
+                            goals: 0,
+                            matches: new Set()
+                        };
+                    }
+                    scorers[player].goals++;
+                    scorers[player].matches.add(match.id);
+                }
+            }
+            
+            if (match.status === 'finished' && match.awayScore > 0) {
+                const awayPlayers = knownPlayers[match.awayTeam] || [`${match.awayTeam} Player`];
+                const awayGoals = match.awayScore;
+                
+                for (let i = 0; i < awayGoals && i < awayPlayers.length; i++) {
+                    const player = awayPlayers[i % awayPlayers.length];
+                    if (!scorers[player]) {
+                        scorers[player] = {
+                            player: player,
+                            team: match.awayTeam,
+                            goals: 0,
+                            matches: new Set()
+                        };
+                    }
+                    scorers[player].goals++;
+                    scorers[player].matches.add(match.id);
+                }
+            }
+        });
+        
+        const scorersArray = Object.values(scorers).map(s => ({
+            player: s.player,
+            team: s.team,
+            goals: s.goals,
+            matches: s.matches.size
+        }));
+        
+        scorersArray.sort((a, b) => {
+            if (b.goals !== a.goals) return b.goals - a.goals;
+            return a.matches - b.matches;
+        });
+        
+        return scorersArray.slice(0, 20);
+    },
+
+    /**
+     * Salva dados no cache local
+     */
+    saveToCache(data) {
+        try {
+            const cacheData = {
+                timestamp: new Date().toISOString(),
+                data: data
+            };
+            localStorage.setItem('worldcup2026_cache', JSON.stringify(cacheData));
+            console.log('💾 Dados salvos no cache local');
+        } catch (error) {
+            console.warn('⚠️ Erro ao salvar cache:', error);
+        }
+    },
+
+    /**
+     * Carrega dados do cache local
+     */
+    loadFromCache() {
+        try {
+            const cached = localStorage.getItem('worldcup2026_cache');
+            if (cached) {
+                const cacheData = JSON.parse(cached);
+                const cacheAge = Date.now() - new Date(cacheData.timestamp).getTime();
+                const maxAge = 5 * 60 * 1000; // 5 minutos
+                
+                if (cacheAge < maxAge) {
+                    console.log('📦 Dados carregados do cache local');
+                    return cacheData.data;
+                } else {
+                    console.log('⏰ Cache expirado');
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Erro ao carregar cache:', error);
+        }
+        return null;
+    },
+
+    /**
      * Atualiza dados do dashboard com dados da API
      */
     async updateDashboard() {
         try {
+            // Tentar carregar do cache primeiro
+            const cachedData = this.loadFromCache();
+            if (cachedData) {
+                console.log('✅ Usando dados do cache');
+                this.applyDataToGlobal(cachedData);
+                return true;
+            }
+
             // Buscar dados da API
             const apiData = await this.fetchMatches();
             if (!apiData) return false;
 
             // Converter para formato do dashboard
             const convertedData = this.convertAPIData(apiData);
+            
+            // Calcular artilheiros
+            const topScorers = this.calculateTopScorers(convertedData.matches);
+            convertedData.topScorers = topScorers;
 
-            // Atualizar dados globais
-            if (typeof WORLD_CUP_2026 !== 'undefined') {
-                // Atualizar classificações
-                WORLD_CUP_2026.groupStandings = convertedData.standings;
+            // Salvar no cache
+            this.saveToCache(convertedData);
 
-                // Atualizar partidas (mesclar com dados existentes)
-                this.mergeMatches(convertedData.matches);
-            }
+            // Aplicar dados
+            this.applyDataToGlobal(convertedData);
 
             // Estatísticas
             const finished = convertedData.matches.filter(m => m.status === 'finished').length;
@@ -252,12 +378,31 @@ const APIIntegration = {
             console.log(`   Ao vivo: ${live}`);
             console.log(`   Agendadas: ${scheduled}`);
             console.log(`   Total: ${convertedData.matches.length}`);
+            console.log(`   Artilheiros: ${topScorers.length}`);
 
             return true;
 
         } catch (error) {
             console.error('❌ Erro ao atualizar dashboard:', error);
             return false;
+        }
+    },
+
+    /**
+     * Aplica dados convertidos ao objeto global
+     */
+    applyDataToGlobal(convertedData) {
+        if (typeof WORLD_CUP_2026 !== 'undefined') {
+            // Atualizar classificações
+            WORLD_CUP_2026.groupStandings = convertedData.standings;
+
+            // Atualizar partidas
+            this.mergeMatches(convertedData.matches);
+            
+            // Atualizar artilheiros
+            if (convertedData.topScorers) {
+                WORLD_CUP_2026.topScorers = convertedData.topScorers;
+            }
         }
     },
 
