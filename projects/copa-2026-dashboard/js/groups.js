@@ -218,7 +218,11 @@ function viewGroupMatches(groupId) {
     // Get all matches for this group
     const groupMatches = WORLD_CUP_2026.matches.filter(m => m.group === groupId);
     const finishedMatches = groupMatches.filter(m => m.status === 'finished');
-    const scheduledMatches = groupMatches.filter(m => m.status === 'scheduled');
+    const scheduledMatches = groupMatches.filter(m => m.status === 'scheduled' || m.status === 'timed');
+    
+    console.log(`📊 Grupo ${groupId}: ${groupMatches.length} partidas total`);
+    console.log(`   ✅ Finalizadas: ${finishedMatches.length}`);
+    console.log(`   📅 Agendadas: ${scheduledMatches.length}`);
     
     // Create modal
     const modal = document.createElement('div');

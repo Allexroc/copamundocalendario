@@ -436,37 +436,25 @@ const APIIntegration = {
     },
 
     /**
-     * Mescla partidas da API com dados existentes
+     * Substitui completamente as partidas com dados da API
      */
     mergeMatches(apiMatches) {
-        if (typeof WORLD_CUP_2026 === 'undefined' || !WORLD_CUP_2026.matches) {
+        if (typeof WORLD_CUP_2026 === 'undefined') {
             return;
         }
 
-        // Criar mapa de partidas da API
-        const apiMatchesMap = {};
+        // Substituir completamente as partidas com os dados da API
+        WORLD_CUP_2026.matches = apiMatches;
+        
+        console.log(`✅ ${apiMatches.length} partidas atualizadas no WORLD_CUP_2026`);
+        
+        // Log de partidas por grupo para debug
+        const groupCounts = {};
         apiMatches.forEach(match => {
-            const key = `${match.group}-${match.homeTeam}-${match.awayTeam}-R${match.round}`;
-            apiMatchesMap[key] = match;
+            groupCounts[match.group] = (groupCounts[match.group] || 0) + 1;
         });
-
-        // Atualizar partidas existentes
-        WORLD_CUP_2026.matches.forEach((match, index) => {
-            const key = `${match.group}-${match.homeTeam}-${match.awayTeam}-R${match.round}`;
-            const apiMatch = apiMatchesMap[key];
-            
-            if (apiMatch) {
-                // Atualizar com dados da API
-                WORLD_CUP_2026.matches[index] = {
-                    ...match,
-                    homeScore: apiMatch.homeScore,
-                    awayScore: apiMatch.awayScore,
-                    status: apiMatch.status,
-                    date: apiMatch.date,
-                    minute: apiMatch.minute
-                };
-            }
-        });
+        
+        console.log('📊 Partidas por grupo:', groupCounts);
     },
 
     /**
