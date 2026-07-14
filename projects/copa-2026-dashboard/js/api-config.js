@@ -86,7 +86,7 @@ const API_CONFIG = {
 
     backendProxy: {
         name: 'Backend Proxy',
-        baseUrl: 'http://localhost:3001',
+        baseUrl: 'http://localhost:3002',
         endpoints: {
             dashboard: '/api/dashboard-data'
         },

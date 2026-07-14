@@ -3,7 +3,7 @@
 
 const APIIntegration = {
     apiKey: '093dce6688974c83ad7a4adae69e5cfd',
-    baseUrl: 'http://localhost:3001', // Proxy server para evitar CORS
+    baseUrl: 'http://localhost:3002', // Proxy server para evitar CORS
     lastUpdate: null,
     isLoading: false,
     useProxy: true, // Flag para usar proxy local

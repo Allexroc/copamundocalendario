@@ -5,7 +5,7 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 
-const PORT = 3001;
+const PORT = 3002;
 const API_KEY = '093dce6688974c83ad7a4adae69e5cfd';
 const API_BASE = 'api.football-data.org';
 
