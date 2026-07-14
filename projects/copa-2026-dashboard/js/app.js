@@ -63,9 +63,9 @@ window.addEventListener('load', function() {
             // Inicializar status da API
             initializeAPIStatus();
             
-            // Iniciar integração com WorldCup API
-            if (typeof WorldCupAPI !== 'undefined') {
-                WorldCupAPI.startAutoRefresh();
+            // Iniciar atualização automática com a API real
+            if (typeof startAPIAutoRefresh === 'function') {
+                startAPIAutoRefresh();
             }
             
             console.log('✅ Dashboard inicializado com sucesso!');
@@ -147,86 +147,7 @@ function setupEventListeners() {
     const refreshButton = document.getElementById('refreshMatchesButton');
     if (refreshButton) {
         refreshButton.addEventListener('click', async () => {
-            const statusEl = document.getElementById('refreshStatus');
-            const icon = refreshButton.querySelector('i');
-            
-            try {
-                // Atualizar status da API para loading
-                updateAPIStatus('loading');
-                
-                // Mostrar loading
-                if (icon) {
-                    icon.classList.add('fa-spin');
-                }
-                if (statusEl) {
-                    statusEl.textContent = 'Buscando dados da API...';
-                    statusEl.className = 'refresh-status loading';
-                }
-                
-                // Buscar dados da API REAL (Football-Data.org)
-                let success = false;
-                
-                if (typeof APIIntegration !== 'undefined') {
-                    // Usar API real da Football-Data.org
-                    success = await APIIntegration.updateDashboard();
-                } else {
-                    console.error('❌ APIIntegration não disponível');
-                }
-                
-                if (success) {
-                    
-                    if (success) {
-                        // Recarregar todas as views com os novos dados
-                        if (typeof renderGroups === 'function') renderGroups();
-                        if (typeof renderCalendar === 'function') renderCalendar();
-                        if (typeof renderResults === 'function') renderResults();
-                        if (typeof renderKnockout === 'function') renderKnockout();
-                        if (typeof renderStats === 'function') renderStats();
-                        
-                        // Atualizar informações da sidebar
-                        updateSidebarInfo();
-                        
-                        // Mostrar sucesso
-                        if (statusEl) {
-                            const now = new Date();
-                            const timeStr = now.toLocaleTimeString('pt-BR', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                timeZone: 'America/Sao_Paulo'
-                            });
-                            const dateStr = now.toLocaleDateString('pt-BR', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                timeZone: 'America/Sao_Paulo'
-                            });
-                            statusEl.textContent = `✓ Atualizado em ${dateStr} às ${timeStr}`;
-                            statusEl.className = 'refresh-status success';
-                        }
-                        
-                        // Atualizar status da API para conectado
-                        updateAPIStatus('connected');
-                    } else {
-                        throw new Error('Falha ao atualizar dados');
-                    }
-                } else {
-                    throw new Error('Módulo de API não disponível');
-                }
-                
-            } catch (error) {
-                console.error('Erro ao atualizar:', error);
-                
-                // Atualizar status da API para desconectado
-                updateAPIStatus('disconnected');
-                
-                if (statusEl) {
-                    statusEl.textContent = '✗ Erro ao atualizar. Verifique sua conexão.';
-                    statusEl.className = 'refresh-status error';
-                }
-            } finally {
-                if (icon) {
-                    icon.classList.remove('fa-spin');
-                }
-            }
+            await refreshDashboardData(true);
         });
     }
 
@@ -609,80 +530,106 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Auto-update data on page load using REAL API
-async function autoUpdateOnLoad() {
-    console.log('🔄 Iniciando atualização automática dos dados da API real...');
-    console.log('📅 Data atual: 23/06/2026');
-    console.log('🏆 FIFA World Cup 2026 em andamento');
-    
-    if (typeof APIIntegration !== 'undefined') {
-        try {
-            const success = await APIIntegration.updateDashboard();
-            
-            if (success) {
-                console.log('✅ Dados da API real atualizados automaticamente!');
-                
-                // Recarregar todas as views
-                if (typeof renderGroups === 'function') renderGroups();
-                if (typeof renderCalendar === 'function') renderCalendar();
-                if (typeof renderResults === 'function') renderResults();
-                if (typeof renderKnockout === 'function') renderKnockout();
-                if (typeof renderStats === 'function') renderStats();
-                
-                // Atualizar sidebar
-                updateSidebarInfo();
-                
-                // Atualizar status da API
-                updateAPIStatus('connected');
-                
-                // Atualizar banner
-                const banner = document.getElementById('bobUpdateBanner');
-                if (banner) {
-                    const timestamp = banner.querySelector('.bob-banner-timestamp');
-                    if (timestamp) {
-                        const now = new Date();
-                        const dateStr = now.toLocaleDateString('pt-BR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            timeZone: 'America/Sao_Paulo'
-                        });
-                        const timeStr = now.toLocaleTimeString('pt-BR', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            timeZone: 'America/Sao_Paulo'
-                        });
-                        timestamp.textContent = `Última atualização: ${dateStr} às ${timeStr} BRT`;
-                    }
-                    
-                    // Atualizar mensagem do banner
-                    const message = banner.querySelector('.bob-banner-message p');
-                    if (message) {
-                        message.innerHTML = `Dashboard atualizado com dados reais da API Football-Data.org!
-                           <strong>Dados da Copa do Mundo 2026</strong> atualizados automaticamente.
-                           <a href="#" id="viewUpdateDetails" style="color: #42BE65; text-decoration: underline;">Ver detalhes</a>`;
-                    }
-                }
-            } else {
-                console.warn('⚠️ Falha na atualização automática');
-                updateAPIStatus('error');
-            }
-        } catch (error) {
-            console.error('❌ Erro na atualização automática:', error);
-            updateAPIStatus('error');
+const API_AUTO_REFRESH_INTERVAL = 5 * 60 * 1000;
+let apiAutoRefreshTimer = null;
+
+async function refreshDashboardData(isManual = false) {
+    const refreshButton = document.getElementById('refreshMatchesButton');
+    const statusEl = document.getElementById('refreshStatus');
+    const icon = refreshButton ? refreshButton.querySelector('i') : null;
+
+    try {
+        updateAPIStatus('loading');
+
+        if (refreshButton) refreshButton.disabled = true;
+        if (icon) icon.classList.add('fa-spin');
+        if (statusEl) {
+            statusEl.textContent = isManual ? 'Buscando dados da API...' : 'Atualizando automaticamente...';
+            statusEl.className = 'refresh-status loading';
         }
-    } else {
-        console.error('❌ APIIntegration não disponível');
+
+        // Usar DirectAPI (sem proxy) — chama Football-Data.org diretamente do browser
+        if (typeof DirectAPI === 'undefined') {
+            throw new Error('DirectAPI não carregado');
+        }
+        await DirectAPI.fetchAndApply();
+
+        refreshAllViews();
+        updateSidebarInfo();
+        updateAPIStatus('connected');
+        updateBannerTimestamp();
+
+        if (statusEl) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'America/Sao_Paulo'
+            });
+            const dateStr = now.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                timeZone: 'America/Sao_Paulo'
+            });
+            statusEl.textContent = `${isManual ? '✓ Atualizado' : '✓ Atualização automática'} em ${dateStr} às ${timeStr}`;
+            statusEl.className = 'refresh-status success';
+        }
+
+        return true;
+    } catch (error) {
+        console.error('❌ Erro ao atualizar dashboard:', error);
+        updateAPIStatus('disconnected');
+        if (statusEl) {
+            statusEl.textContent = '✗ Erro ao atualizar. Verifique a API/proxy.';
+            statusEl.className = 'refresh-status error';
+        }
+        return false;
+    } finally {
+        if (refreshButton) {
+            refreshButton.disabled = false;
+        }
+        if (icon) {
+            icon.classList.remove('fa-spin');
+        }
     }
 }
 
-// Execute auto-update after page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(autoUpdateOnLoad, 1000);
-    });
-} else {
-    setTimeout(autoUpdateOnLoad, 1000);
+function updateBannerTimestamp() {
+    const banner = document.getElementById('bobUpdateBanner');
+    if (!banner) return;
+
+    const timestamp = banner.querySelector('.bob-banner-timestamp');
+    if (timestamp) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            timeZone: 'America/Sao_Paulo'
+        });
+        const timeStr = now.toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'America/Sao_Paulo'
+        });
+        timestamp.textContent = `Última atualização: ${dateStr} às ${timeStr} BRT`;
+    }
+}
+
+function startAPIAutoRefresh() {
+    if (apiAutoRefreshTimer) {
+        clearInterval(apiAutoRefreshTimer);
+    }
+
+    setTimeout(() => {
+        refreshDashboardData(false);
+    }, 1000);
+
+    apiAutoRefreshTimer = setInterval(() => {
+        refreshDashboardData(false);
+    }, API_AUTO_REFRESH_INTERVAL);
+
+    console.log(`🔄 Atualização automática da API configurada (${API_AUTO_REFRESH_INTERVAL / 60000} minutos)`);
 }
 
 // Made with Bob
