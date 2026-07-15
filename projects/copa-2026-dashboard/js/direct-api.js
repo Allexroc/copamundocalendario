@@ -104,32 +104,59 @@ const DirectAPI = {
     },
 
     /**
-     * Busca jogos diretamente na API Football-Data.org (sem proxy)
+     * Tenta fetch com uma URL. Rejeita se o status não for OK.
+     */
+    async _tryFetch(url, headers) {
+        const res = await fetch(url, { headers });
+        if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        return res.json();
+    },
+
+    /**
+     * Busca jogos da API Football-Data.org.
+     * Tenta primeiro chamada direta; se bloqueada por CORS (file://),
+     * usa corsproxy.io como fallback transparente.
      * @returns {Promise<{matches, standings}>}
      */
-    async fetchAndApply() {
-        // 1. Tentar cache
-        const cached = this._readCache();
-        if (cached) {
-            console.log('📦 DirectAPI: usando cache (< 5 min)');
-            this._apply(cached);
-            return { source: 'cache', ...cached };
+    async fetchAndApply(forceRefresh = false) {
+        // 1. Tentar cache (skip se forceRefresh)
+        if (!forceRefresh) {
+            const cached = this._readCache();
+            if (cached) {
+                console.log('📦 DirectAPI: usando cache (< 5 min)');
+                this._apply(cached);
+                return { source: 'cache', ...cached };
+            }
         }
 
-        // 2. Chamar API direta
-        console.log('🌐 DirectAPI: chamando Football-Data.org diretamente...');
-        const res = await fetch(`${this.BASE_URL}/competitions/WC/matches`, {
-            headers: { 'X-Auth-Token': this.API_KEY }
-        });
+        const endpoint = `/competitions/WC/matches`;
+        const directUrl = `${this.BASE_URL}${endpoint}`;
+        const proxyUrl  = `https://corsproxy.io/?url=${encodeURIComponent(directUrl)}`;
+        const headers   = { 'X-Auth-Token': this.API_KEY };
 
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        let json = null;
+        let source = 'api-direct';
+
+        // 2. Tentar chamada direta (funciona quando servido por http://localhost)
+        try {
+            console.log('🌐 DirectAPI: tentando chamada direta...');
+            json = await this._tryFetch(directUrl, headers);
+            console.log('✅ DirectAPI: chamada direta OK');
+        } catch (directErr) {
+            // 3. Fallback via corsproxy.io (necessário quando aberto como file://)
+            console.warn('⚠️ DirectAPI: chamada direta bloqueada (' + directErr.message + '), usando corsproxy.io...');
+            try {
+                json = await this._tryFetch(proxyUrl, headers);
+                source = 'api-proxy';
+                console.log('✅ DirectAPI: corsproxy.io OK');
+            } catch (proxyErr) {
+                throw new Error(`Direto: ${directErr.message} | Proxy: ${proxyErr.message}`);
+            }
         }
 
-        const json = await res.json();
-        const matches = this._convert(json.matches || []);
+        const matches   = this._convert(json.matches || []);
         const standings = this._calcStandings(matches);
-        const payload = { matches, standings };
+        const payload   = { matches, standings };
 
         this._writeCache(payload);
         this._apply(payload);
@@ -137,9 +164,16 @@ const DirectAPI = {
         const finished  = matches.filter(m => m.status === 'finished').length;
         const live      = matches.filter(m => m.status === 'live').length;
         const scheduled = matches.filter(m => m.status === 'scheduled').length;
-        console.log(`✅ DirectAPI: ${matches.length} jogos — ${finished} finalizados, ${live} ao vivo, ${scheduled} agendados`);
+        console.log(`✅ DirectAPI [${source}]: ${matches.length} jogos — ${finished} fin, ${live} live, ${scheduled} agend`);
 
-        return { source: 'api', matches, standings };
+        return { source, matches, standings };
+    },
+
+    /**
+     * Limpa o cache forçando nova busca na próxima chamada
+     */
+    clearCache() {
+        try { localStorage.removeItem(this.CACHE_KEY); } catch (_) {}
     },
 
     // Aplica dados ao objeto global WORLD_CUP_2026

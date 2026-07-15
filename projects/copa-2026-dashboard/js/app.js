@@ -548,11 +548,12 @@ async function refreshDashboardData(isManual = false) {
             statusEl.className = 'refresh-status loading';
         }
 
-        // Usar DirectAPI (sem proxy) — chama Football-Data.org diretamente do browser
+        // Usar DirectAPI — chamada direta com fallback via corsproxy.io
         if (typeof DirectAPI === 'undefined') {
             throw new Error('DirectAPI não carregado');
         }
-        await DirectAPI.fetchAndApply();
+        // forceRefresh=true no clique manual para ignorar cache e buscar dado fresco
+        await DirectAPI.fetchAndApply(isManual);
 
         refreshAllViews();
         updateSidebarInfo();

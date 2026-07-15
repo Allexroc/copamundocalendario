@@ -286,7 +286,7 @@ const WORLD_CUP_2026 = {
         { id: 98, date: "2026-07-10T16:00:00-03:00", group: null, homeTeam: "ESP", awayTeam: "BEL", homeScore: 2, awayScore: 1, stadium: "Stadium", status: "finished", phase: "knockout", round: null },
         { id: 99, date: "2026-07-11T18:00:00-03:00", group: null, homeTeam: "NOR", awayTeam: "ENG", homeScore: 1, awayScore: 2, stadium: "Stadium", status: "finished", phase: "knockout", round: null },
         { id: 100, date: "2026-07-11T22:00:00-03:00", group: null, homeTeam: "ARG", awayTeam: "SUI", homeScore: 3, awayScore: 1, stadium: "Stadium", status: "finished", phase: "knockout", round: null },
-        { id: 101, date: "2026-07-14T16:00:00-03:00", group: null, homeTeam: "FRA", awayTeam: "ESP", homeScore: null, awayScore: null, stadium: "Stadium", status: "scheduled", phase: "knockout", round: null },
+        { id: 101, date: "2026-07-14T16:00:00-03:00", group: null, homeTeam: "FRA", awayTeam: "ESP", homeScore: 0, awayScore: 2, stadium: "Stadium", status: "finished", phase: "knockout", round: null },
         { id: 102, date: "2026-07-15T16:00:00-03:00", group: null, homeTeam: "ENG", awayTeam: "ARG", homeScore: null, awayScore: null, stadium: "Stadium", status: "scheduled", phase: "knockout", round: null },
         { id: 103, date: "2026-07-18T18:00:00-03:00", group: null, homeTeam: null, awayTeam: null, homeScore: null, awayScore: null, stadium: "Stadium", status: "scheduled", phase: "knockout", round: null },
         { id: 104, date: "2026-07-19T16:00:00-03:00", group: null, homeTeam: null, awayTeam: null, homeScore: null, awayScore: null, stadium: "Stadium", status: "scheduled", phase: "knockout", round: null }
