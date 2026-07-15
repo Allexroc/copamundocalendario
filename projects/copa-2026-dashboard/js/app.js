@@ -333,10 +333,19 @@ function updateSidebarInfo() {
         }
     }
     
-    // Artilheiro: endpoint não disponível no plano gratuito da API
+    // Top scorer — dados via Wikipedia (topScorers populado em data.js)
     const topScorerEl = document.getElementById('topScorer');
-    if (topScorerEl) {
-        topScorerEl.textContent = 'Dados não disponíveis';
+    if (topScorerEl && typeof getTopScorers === 'function') {
+        const scorers = getTopScorers(1);
+        if (scorers.length > 0) {
+            const scorer = scorers[0];
+            const team = WORLD_CUP_2026.teams[scorer.team];
+            topScorerEl.textContent = team
+                ? `${scorer.player} ${team.flag} — ${scorer.goals} gols`
+                : `${scorer.player} — ${scorer.goals} gols`;
+        } else {
+            topScorerEl.textContent = 'Dados não disponíveis';
+        }
     }
 }
 

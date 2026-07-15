@@ -305,15 +305,43 @@ function loadStatsCategory(category) {
 }
 
 function createScorersTable() {
+    const scorers = getTopScorers(20);
+
+    if (scorers.length === 0) {
+        return `
+            <div class="stats-section">
+                <div class="stats-header">
+                    <h3><i class="fas fa-futbol"></i> Artilharia</h3>
+                    <span class="stats-subtitle">Top Goleadores</span>
+                </div>
+                <div class="stats-unavailable">
+                    <i class="fas fa-info-circle"></i>
+                    Dados de artilharia ainda não disponíveis.
+                </div>
+            </div>
+        `;
+    }
+
     return `
         <div class="stats-section">
             <div class="stats-header">
                 <h3><i class="fas fa-futbol"></i> Artilharia</h3>
-                <span class="stats-subtitle">Top Goleadores</span>
+                <span class="stats-subtitle">Top Goleadores · Fonte: Wikipedia · até 14/07/2026</span>
             </div>
-            <div class="stats-unavailable">
-                <i class="fas fa-info-circle"></i>
-                Dados de artilharia não disponíveis — endpoint não incluso no plano gratuito da API.
+            <div class="stats-table-wrapper">
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th class="rank-col">#</th>
+                            <th class="player-col">Jogador</th>
+                            <th class="team-col">Seleção</th>
+                            <th class="stat-col">Gols</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${scorers.map((scorer, index) => createScorerRow(scorer, index + 1)).join('')}
+                    </tbody>
+                </table>
             </div>
         </div>
     `;
@@ -321,9 +349,8 @@ function createScorersTable() {
 
 function createScorerRow(scorer, rank) {
     const team = getTeamInfo(scorer.team) || { flag: '🏳️', code: scorer.team };
-    const average = (scorer.goals / scorer.matches).toFixed(2);
     const medalClass = rank <= 3 ? `medal-${rank}` : '';
-    
+
     return `
         <tr class="stats-row ${medalClass}">
             <td class="rank-col">
@@ -343,8 +370,6 @@ function createScorerRow(scorer, rank) {
             <td class="stat-col">
                 <strong class="stat-value">${scorer.goals}</strong>
             </td>
-            <td class="stat-col">${scorer.matches}</td>
-            <td class="stat-col">${average}</td>
         </tr>
     `;
 }
@@ -358,7 +383,7 @@ function createAssistsTable() {
             </div>
             <div class="stats-unavailable">
                 <i class="fas fa-info-circle"></i>
-                Dados de assistências não disponíveis — endpoint não incluso no plano gratuito da API.
+                Dados de assistências não disponíveis em fonte verificável.
             </div>
         </div>
     `;

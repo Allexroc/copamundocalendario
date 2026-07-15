@@ -292,8 +292,58 @@ const WORLD_CUP_2026 = {
         { id: 104, date: "2026-07-19T16:00:00-03:00", group: null, homeTeam: null, awayTeam: null, homeScore: null, awayScore: null, stadium: "Stadium", status: "scheduled", phase: "knockout", round: null }
     ],
 
-    // Artilheiros e assistências: endpoint não disponível no plano gratuito da football-data.org
-    topScorers: [],
+    // Artilheiros — fonte: Wikipedia (dados até 14/07/2026, 101 jogos)
+    // https://en.wikipedia.org/wiki/2026_FIFA_World_Cup#Goalscorers
+    topScorers: [
+        { player: "Lionel Messi",         team: "ARG", goals: 8 },
+        { player: "Kylian Mbappé",        team: "FRA", goals: 8 },
+        { player: "Erling Haaland",       team: "NOR", goals: 7 },
+        { player: "Jude Bellingham",      team: "ENG", goals: 6 },
+        { player: "Harry Kane",           team: "ENG", goals: 6 },
+        { player: "Ousmane Dembélé",      team: "FRA", goals: 5 },
+        { player: "Mikel Oyarzabal",      team: "ESP", goals: 5 },
+        { player: "Vinícius Júnior",      team: "BRA", goals: 4 },
+        { player: "Julián Quiñones",      team: "MEX", goals: 4 },
+        { player: "Ismaïla Sarr",         team: "SEN", goals: 4 },
+        { player: "Charles De Ketelaere", team: "BEL", goals: 3 },
+        { player: "Romelu Lukaku",        team: "BEL", goals: 3 },
+        { player: "Matheus Cunha",        team: "BRA", goals: 3 },
+        { player: "Jonathan David",       team: "CAN", goals: 3 },
+        { player: "Yoane Wissa",          team: "COD", goals: 3 },
+        { player: "Kai Havertz",          team: "GER", goals: 3 },
+        { player: "Deniz Undav",          team: "GER", goals: 3 },
+        { player: "Raúl Jiménez",         team: "MEX", goals: 3 },
+        { player: "Ismael Saibari",       team: "MAR", goals: 3 },
+        { player: "Brian Brobbey",        team: "NED", goals: 3 },
+        { player: "Cody Gakpo",           team: "NED", goals: 3 },
+        { player: "Cristiano Ronaldo",    team: "POR", goals: 3 },
+        { player: "Folarin Balogun",      team: "USA", goals: 3 },
+        { player: "Riyad Mahrez",         team: "ALG", goals: 2 },
+        { player: "Lautaro Martínez",     team: "ARG", goals: 2 },
+        { player: "Youri Tielemans",      team: "BEL", goals: 2 },
+        { player: "Leandro Trossard",     team: "BEL", goals: 2 },
+        { player: "Cyle Larin",           team: "CAN", goals: 2 },
+        { player: "Amad Diallo",          team: "CIV", goals: 2 },
+        { player: "Nicolas Pépé",         team: "CIV", goals: 2 },
+        { player: "Bradley Barcola",      team: "FRA", goals: 2 },
+        { player: "Daichi Kamada",        team: "JPN", goals: 2 },
+        { player: "Ayase Ueda",           team: "JPN", goals: 2 },
+        { player: "Azzedine Ounahi",      team: "MAR", goals: 2 },
+        { player: "Soufiane Rahimi",      team: "MAR", goals: 2 },
+        { player: "Crysencio Summerville",team: "NED", goals: 2 },
+        { player: "Mikel Merino",         team: "ESP", goals: 2 },
+        { player: "Pedro Porro",          team: "ESP", goals: 2 },
+        { player: "Habib Diarra",         team: "SEN", goals: 2 },
+        { player: "Pape Gueye",           team: "SEN", goals: 2 },
+        { player: "Yasin Ayari",          team: "SWE", goals: 2 },
+        { player: "Anthony Elanga",       team: "SWE", goals: 2 },
+        { player: "Breel Embolo",         team: "SUI", goals: 2 },
+        { player: "Dan Ndoye",            team: "SUI", goals: 2 },
+        { player: "Rubén Vargas",         team: "SUI", goals: 2 },
+        { player: "Malik Tillman",        team: "USA", goals: 2 },
+        { player: "Maximiliano Araújo",   team: "URU", goals: 2 }
+    ],
+    // Assistências: não disponíveis em fonte verificável (endpoint não incluso no plano gratuito da API)
     topAssists: []
 };
 
