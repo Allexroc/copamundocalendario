@@ -1,10 +1,8 @@
 // Vercel Serverless Function — API Proxy
 // Rota: /api/matches
-// Faz proxy seguro para football-data.org sem expor CORS ao browser
-// Roda no servidor da Vercel — funciona em qualquer origem (browser, mobile, etc.)
+// CommonJS format required for Vercel static/serverless projects (non-Next.js)
 
-export default async function handler(req, res) {
-    // Permitir qualquer origem (o código roda no servidor, não no browser)
+module.exports = async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -32,20 +30,19 @@ export default async function handler(req, res) {
 
         if (!response.ok) {
             const text = await response.text();
-            res.status(response.status).json({
+            return res.status(response.status).json({
                 error: `API error: ${response.status}`,
                 details: text.substring(0, 200)
             });
-            return;
         }
 
         const data = await response.json();
 
-        // Cache na CDN da Vercel por 60 segundos (atualização automática eficiente)
+        // CDN cache: 60s fresh, serve stale for up to 30s while revalidating
         res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
-        res.status(200).json(data);
+        return res.status(200).json(data);
 
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error', message: error.message });
+        return res.status(500).json({ error: 'Internal server error', message: error.message });
     }
-}
+};

@@ -1,7 +1,4 @@
 {
-  "rewrites": [
-    { "source": "/api/matches", "destination": "/api/matches.js" }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",

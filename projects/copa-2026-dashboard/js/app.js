@@ -144,13 +144,6 @@ function setupEventListeners() {
     // Filtros
     setupFilters();
 
-    const refreshButton = document.getElementById('refreshMatchesButton');
-    if (refreshButton) {
-        refreshButton.addEventListener('click', async () => {
-            await refreshDashboardData(true);
-        });
-    }
-
     // Auto-refresh for live matches (mantido para compatibilidade)
     startAutoRefresh();
 }
@@ -534,25 +527,12 @@ const API_AUTO_REFRESH_INTERVAL = 2 * 60 * 1000; // 2 minutos (Vercel serverless
 let apiAutoRefreshTimer = null;
 
 async function refreshDashboardData(isManual = false) {
-    const refreshButton = document.getElementById('refreshMatchesButton');
     const statusEl = document.getElementById('refreshStatus');
-    const icon = refreshButton ? refreshButton.querySelector('i') : null;
 
     try {
         updateAPIStatus('loading');
 
-        if (refreshButton) refreshButton.disabled = true;
-        if (icon) icon.classList.add('fa-spin');
-        if (statusEl) {
-            statusEl.textContent = isManual ? 'Buscando dados da API...' : 'Atualizando automaticamente...';
-            statusEl.className = 'refresh-status loading';
-        }
-
-        // Usar DirectAPI — proxy local serve.js (porta 8080) ou chamada direta
-        if (typeof DirectAPI === 'undefined') {
-            throw new Error('DirectAPI não carregado');
-        }
-        // forceRefresh=true no clique manual para ignorar cache e buscar dado fresco
+        // forceRefresh=true no clique manual para ignorar cache
         await DirectAPI.fetchAndApply(isManual);
 
         refreshAllViews();
@@ -560,41 +540,29 @@ async function refreshDashboardData(isManual = false) {
         updateAPIStatus('connected');
         updateBannerTimestamp();
 
+        // Mostrar timestamp discreto no status
         if (statusEl) {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('pt-BR', {
-                hour: '2-digit',
-                minute: '2-digit',
+                hour: '2-digit', minute: '2-digit',
                 timeZone: 'America/Sao_Paulo'
             });
-            const dateStr = now.toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                timeZone: 'America/Sao_Paulo'
-            });
-            statusEl.textContent = `${isManual ? '✓ Atualizado' : '✓ Atualização automática'} em ${dateStr} às ${timeStr}`;
+            statusEl.textContent = `✓ Atualizado às ${timeStr}`;
             statusEl.className = 'refresh-status success';
         }
 
         return true;
+
     } catch (error) {
-        console.error('❌ Erro ao atualizar dashboard:', error);
+        console.warn('⚠️ Atualização da API falhou:', error.message);
         updateAPIStatus('disconnected');
+        // Erros silenciosos no auto-refresh — só mostrar no console
+        // O dashboard continua funcionando com os dados do data.js
         if (statusEl) {
-            const isFileProtocol = location.protocol === 'file:';
-            statusEl.textContent = isFileProtocol
-                ? '✗ Abra via: node serve.js → http://localhost:8080'
-                : `✗ Erro: ${error.message}`;
-            statusEl.className = 'refresh-status error';
+            statusEl.textContent = '';
+            statusEl.className = 'refresh-status';
         }
         return false;
-    } finally {
-        if (refreshButton) {
-            refreshButton.disabled = false;
-        }
-        if (icon) {
-            icon.classList.remove('fa-spin');
-        }
     }
 }
 
