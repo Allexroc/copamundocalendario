@@ -1,16 +1,17 @@
 // FIFA World Cup 2026 — Direct API Integration
-// Busca dados da Football-Data.org sem depender do proxy antigo.
+// Busca dados da Football-Data.org via Vercel Serverless Function (/api/matches).
 //
-// Estratégia de chamada (em ordem):
-//   1. /api/competitions/WC/matches  → serve.js (proxy local, sem CORS)
-//   2. https://api.football-data.org  → direto (funciona em http://localhost)
+// Estratégia de chamada (em ordem de prioridade):
+//   1. /api/matches          → Vercel serverless (funciona em produção e local com serve.js)
+//   2. https://api.football-data.org → direto (funciona em http://localhost)
 //
-// Se ambos falharem exibe mensagem de orientação ao usuário.
+// Vercel serverless roda no servidor — sem CORS, sem proxy local necessário.
 
 const DirectAPI = {
-    API_KEY:   '093dce6688974c83ad7a4adae69e5cfd',
-    DIRECT_URL: 'https://api.football-data.org/v4/competitions/WC/matches',
-    LOCAL_URL:  '/api/competitions/WC/matches', // serve.js proxy
+    API_KEY:    '093dce6688974c83ad7a4adae69e5cfd',
+    VERCEL_URL: '/api/matches',                                           // Vercel serverless
+    DIRECT_URL: 'https://api.football-data.org/v4/competitions/WC/matches', // fallback direto
+    LOCAL_URL:  '/api/competitions/WC/matches', // serve.js (desenvolvimento local)
     CACHE_KEY:  'wc2026_direct_cache',
     CACHE_TTL:  5 * 60 * 1000, // 5 minutos
 
@@ -135,25 +136,24 @@ const DirectAPI = {
         let json   = null;
         let source = '';
 
-        // 2. Tentar proxy local do serve.js (sem CORS, mais confiável)
+        // 2. Vercel serverless /api/matches (funciona em produção Vercel e com serve.js local)
         try {
-            console.log('🔌 DirectAPI: tentando proxy local (serve.js)...');
-            json   = await this._tryFetch(this.LOCAL_URL, headers);
-            source = 'local-proxy';
-            console.log('✅ DirectAPI: proxy local OK');
+            console.log('☁️ DirectAPI: tentando Vercel serverless /api/matches...');
+            json   = await this._tryFetch(this.VERCEL_URL, {});  // sem header, servidor injeta key
+            source = 'vercel';
+            console.log('✅ DirectAPI: Vercel OK');
         } catch (_) {
-            // 3. Tentar chamada direta (funciona em http://localhost)
+            // 3. Chamada direta (funciona em http://localhost com CORS permitido)
             try {
                 console.log('🌐 DirectAPI: tentando chamada direta...');
                 json   = await this._tryFetch(this.DIRECT_URL, headers);
                 source = 'direct';
                 console.log('✅ DirectAPI: chamada direta OK');
             } catch (directErr) {
-                // Ambos falharam — provavelmente aberto como file://
                 const isFile = location.protocol === 'file:';
                 const msg = isFile
-                    ? 'CORS bloqueado (file://). Execute: node serve.js — e acesse http://localhost:8080'
-                    : directErr.message;
+                    ? 'Abra em http://localhost:8080 (node serve.js) ou acesse pelo Vercel'
+                    : `API indisponível: ${directErr.message}`;
                 throw new Error(msg);
             }
         }

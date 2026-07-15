@@ -530,7 +530,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-const API_AUTO_REFRESH_INTERVAL = 5 * 60 * 1000;
+const API_AUTO_REFRESH_INTERVAL = 2 * 60 * 1000; // 2 minutos (Vercel serverless tem cache de 60s)
 let apiAutoRefreshTimer = null;
 
 async function refreshDashboardData(isManual = false) {
@@ -625,15 +625,15 @@ function startAPIAutoRefresh() {
         clearInterval(apiAutoRefreshTimer);
     }
 
-    setTimeout(() => {
-        refreshDashboardData(false);
-    }, 1000);
+    // Busca imediata ao carregar (sem aguardar intervalo)
+    refreshDashboardData(false);
 
+    // Repete a cada 2 minutos automaticamente
     apiAutoRefreshTimer = setInterval(() => {
         refreshDashboardData(false);
     }, API_AUTO_REFRESH_INTERVAL);
 
-    console.log(`🔄 Atualização automática da API configurada (${API_AUTO_REFRESH_INTERVAL / 60000} minutos)`);
+    console.log(`🔄 Auto-refresh ativo: atualiza ao carregar + a cada ${API_AUTO_REFRESH_INTERVAL / 60000} min via Vercel`);
 }
 
 // Made with Bob
