@@ -548,7 +548,7 @@ async function refreshDashboardData(isManual = false) {
             statusEl.className = 'refresh-status loading';
         }
 
-        // Usar DirectAPI — chamada direta com fallback via corsproxy.io
+        // Usar DirectAPI — proxy local serve.js (porta 8080) ou chamada direta
         if (typeof DirectAPI === 'undefined') {
             throw new Error('DirectAPI não carregado');
         }
@@ -581,7 +581,10 @@ async function refreshDashboardData(isManual = false) {
         console.error('❌ Erro ao atualizar dashboard:', error);
         updateAPIStatus('disconnected');
         if (statusEl) {
-            statusEl.textContent = '✗ Erro ao atualizar. Verifique a API/proxy.';
+            const isFileProtocol = location.protocol === 'file:';
+            statusEl.textContent = isFileProtocol
+                ? '✗ Abra via: node serve.js → http://localhost:8080'
+                : `✗ Erro: ${error.message}`;
             statusEl.className = 'refresh-status error';
         }
         return false;
