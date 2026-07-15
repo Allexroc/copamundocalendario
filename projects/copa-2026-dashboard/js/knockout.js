@@ -1,7 +1,40 @@
 // FIFA World Cup 2026 - Knockout Stage Management
-// Handles elimination bracket visualization
+// Handles elimination bracket visualization using real match data
 
 let bracketZoom = 1;
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function _knockoutMatches() {
+    return (WORLD_CUP_2026.matches || []).filter(m => m.phase === 'knockout');
+}
+
+function _formatKnockoutDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('pt-BR', {
+        day: '2-digit', month: '2-digit',
+        timeZone: 'America/Sao_Paulo'
+    }) + ' ' + d.toLocaleTimeString('pt-BR', {
+        hour: '2-digit', minute: '2-digit',
+        timeZone: 'America/Sao_Paulo'
+    });
+}
+
+// Group knockout matches by stage based on their sequential position
+// API returns them ordered: LAST_32 (16), LAST_16 (8), QF (4), SF (2), THIRD (1), FINAL (1)
+function _matchesByStage() {
+    const all = _knockoutMatches();
+    const last32   = all.filter((_, i) => i < 16);
+    const last16   = all.filter((_, i) => i >= 16 && i < 24);
+    const qf       = all.filter((_, i) => i >= 24 && i < 28);
+    const sf       = all.filter((_, i) => i >= 28 && i < 30);
+    const third    = all.filter((_, i) => i === 30);
+    const final_   = all.filter((_, i) => i === 31);
+    return { last32, last16, qf, sf, third, final: final_ };
+}
+
+// ─── Render entry point ───────────────────────────────────────────────────────
 
 function renderKnockout() {
     const container = document.getElementById('knockoutContainer');
@@ -15,12 +48,16 @@ function renderKnockout() {
         </div>
         <div class="bracket-legend">
             <div class="legend-item">
-                <span class="legend-badge qualified">Classificado</span>
-                <span class="legend-text">Times confirmados</span>
+                <span class="legend-badge qualified">Finalizado</span>
+                <span class="legend-text">Resultado confirmado</span>
             </div>
             <div class="legend-item">
-                <span class="legend-badge pending">Pendente</span>
-                <span class="legend-text">Aguardando definição</span>
+                <span class="legend-badge live-badge">Ao Vivo</span>
+                <span class="legend-text">Em andamento</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-badge pending">Agendado</span>
+                <span class="legend-text">Aguardando jogo</span>
             </div>
         </div>
     `;
@@ -28,163 +65,144 @@ function renderKnockout() {
     setupZoomControls();
 }
 
+// ─── Bracket structure ────────────────────────────────────────────────────────
+
 function createBracket() {
+    const { last32, last16, qf, sf, third, final: finalM } = _matchesByStage();
     return `
         <div class="bracket">
-            <!-- Round of 16 -->
+            <!-- 32 avos -->
+            <div class="bracket-round round-32">
+                <h4 class="round-title">32 avos de Final</h4>
+                ${last32.map(m => createKnockoutMatchCard(m)).join('')}
+            </div>
+
+            <!-- Oitavas -->
             <div class="bracket-round round-16">
                 <h4 class="round-title">Oitavas de Final</h4>
-                ${createRound16Matches()}
+                ${last16.map(m => createKnockoutMatchCard(m)).join('')}
             </div>
-            
-            <!-- Quarter Finals -->
+
+            <!-- Quartas -->
             <div class="bracket-round quarter-finals">
                 <h4 class="round-title">Quartas de Final</h4>
-                ${createQuarterFinalsMatches()}
+                ${qf.map(m => createKnockoutMatchCard(m)).join('')}
             </div>
-            
-            <!-- Semi Finals -->
+
+            <!-- Semis -->
             <div class="bracket-round semi-finals">
                 <h4 class="round-title">Semifinais</h4>
-                ${createSemiFinalsMatches()}
+                ${sf.map(m => createKnockoutMatchCard(m)).join('')}
             </div>
-            
+
             <!-- Final -->
             <div class="bracket-round final">
                 <h4 class="round-title">Final</h4>
-                ${createFinalMatch()}
-            </div>
-            
-            <!-- Champion -->
-            <div class="bracket-round champion">
-                <h4 class="round-title">Campeão</h4>
-                ${createChampionSlot()}
+                ${finalM.map(m => createKnockoutMatchCard(m, true)).join('')}
+                ${createChampionSlot(finalM[0])}
             </div>
         </div>
-        
-        <!-- Third Place Match -->
+
+        <!-- 3º Lugar -->
         <div class="third-place-section">
             <h4 class="round-title">Disputa de 3º Lugar</h4>
-            ${createThirdPlaceMatch()}
+            ${third.map(m => createKnockoutMatchCard(m)).join('')}
         </div>
     `;
 }
 
-function createRound16Matches() {
-    const matches = [
-        { id: 'R16-1', team1: '1º A', team2: '3º C/D/E', date: '25 Jun' },
-        { id: 'R16-2', team1: '2º A', team2: '2º B', date: '25 Jun' },
-        { id: 'R16-3', team1: '1º B', team2: '3º A/C/D', date: '26 Jun' },
-        { id: 'R16-4', team1: '1º C', team2: '3º D/E/F', date: '26 Jun' },
-        { id: 'R16-5', team1: '1º D', team2: '3º E/F/G', date: '27 Jun' },
-        { id: 'R16-6', team1: '2º D', team2: '2º C', date: '27 Jun' },
-        { id: 'R16-7', team1: '1º E', team2: '3º F/G/H', date: '28 Jun' },
-        { id: 'R16-8', team1: '2º E', team2: '2º F', date: '28 Jun' }
-    ];
-    
-    return matches.map(match => createKnockoutMatch(match, 'pending')).join('');
-}
+// ─── Match card ───────────────────────────────────────────────────────────────
 
-function createQuarterFinalsMatches() {
-    const matches = [
-        { id: 'QF-1', team1: 'Vencedor R16-1', team2: 'Vencedor R16-2', date: '1 Jul' },
-        { id: 'QF-2', team1: 'Vencedor R16-3', team2: 'Vencedor R16-4', date: '1 Jul' },
-        { id: 'QF-3', team1: 'Vencedor R16-5', team2: 'Vencedor R16-6', date: '2 Jul' },
-        { id: 'QF-4', team1: 'Vencedor R16-7', team2: 'Vencedor R16-8', date: '3 Jul' }
-    ];
-    
-    return matches.map(match => createKnockoutMatch(match, 'pending')).join('');
-}
+function createKnockoutMatchCard(match, isFinal = false) {
+    if (!match) return '';
 
-function createSemiFinalsMatches() {
-    const matches = [
-        { id: 'SF-1', team1: 'Vencedor QF-1', team2: 'Vencedor QF-2', date: '7 Jul' },
-        { id: 'SF-2', team1: 'Vencedor QF-3', team2: 'Vencedor QF-4', date: '8 Jul' }
-    ];
-    
-    return matches.map(match => createKnockoutMatch(match, 'pending')).join('');
-}
+    const homeInfo = match.homeTeam ? (getTeamInfo(match.homeTeam) || { flag: '🏳️', name: match.homeTeam }) : null;
+    const awayInfo = match.awayTeam ? (getTeamInfo(match.awayTeam) || { flag: '🏳️', name: match.awayTeam }) : null;
 
-function createFinalMatch() {
-    const match = {
-        id: 'FINAL',
-        team1: 'Vencedor SF-1',
-        team2: 'Vencedor SF-2',
-        date: '19 Jul',
-        stadium: 'MetLife Stadium'
-    };
-    
-    return createKnockoutMatch(match, 'pending', true);
-}
+    const isFinished = match.status === 'finished';
+    const isLive     = match.status === 'live';
+    const isPending  = !isFinished && !isLive;
 
-function createThirdPlaceMatch() {
-    const match = {
-        id: 'THIRD',
-        team1: 'Perdedor SF-1',
-        team2: 'Perdedor SF-2',
-        date: '14 Jul'
-    };
-    
-    return createKnockoutMatch(match, 'pending');
-}
+    const homeWon = isFinished && match.homeScore > match.awayScore;
+    const awayWon = isFinished && match.awayScore > match.homeScore;
 
-function createChampionSlot() {
+    const statusClass = isFinished ? 'finished' : isLive ? 'live' : 'pending';
+    const dateLabel   = _formatKnockoutDate(match.date);
+
+    const homeBlock = homeInfo
+        ? `<span class="team-flag">${homeInfo.flag}</span>
+           <span class="team-name">${homeInfo.name}</span>`
+        : `<span class="team-placeholder">A definir</span>`;
+
+    const awayBlock = awayInfo
+        ? `<span class="team-flag">${awayInfo.flag}</span>
+           <span class="team-name">${awayInfo.name}</span>`
+        : `<span class="team-placeholder">A definir</span>`;
+
+    const homeScore = isFinished || isLive
+        ? `<span class="team-score ${homeWon ? 'score-winner' : ''}">${match.homeScore ?? 0}</span>`
+        : '';
+    const awayScore = isFinished || isLive
+        ? `<span class="team-score ${awayWon ? 'score-winner' : ''}">${match.awayScore ?? 0}</span>`
+        : '';
+
     return `
-        <div class="champion-slot">
-            <div class="trophy-icon">
-                <i class="fas fa-trophy"></i>
-            </div>
-            <div class="champion-team">
-                <span class="champion-label">Campeão Mundial</span>
-                <span class="champion-name">A definir</span>
-            </div>
-        </div>
-    `;
-}
-
-function createKnockoutMatch(match, status = 'pending', isFinal = false) {
-    const team1Info = match.team1.includes('º') ? null : getTeamInfo(match.team1);
-    const team2Info = match.team2.includes('º') ? null : getTeamInfo(match.team2);
-    
-    return `
-        <div class="knockout-match ${status} ${isFinal ? 'final-match' : ''}" data-match-id="${match.id}">
-            <div class="match-date">${match.date}</div>
-            ${match.stadium ? `<div class="match-stadium">${match.stadium}</div>` : ''}
-            <div class="knockout-team ${status === 'finished' && match.winner === 1 ? 'winner' : ''}">
-                ${team1Info ? `
-                    <span class="team-flag">${team1Info.flag}</span>
-                    <span class="team-name">${team1Info.name}</span>
-                ` : `
-                    <span class="team-placeholder">${match.team1}</span>
-                `}
-                ${status === 'finished' ? `<span class="team-score">${match.score1 || 0}</span>` : ''}
+        <div class="knockout-match ${statusClass} ${isFinal ? 'final-match' : ''}" data-match-id="${match.id}">
+            <div class="match-date">${dateLabel}</div>
+            <div class="knockout-team ${homeWon ? 'winner' : ''}">
+                ${homeBlock}${homeScore}
             </div>
             <div class="match-divider"></div>
-            <div class="knockout-team ${status === 'finished' && match.winner === 2 ? 'winner' : ''}">
-                ${team2Info ? `
-                    <span class="team-flag">${team2Info.flag}</span>
-                    <span class="team-name">${team2Info.name}</span>
-                ` : `
-                    <span class="team-placeholder">${match.team2}</span>
-                `}
-                ${status === 'finished' ? `<span class="team-score">${match.score2 || 0}</span>` : ''}
+            <div class="knockout-team ${awayWon ? 'winner' : ''}">
+                ${awayBlock}${awayScore}
+            </div>
+            ${isLive ? `<div class="live-indicator">🔴 AO VIVO${match.minute ? ' ' + match.minute + "'" : ''}</div>` : ''}
+        </div>
+    `;
+}
+
+// ─── Champion slot ────────────────────────────────────────────────────────────
+
+function createChampionSlot(finalMatch) {
+    let championName = 'A definir';
+    let championFlag = '';
+
+    if (finalMatch && finalMatch.status === 'finished') {
+        const winnerCode = finalMatch.homeScore > finalMatch.awayScore
+            ? finalMatch.homeTeam
+            : finalMatch.awayTeam;
+        const info = getTeamInfo(winnerCode);
+        if (info) {
+            championFlag = info.flag + ' ';
+            championName = info.name;
+        }
+    }
+
+    return `
+        <div class="champion-slot">
+            <div class="trophy-icon"><i class="fas fa-trophy"></i></div>
+            <div class="champion-team">
+                <span class="champion-label">Campeão Mundial</span>
+                <span class="champion-name">${championFlag}${championName}</span>
             </div>
         </div>
     `;
 }
+
+// ─── Zoom controls ────────────────────────────────────────────────────────────
 
 function setupZoomControls() {
     const zoomInBtn = document.getElementById('zoomInBracket');
     const zoomOutBtn = document.getElementById('zoomOutBracket');
     const bracketContainer = document.getElementById('bracketContainer');
-    
+
     if (zoomInBtn) {
         zoomInBtn.addEventListener('click', () => {
             bracketZoom = Math.min(bracketZoom + 0.1, 1.5);
             bracketContainer.style.transform = `scale(${bracketZoom})`;
         });
     }
-    
+
     if (zoomOutBtn) {
         zoomOutBtn.addEventListener('click', () => {
             bracketZoom = Math.max(bracketZoom - 0.1, 0.5);
@@ -193,315 +211,62 @@ function setupZoomControls() {
     }
 }
 
-// Add styles for knockout bracket
+// ─── Styles ───────────────────────────────────────────────────────────────────
+
 const knockoutStyles = document.createElement('style');
 knockoutStyles.textContent = `
-    .knockout-container {
-        padding: 20px;
-        overflow-x: auto;
-    }
-    
-    .bracket-wrapper {
-        overflow-x: auto;
-        overflow-y: hidden;
-        padding: 20px;
-        background: #f9f9f9;
-        border-radius: 12px;
-    }
-    
-    .bracket-container {
-        transform-origin: top left;
-        transition: transform 0.3s ease;
-        min-width: 1200px;
-    }
-    
-    .bracket {
-        display: flex;
-        gap: 40px;
-        padding: 20px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .bracket-round {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        min-width: 200px;
-    }
-    
-    .round-title {
-        text-align: center;
-        color: #1a237e;
-        font-size: 14px;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin: 0 0 20px 0;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #1a237e;
-    }
-    
-    .round-16 {
-        justify-content: space-around;
-    }
-    
-    .quarter-finals {
-        justify-content: space-around;
-    }
-    
-    .semi-finals {
-        justify-content: space-around;
-    }
-    
-    .final {
-        justify-content: center;
-    }
-    
-    .champion {
-        justify-content: center;
-    }
-    
-    .knockout-match {
-        background: white;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 12px;
-        min-width: 180px;
-        transition: all 0.3s ease;
-    }
-    
-    .knockout-match:hover {
-        border-color: #1a237e;
-        box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
-    }
-    
-    .knockout-match.pending {
-        background: #fafafa;
-    }
-    
-    .knockout-match.finished {
-        border-color: #4caf50;
-    }
-    
-    .knockout-match.final-match {
-        border-width: 3px;
-        border-color: #ffd700;
-        background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
-    }
-    
-    .match-date {
-        text-align: center;
-        font-size: 11px;
-        font-weight: 600;
-        color: #666;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-    }
-    
-    .match-stadium {
-        text-align: center;
-        font-size: 10px;
-        color: #999;
-        margin-bottom: 8px;
-    }
-    
-    .knockout-team {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px;
-        border-radius: 4px;
-        transition: background 0.2s ease;
-    }
-    
-    .knockout-team.winner {
-        background: #e8f5e9;
-        font-weight: 700;
-    }
-    
-    .knockout-team .team-flag {
-        font-size: 20px;
-    }
-    
-    .knockout-team .team-name {
-        flex: 1;
-        font-size: 13px;
-        color: #212121;
-    }
-    
-    .knockout-team .team-placeholder {
-        flex: 1;
-        font-size: 11px;
-        color: #999;
-        font-style: italic;
-    }
-    
-    .knockout-team .team-score {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1a237e;
-        font-family: 'Roboto Mono', monospace;
-        min-width: 24px;
-        text-align: center;
-    }
-    
-    .match-divider {
-        height: 1px;
-        background: #e0e0e0;
-        margin: 4px 0;
-    }
-    
-    .champion-slot {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-        padding: 24px;
-        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-        border-radius: 12px;
-        border: 3px solid #f9a825;
-        box-shadow: 0 4px 16px rgba(249, 168, 37, 0.4);
-    }
-    
-    .trophy-icon {
-        font-size: 48px;
-        color: #f57f17;
-        animation: float 3s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    .champion-team {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .champion-label {
-        font-size: 12px;
-        font-weight: 700;
-        color: #f57f17;
-        text-transform: uppercase;
-    }
-    
-    .champion-name {
-        font-size: 16px;
-        font-weight: 700;
-        color: #212121;
-    }
-    
-    .third-place-section {
-        margin-top: 30px;
-        padding: 20px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .third-place-section .round-title {
-        text-align: center;
-        color: #ff9800;
-        margin-bottom: 20px;
-    }
-    
-    .third-place-section .knockout-match {
-        max-width: 300px;
-        margin: 0 auto;
-        border-color: #ff9800;
-    }
-    
-    .bracket-legend {
-        display: flex;
-        justify-content: center;
-        gap: 24px;
-        margin-top: 20px;
-        padding: 16px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .legend-badge {
-        padding: 4px 12px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-    
-    .legend-badge.qualified {
-        background: #e8f5e9;
-        color: #2e7d32;
-        border: 1px solid #4caf50;
-    }
-    
-    .legend-badge.pending {
-        background: #fafafa;
-        color: #666;
-        border: 1px solid #e0e0e0;
-    }
-    
-    .legend-text {
-        font-size: 13px;
-        color: #666;
-    }
-    
-    @media (max-width: 1024px) {
-        .bracket {
-            gap: 20px;
-        }
-        
-        .bracket-round {
-            min-width: 160px;
-        }
-        
-        .knockout-match {
-            min-width: 150px;
-            padding: 10px;
-        }
-        
-        .knockout-team .team-name {
-            font-size: 11px;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .bracket-wrapper {
-            padding: 10px;
-        }
-        
-        .bracket {
-            gap: 15px;
-            padding: 15px;
-        }
-        
-        .bracket-round {
-            min-width: 140px;
-        }
-        
-        .knockout-match {
-            min-width: 130px;
-            padding: 8px;
-        }
-        
-        .round-title {
-            font-size: 11px;
-        }
-    }
+    .knockout-container { padding: 20px; overflow-x: auto; }
+
+    .bracket-wrapper { overflow-x: auto; overflow-y: hidden; padding: 20px; background: #f9f9f9; border-radius: 12px; }
+
+    .bracket-container { transform-origin: top left; transition: transform 0.3s ease; min-width: 1400px; }
+
+    .bracket { display: flex; gap: 24px; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); align-items: flex-start; }
+
+    .bracket-round { display: flex; flex-direction: column; gap: 12px; min-width: 190px; }
+
+    .round-title { text-align: center; color: #1a237e; font-size: 13px; font-weight: 700; text-transform: uppercase; margin: 0 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid #1a237e; }
+
+    .knockout-match { background: white; border: 2px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; min-width: 175px; transition: border-color 0.2s ease; }
+    .knockout-match:hover { border-color: #1a237e; box-shadow: 0 2px 8px rgba(26,35,126,0.15); }
+    .knockout-match.finished { border-color: #4caf50; }
+    .knockout-match.live { border-color: #f44336; animation: pulse-border 1.5s infinite; }
+    .knockout-match.pending { background: #fafafa; }
+    .knockout-match.final-match { border-width: 3px; border-color: #ffd700; background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%); }
+
+    @keyframes pulse-border { 0%,100% { border-color: #f44336; } 50% { border-color: #ff8a80; } }
+
+    .match-date { text-align: center; font-size: 10px; font-weight: 600; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+
+    .knockout-team { display: flex; align-items: center; gap: 6px; padding: 6px 4px; border-radius: 4px; }
+    .knockout-team.winner { background: #e8f5e9; }
+
+    .knockout-team .team-flag { font-size: 18px; flex-shrink: 0; }
+    .knockout-team .team-name { flex: 1; font-size: 12px; color: #212121; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .knockout-team .team-placeholder { flex: 1; font-size: 11px; color: #bbb; font-style: italic; }
+    .knockout-team .team-score { font-size: 17px; font-weight: 700; color: #1a237e; font-family: 'Roboto Mono', monospace; min-width: 22px; text-align: right; }
+    .knockout-team .team-score.score-winner { color: #2e7d32; }
+
+    .match-divider { height: 1px; background: #e0e0e0; margin: 2px 0; }
+
+    .live-indicator { text-align: center; font-size: 10px; font-weight: 700; color: #f44336; margin-top: 6px; }
+
+    .champion-slot { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 16px; background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); border-radius: 12px; border: 3px solid #f9a825; box-shadow: 0 4px 16px rgba(249,168,37,0.4); margin-top: 16px; }
+    .trophy-icon { font-size: 40px; color: #f57f17; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .champion-team { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .champion-label { font-size: 11px; font-weight: 700; color: #f57f17; text-transform: uppercase; }
+    .champion-name { font-size: 15px; font-weight: 700; color: #212121; }
+
+    .third-place-section { margin-top: 24px; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+
+    .bracket-legend { display: flex; gap: 20px; margin-top: 16px; padding: 12px 20px; background: white; border-radius: 8px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
+    .legend-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .legend-badge.qualified { background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; }
+    .legend-badge.live-badge { background: #ffebee; color: #c62828; border: 1px solid #f44336; }
+    .legend-badge.pending { background: #f5f5f5; color: #757575; border: 1px solid #e0e0e0; }
 `;
 document.head.appendChild(knockoutStyles);
-
-console.log('✅ Knockout module loaded');
 
 // Made with Bob

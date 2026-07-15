@@ -308,15 +308,20 @@ function createResultCard(match) {
 
 function groupMatchesByDate(matches) {
     const grouped = {};
-    
+
     matches.forEach(match => {
-        const date = match.date.split('T')[0];
-        if (!grouped[date]) {
-            grouped[date] = [];
+        // Extrair a data no fuso de Brasília (UTC-3) a partir do ISO string completo
+        // "2026-07-14T16:00:00-03:00" → dia local BRT = 2026-07-14
+        // Usar toLocaleDateString com timeZone evita o bug de new Date("2026-07-14")
+        // que é interpretado como UTC midnight e vira 13/07 no BRT
+        const d = new Date(match.date);
+        const brtDateStr = d.toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' }); // retorna YYYY-MM-DD
+        if (!grouped[brtDateStr]) {
+            grouped[brtDateStr] = [];
         }
-        grouped[date].push(match);
+        grouped[brtDateStr].push(match);
     });
-    
+
     return grouped;
 }
 
