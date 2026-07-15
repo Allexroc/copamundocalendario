@@ -305,30 +305,15 @@ function loadStatsCategory(category) {
 }
 
 function createScorersTable() {
-    const scorers = getTopScorers(10);
-    
     return `
         <div class="stats-section">
             <div class="stats-header">
                 <h3><i class="fas fa-futbol"></i> Artilharia</h3>
-                <span class="stats-subtitle">Top 10 Goleadores</span>
+                <span class="stats-subtitle">Top Goleadores</span>
             </div>
-            <div class="stats-table-wrapper">
-                <table class="stats-table">
-                    <thead>
-                        <tr>
-                            <th class="rank-col">#</th>
-                            <th class="player-col">Jogador</th>
-                            <th class="team-col">Seleção</th>
-                            <th class="stat-col">Gols</th>
-                            <th class="stat-col">Jogos</th>
-                            <th class="stat-col">Média</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${scorers.map((scorer, index) => createScorerRow(scorer, index + 1)).join('')}
-                    </tbody>
-                </table>
+            <div class="stats-unavailable">
+                <i class="fas fa-info-circle"></i>
+                Dados de artilharia não disponíveis — endpoint não incluso no plano gratuito da API.
             </div>
         </div>
     `;
@@ -365,29 +350,15 @@ function createScorerRow(scorer, rank) {
 }
 
 function createAssistsTable() {
-    const assists = getTopAssists(10);
-    
     return `
         <div class="stats-section">
             <div class="stats-header">
                 <h3><i class="fas fa-hands-helping"></i> Assistências</h3>
-                <span class="stats-subtitle">Top 10 Garçons</span>
+                <span class="stats-subtitle">Top Garçons</span>
             </div>
-            <div class="stats-table-wrapper">
-                <table class="stats-table">
-                    <thead>
-                        <tr>
-                            <th class="rank-col">#</th>
-                            <th class="player-col">Jogador</th>
-                            <th class="team-col">Seleção</th>
-                            <th class="stat-col">Assistências</th>
-                            <th class="stat-col">Jogos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${assists.map((assist, index) => createAssistRow(assist, index + 1)).join('')}
-                    </tbody>
-                </table>
+            <div class="stats-unavailable">
+                <i class="fas fa-info-circle"></i>
+                Dados de assistências não disponíveis — endpoint não incluso no plano gratuito da API.
             </div>
         </div>
     `;
@@ -654,6 +625,23 @@ statsStyles.textContent = `
     .stats-subtitle {
         color: #666;
         font-size: 14px;
+    }
+
+    .stats-unavailable {
+        padding: 24px 16px;
+        color: #57606a;
+        font-size: 14px;
+        border: 1px dashed #d0d7de;
+        border-radius: 6px;
+        background: #f6f8fa;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .stats-unavailable i {
+        color: #3b82d4;
+        flex-shrink: 0;
     }
     
     .stats-table-wrapper {
